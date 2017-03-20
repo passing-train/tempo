@@ -14,3 +14,10 @@ Motion::Project::App.setup do |app|
   app.icon = "AppIcon.icns"
   app.identifier = 'com.cyberfox.whazzup'
 end
+
+
+desc "installapp"
+task :installapp do
+  path = 'build/MacOSX-10.12-Development/Whazzup.app'
+  system "cp -av '#{path}' '/Applications/'"
+end
