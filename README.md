@@ -14,8 +14,10 @@ nag to get back to useful work.
 ## TODO
 - [x] Preference: ask-interval
 - [x] Preference: take picture, yes/no
-
-- [ ] report: markdown/pdf export
+- [x] report: markdown
+- [x] merge refactoring from fork whazzup
+- [ ] markdown use ljust to beautify table
+- [ ] pdf export
 - [ ] Move to menu bar
 - [ ] Menu bar icon, light up whan asking
 - [ ] Picture-taking: warn before taking: Say cheese

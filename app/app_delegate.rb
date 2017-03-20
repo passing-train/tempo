@@ -18,13 +18,19 @@ class AppDelegate
              "What\'s on your mind?"]
 
   def applicationDidFinishLaunching(notification)
+
     NSUserDefaults.standardUserDefaults.registerDefaults PREFS_DEFAULTS
+
     @snap_path = File.join(NSBundle.mainBundle.resourcePath, 'imagesnap')
     application_support = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, true).first
-    @snippet_path = File.join(application_support, 'Whazzup', 'snippets')
-    Motion::FileUtils.mkdir_p(@snippet_path) unless File.exist?(@snippet_path)
 
+    @snippet_path = File.join(application_support, 'wassup', 'snippets')
+    motion::fileutils.mkdir_p(@snippet_path) unless File.exist?(@snippet_path)
+
+    setDateFormats
     prep_log
+    prep_log_md
+    log('[Starting up (rubymotion)]')
     buildMenu
     ask_and_schedule
   end
@@ -84,13 +90,58 @@ class AppDelegate
     log(answer)
   end
 
+  def prep_log_md(file = File.join(@snippet_path, 'snippets.md'))
+
+    @logfile_md = file
+
+    if File.exist?(file)
+      @snippets_md ||= open(file, 'ab')
+    else
+      p 'no'
+      init_log_md file
+    end
+  end
+
+  def init_log_md file
+    @snippets_md ||= open(file, 'ab')
+    @snippets_md << "# Time report\n"
+    @snippets_md << "\n"
+    @snippets_md << "| date       | day       | time     | activity                                 |\n"
+    @snippets_md << "|------------|-----------|----------|------------------------------------------|\n"
+
+    @snippets_md.flush
+  end
+
+  def setDateFormats
+    @dateFormat = NSDateFormatter.new
+    @dateFormat.setDateFormat "YYYY MM dd"
+    @dayFormat = NSDateFormatter.new
+    @dayFormat.setDateFormat "EEEE"
+    @timeFormat = NSDateFormatter.new
+    @timeFormat.setDateFormat " HH:mm"
+  end
+
+  def log_md(msg)
+
+    date = @dateFormat.stringFromDate Time.now
+    day = @dayFormat.stringFromDate Time.now
+    time = @timeFormat.stringFromDate Time.now
+
+    @snippets_md << "| #{date} | #{day} | #{time} | #{msg}                                  |\n"
+    @snippets_md.flush
+  end
+
   def prep_log(file = File.join(@snippet_path, 'snippets.txt'))
     @logfile = file
     @snippets ||= open(file, 'ab')
-    log('[Starting up (rubymotion)]')
   end
 
   def log(msg)
+    log_txt msg
+    log_md msg
+  end
+
+  def log_txt(msg)
     @snippets << Time.now.to_s << ': ' << msg << "\n"
     @snippets.flush
   end
@@ -122,7 +173,7 @@ class AppDelegate
   end
 
   def finderView
-    files = [NSURL.fileURLWithPath(@logfile)]
+    files = [NSURL.fileURLWithPath(@logfile_md)]
     NSWorkspace.sharedWorkspace.activateFileViewerSelectingURLs(files)
   end
 end
