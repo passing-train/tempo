@@ -25,7 +25,7 @@ class AppDelegate
     application_support = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, true).first
 
     @snippet_path = File.join(application_support, 'wassup', 'snippets')
-    motion::fileutils.mkdir_p(@snippet_path) unless File.exist?(@snippet_path)
+    Motion::FileUtils.mkdir_p(@snippet_path) unless File.exist?(@snippet_path)
 
     setDateFormats
     prep_log
@@ -114,7 +114,7 @@ class AppDelegate
 
   def setDateFormats
     @dateFormat = NSDateFormatter.new
-    @dateFormat.setDateFormat "YYYY MM dd"
+    @dateFormat.setDateFormat "YYYY-MM-dd"
     @dayFormat = NSDateFormatter.new
     @dayFormat.setDateFormat "EEEE"
     @timeFormat = NSDateFormatter.new
