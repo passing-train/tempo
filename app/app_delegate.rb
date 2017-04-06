@@ -19,6 +19,8 @@ class AppDelegate
 
   def applicationDidFinishLaunching(notification)
 
+    @last_answer = ''
+
     NSUserDefaults.standardUserDefaults.registerDefaults PREFS_DEFAULTS
 
     @snap_path = File.join(NSBundle.mainBundle.resourcePath, 'imagesnap')
@@ -86,8 +88,10 @@ class AppDelegate
     end
 
     picked = PROMPTS[rand*PROMPTS.length]
-    answer = input(picked)
-    log(answer)
+
+    @last_answer = input(picked, @last_answer)
+#    @last_answer = answer
+    log(@last_answer)
   end
 
   def prep_log_md(file = File.join(@snippet_path, 'snippets.md'))
@@ -159,17 +163,6 @@ class AppDelegate
 
     answer = input_field.stringValue if button == 1
     (answer.nil? || answer.empty?) ? '...' : answer
-  end
-
-  # Deprecated
-  def buildWindow
-    @mainWindow = NSWindow.alloc.initWithContentRect([[240, 180], [480, 360]],
-      styleMask: NSTitledWindowMask|NSClosableWindowMask|NSMiniaturizableWindowMask|NSResizableWindowMask,
-      backing: NSBackingStoreBuffered,
-      defer: false)
-    @mainWindow.title = NSBundle.mainBundle.infoDictionary['CFBundleName']
-    @mainWindow.orderFrontRegardless
-    input("What are you up to?")
   end
 
   def finderView
