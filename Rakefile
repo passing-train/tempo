@@ -16,11 +16,11 @@ Motion::Project::App.setup do |app|
   app.identifier = 'com.lingewoud.wassup'
   app.deployment_target = "10.9"
   app.version = "0.1.0"
-end
 
+end
 
 desc "installapp"
 task :installapp do
-  path = 'build/MacOSX-10.12-Development/wassup.app'
+  path = `find build -name "#{App.config.name}.app"`.strip
   system "cp -av '#{path}' '/Applications/'"
 end
