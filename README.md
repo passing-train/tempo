@@ -16,18 +16,26 @@ nag to get back to useful work.
 - [x] Preference: take picture, yes/no
 - [x] report: markdown
 - [x] merge refactoring from fork whazzup
+
 - [ ] markdown use ljust to beautify table
 - [ ] pdf export
+
 - [ ] Move to menu bar
 - [ ] Menu bar icon, light up whan asking
+
 - [ ] Picture-taking: warn before taking: Say cheese
+
 - [ ] Shortcut to enter the same activity as last entry
 - [ ] Smart auto focus system
+
 - [ ] Database storage
+
 - [ ] report: csv export
 - [ ] report: aggregate periods
 - [ ] report: monthly pictures
+
 - [ ] schedule: disable in the weekend
+
 - [ ] disable function: for an x period
 - [ ] disable function: untill a moment
 - [ ] disable function: at the first workday

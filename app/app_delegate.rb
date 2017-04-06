@@ -37,6 +37,11 @@ class AppDelegate
     ask_and_schedule
   end
 
+  def applicationShouldOpenUntitledFile sender
+    ask_early
+    return false;
+  end
+
   def openPreferences(sender)
     @prefs_controller = PrefsWindowController.alloc.init
     @prefs_controller.showWindow(self)
@@ -66,11 +71,10 @@ class AppDelegate
                       otherButton: nil, informativeTextWithFormat: "")
       alert.runModal
     end
-    # -5..5 + 20 yields a range of 15-25 minutes.
 
     interval = NSUserDefaults.standardUserDefaults.integerForKey('AskInterval')
-    p interval
 
+    # -5..5 + 20 yields a range of 15-25 minutes.
     wait_time = (((rand*10).to_i-5)+interval)*60
     @timer = NSTimer.scheduledTimerWithTimeInterval(wait_time, target: self, selector: 'ask_and_schedule', userInfo: nil, repeats: false)
     old_app.activateWithOptions(NSApplicationActivateIgnoringOtherApps)
@@ -90,7 +94,6 @@ class AppDelegate
     picked = PROMPTS[rand*PROMPTS.length]
 
     @last_answer = input(picked, @last_answer)
-#    @last_answer = answer
     log(@last_answer)
   end
 
