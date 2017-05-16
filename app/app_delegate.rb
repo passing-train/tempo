@@ -37,10 +37,10 @@ class AppDelegate
     ask_and_schedule
   end
 
-  def applicationShouldOpenUntitledFile sender
-    ask_early
-    return false;
-  end
+#  def applicationShouldOpenUntitledFile sender
+#    ask_early
+#    return false;
+#  end
 
   def openPreferences(sender)
     @prefs_controller = PrefsWindowController.alloc.init
@@ -104,7 +104,6 @@ class AppDelegate
     if File.exist?(file)
       @snippets_md ||= open(file, 'ab')
     else
-      p 'no'
       init_log_md file
     end
   end
@@ -115,7 +114,6 @@ class AppDelegate
     @snippets_md << "\n"
     @snippets_md << "| date       | day       | time     | activity                                 |\n"
     @snippets_md << "|------------|-----------|----------|------------------------------------------|\n"
-
     @snippets_md.flush
   end
 
@@ -129,7 +127,6 @@ class AppDelegate
   end
 
   def log_md(msg)
-
     date = @dateFormat.stringFromDate Time.now
     day = @dayFormat.stringFromDate Time.now
     time = @timeFormat.stringFromDate Time.now
@@ -168,8 +165,25 @@ class AppDelegate
     (answer.nil? || answer.empty?) ? '...' : answer
   end
 
-  def finderView
-    files = [NSURL.fileURLWithPath(@logfile_md)]
-    NSWorkspace.sharedWorkspace.activateFileViewerSelectingURLs(files)
+  def export_csv_log
+    p 'export log'
   end
+
+  def reset_log
+    p 'reset log'
+  end
+
+  def show_log
+    content = NSString.stringWithContentsOfFile(@logfile_md, encoding:NSUTF8StringEncoding, error:nil)
+    parser = MarkdownIt::Parser.new({ html: true, linkify: true, typographer: true })
+    html = parser.render(content)
+    css='https://raw.githubusercontent.com/sindresorhus/github-markdown-css/gh-pages/github-markdown.css'
+    header = '<html><head><link rel="stylesheet" href="'+css+'"></head><body class="markdown-body">'
+    footer = '</body></html>'
+    @logweb_controller = LogwebWindowController.alloc.init
+    @logweb_controller.update_webview(header+html+footer)
+    @logweb_controller.showWindow(self)
+    @logweb_controller.window.orderFrontRegardless
+  end
+
 end

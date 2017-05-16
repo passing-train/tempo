@@ -4,7 +4,6 @@ class AppDelegate
 
     appName = NSBundle.mainBundle.infoDictionary['CFBundleName']
     addMenu(appName) do
-      addItemWithTitle('Ask', action: 'ask_early', keyEquivalent: '!')
       addItemWithTitle("About #{appName}", action: 'orderFrontStandardAboutPanel:', keyEquivalent: '')
       addItem(NSMenuItem.separatorItem)
       addItemWithTitle('Preferences', action: 'openPreferences:', keyEquivalent: ',')
@@ -18,7 +17,10 @@ class AppDelegate
     end
 
     addMenu('File') do
-      addItemWithTitle('Show in Finder', action: 'finderView', keyEquivalent: 'i')
+      addItemWithTitle('Ask', action: 'ask_early', keyEquivalent: '!')
+      addItemWithTitle('Show Time Log', action: 'show_log', keyEquivalent: 'i')
+      addItemWithTitle('Export Log to CSV', action: 'export_csv_log', keyEquivalent: 'i')
+      addItemWithTitle('Clear log', action: 'reset_log', keyEquivalent: 'i')
     end
 
     addMenu('Edit') do

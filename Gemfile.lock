@@ -2,10 +2,18 @@ GEM
   remote: https://rubygems.org/
   specs:
     dbt (1.2.0)
+    linkify-it-rb (1.2.0)
+      uc.micro-rb (~> 1.0)
+    mdurl-rb (1.0.0.3)
     motion-fileutils (0.1.1)
     motion-kit (1.1.1)
       dbt (~> 1.1, >= 1.1.5)
+    motion-markdown-it (4.4.0)
+      linkify-it-rb (~> 1.2)
+      mdurl-rb (~> 1.0)
+      uc.micro-rb (~> 1.0)
     rake (10.1.0)
+    uc.micro-rb (1.0.0)
 
 PLATFORMS
   ruby
@@ -13,6 +21,7 @@ PLATFORMS
 DEPENDENCIES
   motion-fileutils
   motion-kit
+  motion-markdown-it
   rake
 
 BUNDLED WITH

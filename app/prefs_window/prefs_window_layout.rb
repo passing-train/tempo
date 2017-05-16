@@ -7,8 +7,8 @@ class PrefsWindowLayout < MK::WindowLayout
       style_mask (style_mask & ~NSResizableWindowMask)
 
       add NSButton, :button_close
-      add NSButton, :button_take_picture
-      add NSTextField, :button_take_picture_label
+#      add NSButton, :button_take_picture
+#      add NSTextField, :button_take_picture_label
       add NSTextField, :time_interval_label
       add NSTextField, :time_interval
   end
@@ -52,28 +52,28 @@ class PrefsWindowLayout < MK::WindowLayout
 
   end
 
-  def button_take_picture_style
-    button_type NSSwitchButton
-    bezel_style 0
-    constraints do
-      left.equals(:time_interval_label, :right).plus(10)
-      top.equals(:time_interval_label, :bottom).plus(20)
-    end
-    tag 2
-    title ""
-    state NSUserDefaults.standardUserDefaults.stringForKey('TakePictures')
-  end
-
-  def button_take_picture_label_style
-    configure_as_label_with_title 'Take selfie Pictures'
-
-    constraints do
-      width 80
-      height 20
-      left.equals(:superview, :left).plus(20)
-      top.equals(:time_interval_label, :bottom).plus(20)
-    end
-  end
+#  def button_take_picture_style
+#    button_type NSSwitchButton
+#    bezel_style 0
+#    constraints do
+#      left.equals(:time_interval_label, :right).plus(10)
+#      top.equals(:time_interval_label, :bottom).plus(20)
+#    end
+#    tag 2
+#    title ""
+#    state NSUserDefaults.standardUserDefaults.stringForKey('TakePictures')
+#  end
+#
+#  def button_take_picture_label_style
+#    configure_as_label_with_title 'Take selfie Pictures'
+#
+#    constraints do
+#      width 80
+#      height 20
+#      left.equals(:superview, :left).plus(20)
+#      top.equals(:time_interval_label, :bottom).plus(20)
+#    end
+#  end
 
   private
 

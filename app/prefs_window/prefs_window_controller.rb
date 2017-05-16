@@ -8,9 +8,9 @@ class PrefsWindowController < NSWindowController
     super.tap do
       self.window = layout.window
 
-      @button_take_picture = @layout.get(:button_take_picture)
-      @button_take_picture.target = self
-      @button_take_picture.action = 'checkboxClick:'
+#      @button_take_picture = @layout.get(:button_take_picture)
+#      @button_take_picture.target = self
+#      @button_take_picture.action = 'checkboxClick:'
 
       @button_close = @layout.get(:button_close)
       @button_close.target = self
@@ -25,11 +25,11 @@ class PrefsWindowController < NSWindowController
     window.close
   end
 
-  def checkboxClick(sender)
-    if sender.tag == 2
-      NSUserDefaults.standardUserDefaults.setObject( sender.state, forKey:'TakePictures')
-    end
-  end
+#  def checkboxClick(sender)
+#    if sender.tag == 2
+#      NSUserDefaults.standardUserDefaults.setObject( sender.state, forKey:'TakePictures')
+#    end
+#  end
 
   def controlTextDidChange(notification)
     textField = notification.object
