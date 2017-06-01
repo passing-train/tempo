@@ -37,10 +37,10 @@ class AppDelegate
     ask_and_schedule
   end
 
-#  def applicationShouldOpenUntitledFile sender
-#    ask_early
-#    return false;
-#  end
+  def applicationShouldOpenUntitledFile sender
+    ask_early
+    return false;
+  end
 
   def openPreferences(sender)
     @prefs_controller = PrefsWindowController.alloc.init
@@ -53,10 +53,10 @@ class AppDelegate
     if @timer
       @timer.fire
     else
-      alert = NSAlert.alertWithMessageText('The prompt is already being displayed',
-                      defaultButton: "OK", alternateButton: nil,
-                      otherButton: nil, informativeTextWithFormat: "")
-      alert.runModal
+#      alert = NSAlert.alertWithMessageText('The prompt is already being displayed',
+#                      defaultButton: "OK", alternateButton: nil,
+#                      otherButton: nil, informativeTextWithFormat: "")
+#      alert.runModal
     end
   end
 

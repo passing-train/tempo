@@ -20,12 +20,17 @@ nag to get back to useful work.
 - [ ] markdown use ljust to beautify table
 - [ ] pdf export
 
+- [ ] setting: click on icon for ask
+
 - [ ] Move to menu bar
 - [ ] Menu bar icon, light up whan asking
 
 - [ ] Picture-taking: warn before taking: Say cheese
 
 - [ ] Shortcut to enter the same activity as last entry
+
+- [ ] Glopal shortcut https://github.com/Clipy/Magnet
+
 - [ ] Smart auto focus system
 
 - [ ] Database storage

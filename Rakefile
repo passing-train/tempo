@@ -26,6 +26,8 @@ end
 
 desc "installapp"
 task :installapp do
-  path = `find build -name "#{App.config.name}.app"`.strip
+  path = `find build -name "#{App.config.name}.app"|grep Development`.strip
+#  print path
+#  print "cp -av '#{path}' '/Applications/'"
   system "cp -av '#{path}' '/Applications/'"
 end
