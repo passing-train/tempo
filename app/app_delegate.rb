@@ -108,6 +108,10 @@ class AppDelegate
     end
   end
 
+  def snippets_md
+
+  end
+
   def init_log_md file
     @snippets_md ||= open(file, 'ab')
     @snippets_md << "# Time report\n"
@@ -171,6 +175,24 @@ class AppDelegate
 
   def reset_log
     p 'reset log'
+
+    @snippets_md = nil
+
+    date = @dateFormat.stringFromDate Time.now
+
+    destination = NSURL.fileURLWithPath("#{@logfile_md}-#{date}")
+    p destination
+    p @logfile_md
+
+    if NSFileManager.defaultManager.isReadableFileAtPath(@logfile_md)
+      NSFileManager.defaultManager.copyItemAtURL(NSURL.fileURLWithPath(@logfile_md), toURL:destination, error:nil)
+      Motion::FileUtils.rm(@logfile_md) if File.exist?(@logfile_md)
+    end
+
+    prep_log_md
+
+
+
   end
 
   def show_log
