@@ -23,8 +23,21 @@ class LogwebWindowController < NSWindowController
     end
   end
 
-  def update_webview content
-    @web_view.mainFrame.loadHTMLString(content, baseURL:NSBundle.mainBundle.bundleURL)
+  def update_webview
+
+    temp_file = NSApp.delegate.export.create_markdown_file
+
+    content = NSString.stringWithContentsOfFile(temp_file, encoding:NSUTF8StringEncoding, error:nil)
+
+    parser = MarkdownIt::Parser.new({ html: true, linkify: true, typographer: true })
+    body = parser.render(content)
+
+    css = NSBundle.mainBundle.URLForResource("github-markdown", withExtension:"css")
+
+    header = '<html><head><link rel="stylesheet" href="'+css.absoluteString+'"></head><body class="markdown-body">'
+    footer = '</body></html>'
+
+    @web_view.mainFrame.loadHTMLString(header+body+footer, baseURL:NSBundle.mainBundle.bundleURL)
   end
 
   def closeWindow(sender)
@@ -32,29 +45,10 @@ class LogwebWindowController < NSWindowController
   end
 
   def printContent(sender)
-
     printInfo = NSPrintInfo.sharedPrintInfo
-
-    # This is your chance to modify printInfo if you need to change 
-    # the page orientation, margins, etc
-    #[printInfo setOrientation:NSLandscapeOrientation]
-    #
-#    printInfo.setBottomMargin 0.0
-#    printInfo.setLeftMargin 0.0
     printInfo.setTopMargin 0.5
     printInfo.setRightMargin 0.5
-
     printOperation = @web_view.mainFrame.frameView.printOperationWithPrintInfo printInfo
-
-    #// Open the print dialog
     printOperation.runOperation
-
-#/ If you want your print window to appear as a sheet instead of a popup,
-#// use this method instead of -[runOperation]
-#printOperation.runOperationModalForWindow:yourWindow
-#                                  delegate:self 
-#                            didRunSelector:@selector(printDidRun)
-#                               contextInfo:nil];
   end
-
 end
