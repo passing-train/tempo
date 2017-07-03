@@ -34,8 +34,6 @@ class AppDelegate
     Motion::FileUtils.mkdir_p(@snippet_path) unless File.exist?(@snippet_path)
 
     setDateFormats
-    prep_log
-    prep_log_md
     buildMenu
 
     ask_and_schedule
@@ -55,11 +53,6 @@ class AppDelegate
   def ask_early
     if @timer
       @timer.fire
-    else
-      #      alert = NSAlert.alertWithMessageText('The prompt is already being displayed',
-      #                      defaultButton: "OK", alternateButton: nil,
-      #                      otherButton: nil, informativeTextWithFormat: "")
-      #      alert.runModal
     end
   end
 
@@ -103,30 +96,6 @@ class AppDelegate
     end
   end
 
-  def prep_log_md(file = File.join(@snippet_path, 'snippets.md'))
-
-    @logfile_md = file
-
-    if File.exist?(file)
-      @snippets_md ||= open(file, 'ab')
-    else
-      init_log_md file
-    end
-  end
-
-  def snippets_md
-
-  end
-
-  def init_log_md file
-    @snippets_md ||= open(file, 'ab')
-    @snippets_md << "# Time report\n"
-    @snippets_md << "\n"
-    @snippets_md << "| date       | day       | time     | activity                                 |\n"
-    @snippets_md << "|------------|-----------|----------|------------------------------------------|\n"
-    @snippets_md.flush
-  end
-
   def setDateFormats
     @dateFormat = NSDateFormatter.new
     @dateFormat.setDateFormat "YYYY-MM-dd"
@@ -136,34 +105,12 @@ class AppDelegate
     @timeFormat.setDateFormat " HH:mm"
   end
 
-  def log_md(msg)
-    date = @dateFormat.stringFromDate Time.now
-    day = @dayFormat.stringFromDate Time.now
-    time = @timeFormat.stringFromDate Time.now
-
-    @snippets_md << "| #{date} | #{day} | #{time} | #{msg}                                  |\n"
-    @snippets_md.flush
-  end
-
-  def prep_log(file = File.join(@snippet_path, 'snippets.txt'))
-    @logfile = file
-    @snippets ||= open(file, 'ab')
-  end
-
   def log(msg)
-    log_txt msg
-    log_md msg
-    coredata msg
-  end
-
-  def log_txt(msg)
-    @snippets << Time.now.to_s << ': ' << msg << "\n"
-    @snippets.flush
+    Entry.create(title: msg)
+    cdq.save
   end
 
   def coredata(msg)
-    Entry.create(title: msg)
-    cdq.save
   end
 
   def input(prompt, default_value="")
@@ -197,33 +144,50 @@ class AppDelegate
         end
       end
     )
-
   end
 
   def reset_log
     p 'reset log'
+    Entry.all.each do |entry|
+      entry.destroy
+    end
+    cdq.save
+  end
 
-    @snippets_md = nil
+  def create_markdown_file(file = File.join(@snippet_path, 'snippets.md'))
 
-    date = @dateFormat.stringFromDate Time.now
+    Motion::FileUtils.rm(file) if File.exist?(file)
 
-    destination = NSURL.fileURLWithPath("#{@logfile_md}-#{date}")
-    p destination
-    p @logfile_md
+    snippets_md ||= open(file, 'ab')
+    snippets_md << "# Time report\n"
+    snippets_md << "\n"
+    snippets_md << "| date       | day       | time     | activity                                 |\n"
+    snippets_md << "|------------|-----------|----------|------------------------------------------|\n"
 
-    if NSFileManager.defaultManager.isReadableFileAtPath(@logfile_md)
-      NSFileManager.defaultManager.copyItemAtURL(NSURL.fileURLWithPath(@logfile_md), toURL:destination, error:nil)
-      Motion::FileUtils.rm(@logfile_md) if File.exist?(@logfile_md)
+    Entry.all.sort_by('created_at').each do |entry|
+
+      date = @dateFormat.stringFromDate entry.created_at
+      day = @dayFormat.stringFromDate entry.created_at
+      time = @timeFormat.stringFromDate entry.created_at
+
+      snippets_md << "| #{date} | #{day} | #{time} | #{entry.title}                                  |\n"
     end
 
-    prep_log_md
+    snippets_md.flush
 
   end
 
+
   def show_log
-    content = NSString.stringWithContentsOfFile(@logfile_md, encoding:NSUTF8StringEncoding, error:nil)
+
+    temp_file = File.join(@snippet_path, 'snippets_temp.md')
+    create_markdown_file( temp_file )
+
+    content = NSString.stringWithContentsOfFile(temp_file, encoding:NSUTF8StringEncoding, error:nil)
+
     parser = MarkdownIt::Parser.new({ html: true, linkify: true, typographer: true })
     html = parser.render(content)
+
     css='https://raw.githubusercontent.com/sindresorhus/github-markdown-css/gh-pages/github-markdown.css'
     header = '<html><head><link rel="stylesheet" href="'+css+'"></head><body class="markdown-body">'
     footer = '</body></html>'
