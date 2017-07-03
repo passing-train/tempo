@@ -17,15 +17,22 @@ nag to get back to useful work.
 - [x] report: markdown
 - [x] merge refactoring from fork whazzup
 
+- [ ] reporting
+  - [ ] Database storage
+    - [ ] test cdq
+    - [ ] migration
+    - [ ] wrting
+    - [ ] reading
+  - [ ] report: csv export
+  - [ ] report: aggregate periods
+- [ ] setting: click on icon for ask
+- [ ] Menu bar icon, light up whan asking
+- [ ] Move to menu bar
+
 - [ ] markdown use ljust to beautify table
 - [ ] pdf export
 
-- [ ] setting: click on icon for ask
 
-- [ ] Move to menu bar
-- [ ] Menu bar icon, light up whan asking
-
-- [ ] Picture-taking: warn before taking: Say cheese
 
 - [ ] Shortcut to enter the same activity as last entry
 
@@ -33,10 +40,7 @@ nag to get back to useful work.
 
 - [ ] Smart auto focus system
 
-- [ ] Database storage
 
-- [ ] report: csv export
-- [ ] report: aggregate periods
 - [ ] report: monthly pictures
 
 - [ ] schedule: disable in the weekend
