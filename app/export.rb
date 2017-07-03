@@ -24,7 +24,7 @@ class Export
     row
   end
 
-  def interpret(keys = nil ,last_only = false)
+  def interpret(keys = nil, last_only = false)
     last_entry = nil
     block_total = 0
 
@@ -57,7 +57,7 @@ class Export
       row = interpret_add_key_val(row, keys, 'time_spent', block_total_display)
       row = interpret_add_key_val(row, keys, 'last_in_block', entry.last_in_block)
 
-      rows << row if !last_only || entry.last_in_block
+      rows << row if !last_only || entry.last_in_block?
 
       last_entry = entry
 
@@ -71,16 +71,26 @@ class Export
 
     rows = interpret
 
+
     if rows.length > 0
-      headers = rows[0].keys
-      rows.unshift(headers)
+
+      rows_arr = []
+      rows_arr << rows[0].keys
+
+      rows.each do | row |
+        rows_arr << row.values
+      end
+
+#      rows_arr = rows.values
+#      headers = rows[0].keys
+#      rows_arr.unshift(headers)
 
       panel = NSSavePanel.savePanel
       panel.setNameFieldStringValue "time-entries.csv"
       panel.beginWithCompletionHandler(
         lambda do | result |
           if result == NSFileHandlingPanelOKButton
-            rows.to_csv.writeToFile(panel.URL, atomically:true, encoding:NSUTF8StringEncoding, error:nil)
+            rows_arr.to_csv.writeToFile(panel.URL, atomically:true, encoding:NSUTF8StringEncoding, error:nil)
           end
         end
       )
@@ -130,6 +140,8 @@ class Export
     handle << create_markdown_header('Time Report', keys)
 
     rows = interpret(keys, true)
+
+    mp rows
 
     rows.each do | row |
       handle << create_markdown_table_row(keys,row)
