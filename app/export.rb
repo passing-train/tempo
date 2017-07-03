@@ -81,10 +81,6 @@ class Export
         rows_arr << row.values
       end
 
-#      rows_arr = rows.values
-#      headers = rows[0].keys
-#      rows_arr.unshift(headers)
-
       panel = NSSavePanel.savePanel
       panel.setNameFieldStringValue "time-entries.csv"
       panel.beginWithCompletionHandler(
@@ -140,8 +136,6 @@ class Export
     handle << create_markdown_header('Time Report', keys)
 
     rows = interpret(keys, true)
-
-    mp rows
 
     rows.each do | row |
       handle << create_markdown_table_row(keys,row)
