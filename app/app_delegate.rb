@@ -1,4 +1,7 @@
 class AppDelegate
+
+  include CDQ
+
   PREFS_DEFAULTS = {
     'AskInterval' => 20,
     'TakePictures' => NSOnState
@@ -18,6 +21,7 @@ class AppDelegate
              "What\'s on your mind?"]
 
   def applicationDidFinishLaunching(notification)
+    cdq.setup
 
     @last_answer = ''
 
@@ -32,13 +36,13 @@ class AppDelegate
     setDateFormats
     prep_log
     prep_log_md
-    log('[Starting up (rubymotion)]')
     buildMenu
+
     ask_and_schedule
   end
 
+
   def applicationShouldOpenUntitledFile sender
-    ask_early
     return false;
   end
 
@@ -48,15 +52,14 @@ class AppDelegate
     @prefs_controller.window.orderFrontRegardless
   end
 
-
   def ask_early
     if @timer
       @timer.fire
     else
-#      alert = NSAlert.alertWithMessageText('The prompt is already being displayed',
-#                      defaultButton: "OK", alternateButton: nil,
-#                      otherButton: nil, informativeTextWithFormat: "")
-#      alert.runModal
+      #      alert = NSAlert.alertWithMessageText('The prompt is already being displayed',
+      #                      defaultButton: "OK", alternateButton: nil,
+      #                      otherButton: nil, informativeTextWithFormat: "")
+      #      alert.runModal
     end
   end
 
@@ -67,8 +70,8 @@ class AppDelegate
       ask
     rescue => e
       alert = NSAlert.alertWithMessageText('Problem asking for input: ' + e.message,
-                      defaultButton: "OK", alternateButton: nil,
-                      otherButton: nil, informativeTextWithFormat: "")
+                                           defaultButton: "OK", alternateButton: nil,
+                                           otherButton: nil, informativeTextWithFormat: "")
       alert.runModal
     end
 
@@ -93,8 +96,11 @@ class AppDelegate
 
     picked = PROMPTS[rand*PROMPTS.length]
 
-    @last_answer = input(picked, @last_answer)
-    log(@last_answer)
+    answer = input(picked, @last_answer)
+    if answer
+      @last_answer = answer
+      log(@last_answer)
+    end
   end
 
   def prep_log_md(file = File.join(@snippet_path, 'snippets.md'))
@@ -147,11 +153,17 @@ class AppDelegate
   def log(msg)
     log_txt msg
     log_md msg
+    coredata msg
   end
 
   def log_txt(msg)
     @snippets << Time.now.to_s << ': ' << msg << "\n"
     @snippets.flush
+  end
+
+  def coredata(msg)
+    Entry.create(title: msg)
+    cdq.save
   end
 
   def input(prompt, default_value="")
@@ -165,12 +177,27 @@ class AppDelegate
     alert.window.makeFirstResponder(input_field)
     button = alert.runModal
 
-    answer = input_field.stringValue if button == 1
-    (answer.nil? || answer.empty?) ? '...' : answer
+    input_field.stringValue if button == 1
   end
 
   def export_csv_log
-    p 'export log'
+    rows = []
+    Entry.all.sort_by('created_at').each do |entry|
+      rows << [entry.created_at, entry.title]
+    end
+
+    panel = NSSavePanel.savePanel
+
+    panel.setNameFieldStringValue "time-entries.csv"
+
+    panel.beginWithCompletionHandler(
+      lambda do | result |
+        if result == NSFileHandlingPanelOKButton
+          rows.to_csv.writeToFile(panel.URL, atomically:true, encoding:NSUTF8StringEncoding, error:nil)
+        end
+      end
+    )
+
   end
 
   def reset_log
@@ -190,8 +217,6 @@ class AppDelegate
     end
 
     prep_log_md
-
-
 
   end
 
