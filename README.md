@@ -11,46 +11,6 @@ Whazzup is a OS X application which asks on a regular (but slightly
 random) schedule what you're doing. Used for time-tracking, and a subtle
 nag to get back to useful work.
 
-## TODO
-- [x] Preference: ask-interval
-- [x] Preference: take picture, yes/no
-- [x] report: markdown
-- [x] merge refactoring from fork whazzup
-
-- [ ] reporting
-  - [ ] Database storage
-    - [ ] test cdq
-    - [ ] migration
-    - [ ] wrting
-    - [ ] reading
-  - [ ] report: csv export
-  - [ ] report: aggregate periods
-- [ ] setting: click on icon for ask
-- [ ] Menu bar icon, light up whan asking
-- [ ] Move to menu bar
-
-- [ ] markdown use ljust to beautify table
-- [ ] pdf export
-
-
-
-- [ ] Shortcut to enter the same activity as last entry
-
-- [ ] Glopal shortcut https://github.com/Clipy/Magnet
-
-- [ ] Smart auto focus system
-
-
-- [ ] report: monthly pictures
-
-- [ ] schedule: disable in the weekend
-
-- [ ] disable function: for an x period
-- [ ] disable function: untill a moment
-- [ ] disable function: at the first workday
-
-
-
 ## In de app store
 
 - maak een bundle id aan in de developer-omgeving
