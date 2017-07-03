@@ -16,9 +16,13 @@ class Ask
              "What\'s happening?",
              "What\'s on your mind?"]
   def init
-    @last_answer = ''
-
+    reset_last
     self
+  end
+
+  def reset_last
+    @last_answer = ''
+    @last_time = nil
   end
 
   def ask_early
@@ -28,6 +32,7 @@ class Ask
   end
 
   def ask_and_schedule
+
     old_app = NSWorkspace.sharedWorkspace.frontmostApplication
     @timer = nil
     begin
@@ -73,8 +78,29 @@ class Ask
   end
 
   def log(msg)
+
+    if @last_time
+
+      last_entry =  Entry.last
+      now = NSDate::date
+
+      distanceBetweenDates = now.timeIntervalSinceDate(last_entry.created_at)
+      p distanceBetweenDates.to_i
+
+      last_entry.time_delta = distanceBetweenDates.to_i
+
+      if msg == last_entry.title
+        last_entry.last_in_block = 0
+      end
+
+      cdq.save
+    end
+
+
     Entry.create(title: msg)
     cdq.save
+
+    @last_time = NSDate::date
   end
 
 end

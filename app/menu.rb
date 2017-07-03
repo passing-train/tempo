@@ -2,6 +2,7 @@ class AppDelegate
   def buildMenu
     @mainMenu = NSMenu.new
 
+
     appName = NSBundle.mainBundle.infoDictionary['CFBundleName']
     addMenu(appName) do
       addItemWithTitle("About #{appName}", action: 'orderFrontStandardAboutPanel:', keyEquivalent: '')
@@ -18,8 +19,9 @@ class AppDelegate
 
     addMenu('File') do
       addItemWithTitle('Ask', action: 'ask_early', keyEquivalent: '!')
-      addItemWithTitle('Show Time Log', action: 'show_log', keyEquivalent: 'i')
-      addItemWithTitle('Export Log to CSV', action: 'export_csv_log', keyEquivalent: 'i')
+      addItemWithTitle('Show Flat Time Log', action: 'show_flat_log', keyEquivalent: 'i')
+      addItemWithTitle('Show Cumulated Time Log', action: 'show_cum_log', keyEquivalent: 'l')
+      addItemWithTitle('Export Log to CSV', action: 'export_csv_log', keyEquivalent: '')
       addItemWithTitle('Clear log', action: 'reset_log', keyEquivalent: 'i')
     end
 

@@ -34,11 +34,27 @@ class AppDelegate
     @export.export_csv_log
   end
 
-  def show_log
+  def ask_early
+    @ask.ask_early
+  end
+
+  def logweb_controller_action action
     @logweb_controller ||= LogwebWindowController.alloc.init
-    @logweb_controller.update_webview()
+    @logweb_controller.send(action)
     @logweb_controller.showWindow(self)
     @logweb_controller.window.orderFrontRegardless
+  end
+
+  def show_flat_log
+    logweb_controller_action 'update_webview_with_flat_log'
+  end
+
+  def show_cum_log
+    logweb_controller_action 'update_webview_with_cum_log'
+#    @logweb_controller ||= LogwebWindowController.alloc.init
+#    @logweb_controller.update_webview()
+#    @logweb_controller.showWindow(self)
+#    @logweb_controller.window.orderFrontRegardless
   end
 
   def reset_log
@@ -46,6 +62,7 @@ class AppDelegate
       entry.destroy
     end
     cdq.save
+    @ask.reset_last
   end
 
 end

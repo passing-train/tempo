@@ -17,50 +17,148 @@ class Export
     @timeFormat.setDateFormat " HH:mm"
   end
 
-
-  def export_csv_log
-    rows = []
-    Entry.all.sort_by('created_at').each do |entry|
-      rows << [entry.created_at, entry.title]
+  def interpret_add_key_val(row, keys, key, val)
+    if(!keys.kind_of?(Array)||keys.include?(key))
+      row[key] = val
     end
-
-    panel = NSSavePanel.savePanel
-
-    panel.setNameFieldStringValue "time-entries.csv"
-
-    panel.beginWithCompletionHandler(
-      lambda do | result |
-        if result == NSFileHandlingPanelOKButton
-          rows.to_csv.writeToFile(panel.URL, atomically:true, encoding:NSUTF8StringEncoding, error:nil)
-        end
-      end
-    )
+    row
   end
 
-  def create_markdown_file(file = File.join(@snippet_path, 'snippets_temp.md'))
+  def interpret(keys = nil ,last_only = false)
+    last_entry = nil
+    block_total = 0
 
-#    file = File.join(@snippet_path, 'snippets_temp.md') if file == nil
+    rows = []
+
+    Entry.all.sort_by('created_at').each do |entry|
+
+      row = {}
+
+      if last_entry.nil? || entry.title != last_entry.title || last_entry.last_in_block?
+        block_total = 0
+      end
+
+      block_total += entry.time_delta
+
+      if entry.last_in_block?
+        block_total_display = TimeUtility::format_time_from_seconds block_total
+        block_total_seconds = block_total
+      else
+        block_total_display = ''
+        block_total_seconds = 0
+      end
+
+      row = interpret_add_key_val(row, keys, 'created_at', entry.created_at)
+      row = interpret_add_key_val(row, keys, 'day', @dayFormat.stringFromDate(entry.created_at))
+      row = interpret_add_key_val(row, keys, 'date', @dateFormat.stringFromDate(entry.created_at))
+      row = interpret_add_key_val(row, keys, 'time', @timeFormat.stringFromDate(entry.created_at))
+      row = interpret_add_key_val(row, keys, 'activity', entry.title)
+      row = interpret_add_key_val(row, keys, 'time_delta', entry.time_delta)
+      row = interpret_add_key_val(row, keys, 'time_spent', block_total_display)
+      row = interpret_add_key_val(row, keys, 'last_in_block', entry.last_in_block)
+
+      rows << row if !last_only || entry.last_in_block
+
+      last_entry = entry
+
+    end
+
+    rows
+
+  end
+
+  def export_csv_log
+
+    rows = interpret
+
+    if rows.length > 0
+      headers = rows[0].keys
+      rows.unshift(headers)
+
+      panel = NSSavePanel.savePanel
+      panel.setNameFieldStringValue "time-entries.csv"
+      panel.beginWithCompletionHandler(
+        lambda do | result |
+          if result == NSFileHandlingPanelOKButton
+            rows.to_csv.writeToFile(panel.URL, atomically:true, encoding:NSUTF8StringEncoding, error:nil)
+          end
+        end
+      )
+
+    else
+      alert = NSAlert.alloc.init
+      alert.setMessageText  "Cannot export"
+      alert.setInformativeText "There are not entries."
+      alert.addButtonWithTitle "Ok"
+      alert.runModal
+    end
+  end
+
+  def create_markdown_header(title, keys)
+    header = "# #{title}\n"
+    header += "\n"
+
+    header += "| "
+    keys.each do | col |
+      header += col + " |"
+    end
+    header += " \n|"
+
+    keys.each do | col |
+      header += "--------|"
+    end
+    header += " |\n"
+
+  end
+
+  def create_markdown_table_row(keys, row)
+    mdrow = "| "
+    keys.each do | col |
+      mdrow += row[col] + " |"
+    end
+    mdrow += " \n"
+  end
+
+
+  def create_cumulated_markdown_file(file = File.join(@snippet_path, 'snippets_temp_cum.md'))
 
     Motion::FileUtils.rm(file) if File.exist?(file)
 
-    snippets_md ||= open(file, 'ab')
-    snippets_md << "# Time report\n"
-    snippets_md << "\n"
-    snippets_md << "| date       | day       | time     | activity                                 |\n"
-    snippets_md << "|------------|-----------|----------|------------------------------------------|\n"
+    handle ||= open(file, 'ab')
 
-    Entry.all.sort_by('created_at').each do |entry|
+    keys = ['date', 'day', 'activity','time_spent']
+    handle << create_markdown_header('Time Report', keys)
 
-      date = @dateFormat.stringFromDate entry.created_at
-      day = @dayFormat.stringFromDate entry.created_at
-      time = @timeFormat.stringFromDate entry.created_at
+    rows = interpret(keys, true)
 
-      snippets_md << "| #{date} | #{day} | #{time} | #{entry.title}                                  |\n"
+    rows.each do | row |
+      handle << create_markdown_table_row(keys,row)
     end
 
-    snippets_md.flush
+    handle.flush
 
-    return file
+    file
+  end
+
+
+  def create_markdown_file(file = File.join(@snippet_path, 'snippets_temp.md'))
+
+    Motion::FileUtils.rm(file) if File.exist?(file)
+
+    handle ||= open(file, 'ab')
+
+    keys = ['date', 'day','time', 'activity']
+    handle << create_markdown_header('Time Report', keys)
+
+    rows = interpret(keys, false)
+
+    rows.each do | row |
+      handle << create_markdown_table_row(keys,row)
+    end
+
+    handle.flush
+
+    file
   end
 
 end

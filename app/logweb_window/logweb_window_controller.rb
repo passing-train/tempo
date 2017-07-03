@@ -23,10 +23,17 @@ class LogwebWindowController < NSWindowController
     end
   end
 
-  def update_webview
+  def update_webview_with_cum_log
+    temp_file = NSApp.delegate.export.create_cumulated_markdown_file
+    update_webview_with_markdown_file temp_file
+  end
 
+  def update_webview_with_flat_log
     temp_file = NSApp.delegate.export.create_markdown_file
+    update_webview_with_markdown_file temp_file
+  end
 
+  def update_webview_with_markdown_file temp_file
     content = NSString.stringWithContentsOfFile(temp_file, encoding:NSUTF8StringEncoding, error:nil)
 
     parser = MarkdownIt::Parser.new({ html: true, linkify: true, typographer: true })
