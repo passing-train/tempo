@@ -6,6 +6,7 @@ class LogwebWindowLayout < MK::WindowLayout
       title "WassUp Time Log"
 
       add NSButton, :button_close
+      add NSButton, :button_print
 
       @web_view = WebView.alloc.initWithFrame(NSMakeRect(0, 0, 480, 360))
       @web_view.setAutoresizingMask(NSViewMinXMargin|
@@ -36,7 +37,22 @@ class LogwebWindowLayout < MK::WindowLayout
       bottom.equals(:superview, :bottom).minus(20)
     end
 
-    title "OK"
+    title "Close"
+
+  end
+
+  def button_print_style
+    bezel_style NSRoundedBezelStyle
+    key_equivalent "\p"
+
+    constraints do
+      width 100
+      height 20
+      right.equals(:button_close, :left).minus(20)
+      bottom.equals(:superview, :bottom).minus(20)
+    end
+
+    title "Print"
 
   end
 

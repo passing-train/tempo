@@ -31,3 +31,4 @@ task :installapp do
 #  print "cp -av '#{path}' '/Applications/'"
   system "cp -av '#{path}' '/Applications/'"
 end
+task :"build:simulator" => :"schema:build"

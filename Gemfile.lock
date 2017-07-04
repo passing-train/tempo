@@ -1,10 +1,22 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    activesupport (4.2.8)
+      i18n (~> 0.7)
+      minitest (~> 5.1)
+      thread_safe (~> 0.3, >= 0.3.4)
+      tzinfo (~> 1.1)
+    builder (3.2.3)
+    cdq (1.0.8)
+      motion-yaml (= 1.4)
+      ruby-xcdm (>= 0.0.9)
     dbt (1.2.0)
+    i18n (0.8.4)
     linkify-it-rb (1.2.0)
       uc.micro-rb (~> 1.0)
     mdurl-rb (1.0.0.3)
+    minitest (5.10.2)
+    motion-csv (0.0.2)
     motion-fileutils (0.1.1)
     motion-kit (1.1.1)
       dbt (~> 1.1, >= 1.1.5)
@@ -12,16 +24,29 @@ GEM
       linkify-it-rb (~> 1.2)
       mdurl-rb (~> 1.0)
       uc.micro-rb (~> 1.0)
+    motion-yaml (1.4)
+    motion_print (1.2.0)
+    plist (3.2.0)
     rake (10.1.0)
+    ruby-xcdm (0.0.10)
+      activesupport (~> 4.1)
+      builder (~> 3.2)
+      plist (~> 3.1)
+    thread_safe (0.3.6)
+    tzinfo (1.2.3)
+      thread_safe (~> 0.1)
     uc.micro-rb (1.0.0)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
+  cdq
+  motion-csv
   motion-fileutils
   motion-kit
   motion-markdown-it
+  motion_print
   rake
 
 BUNDLED WITH
