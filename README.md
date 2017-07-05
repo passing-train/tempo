@@ -1,12 +1,3 @@
-# Todo AutoCorrect
-
-- [x] enter should close popup and not submit alert
-- [x] multiple alerts
-- [x] bij geen match foutmelding
-- [x] bredere popover
-- [x] Case sensitive search
-- [ ] code cleanup
-
 # Commercial Time Tracking App for Mac
 
 ## Naming App Store

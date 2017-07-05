@@ -1,22 +1,5 @@
-#module AutoCompleteTableViewDelegate
-#
-#  def textField(somevar, completions, forPartialWordRange, indexOfSelectedItem)
-#    ''
-#  end
-#end
-#
-
-#@objc protocol AutoCompleteTableViewDelegate:NSObjectProtocol{
-#    func textField(_ textField:NSTextField,completions words:[String],forPartialWordRange charRange:NSRange,indexOfSelectedItem index:Int) ->[String]
-#    @objc optional func didSelectItem(_ selectedItem: String)
-#}
-
-
-
-
 class Ask
 
-#  include AutoCompleteTableViewDelegate
   include CDQ
 
   PROMPTS = ["What\'re you working on?",
@@ -83,8 +66,6 @@ class Ask
   end
 
   def input(prompt, default_value="")
-    #    alert = NSAlert.alertWithMessageText(prompt, defaultButton: "OK", alternateButton: "Cancel", otherButton: nil, informativeTextWithFormat: "")
-    #@alert ||= NSAlert.alloc.init
     @alert = NSAlert.alloc.init
     @alert.addButtonWithTitle("Add entry")
     @alert.addButtonWithTitle("Cancel")
@@ -96,8 +77,6 @@ class Ask
     @okbutton.setTarget self
     @okbutton.setAction "verifyPopover:"
     @alert.setMessageText(prompt)
-
-    #alert.addButtonWithTitle(prompt, defaultButton: "OK", alternateButton: "Cancel", otherButton: nil, informativeTextWithFormat: "")
 
     @input_field = WuAutoCompleteTextField.alloc.initWithFrame(NSMakeRect(0, 0, 200, 24))
     @input_field.awakeFromNib
@@ -113,7 +92,6 @@ class Ask
     @alert.window.makeFirstResponder(@input_field)
     buttonClicked = @alert.runModal
 
-    p buttonClicked
     @input_field.tableViewDelegate = self
     @input_field.stringValue if buttonClicked == 1000
   end
@@ -126,13 +104,6 @@ class Ask
     end
   end
 
-#  def didSelectItem(somevar, selectedItem: aSelectedItem)
-#    if aSelectedItem
-#      input_field.stringValue = aSelectedItem
-#    end
-#    NSLog("%@", aSelectedItem)
-#  end
-
   def textField(textField, completions:somecompletions, forPartialWordRange:partialWordRange, indexOfSelectedItem:theIndexOfSelectedItem)
 
     matches = Entry.where(:title).contains(textField.stringValue,NSCaseInsensitivePredicateOption).map(&:title).uniq
@@ -141,14 +112,12 @@ class Ask
 
   def log(msg)
 
-#    p msg
     if @last_time
 
       last_entry =  Entry.last
       now = NSDate::date
 
       distanceBetweenDates = now.timeIntervalSinceDate(last_entry.created_at)
-#      p distanceBetweenDates.to_i
 
       last_entry.time_delta = distanceBetweenDates.to_i
 

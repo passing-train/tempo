@@ -18,23 +18,15 @@ Motion::Project::App.setup do |app|
   app.icon = "AppIcon.icns"
 
   app.frameworks << 'webkit'
-  #app.frameworks << 'AutoCompleteTextFieldClassic'
   app.identifier = 'com.lingewoud.wassup'
   app.codesign_certificate = '3rd Party Mac Developer Application: Lingewoud (3WQRKDPTP8)'
 
   app.entitlements['com.apple.security.app-sandbox'] = true
-
-  app.pods do
-    use_frameworks!
-    pod 'AutoCompleteTextFieldClassic', :git => 'https://github.com/mipmip/AutoCompleteTextField.git'
-  end
 end
 
 desc "installapp"
 task :installapp do
   path = `find build -name "#{App.config.name}.app"|grep Development`.strip
-#  print path
-#  print "cp -av '#{path}' '/Applications/'"
   system "cp -av '#{path}' '/Applications/'"
 end
 task :"build:simulator" => :"schema:build"

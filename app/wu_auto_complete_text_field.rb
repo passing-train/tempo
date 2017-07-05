@@ -1,28 +1,38 @@
 class AutoCompleteTableRowView < NSTableRowView
+=begin
+This is for the blue background. not working
+  def drawBackgroundInRect(dirtyRect)
+    p "hallo3"
+    if (!@selected)
+      NSColor.clearColor.set
+    else
+      #NSColor.selectedMenuItemColor.set
+      NSColor.blueColor.set
+    end
+    NSRectFill(dirtyRect)
+  end
+
+  def setSelected(selected)
+    p 'ha;l;ol09'
+
+    super selected
+    setNeedsDisplay(true)
+
+  end
 
   def drawSelectionIn(dirtyRect)
-    if self.selectionHighlightStyle != NSTableViewSelectionHighlightStyleNone
+    p selectionHighlightStyle
+    p "hallo2"
+    #if selectionHighlightStyle != NSTableViewSelectionHighlightStyleNone
       selectionRect = NSInsetRect(self.bounds, 2.5, 2.5)
       NSColor.selectedMenuItemColor.setStroke()
       NSColor.selectedMenuItemColor.setFill()
       selectionPath = NSBezierPath.bezierPathWithRoundedRect(selectionRect, xRadius: 0.0, yRadius: 0.0)
       selectionPath.fill()
       selectionPath.stroke()
-    end
+    #end
   end
-
-
-#    open override var interiorBackgroundStyle:NSBackgroundStyle{
-#        get{
-#            if self.isSelected {
-#                return NSBackgroundStyle.dark
-#            }
-#            else{
-#                return NSBackgroundStyle.light
-#            }
-#        }
-#    }
-
+=end
 end
 
 
@@ -45,13 +55,13 @@ class WuAutoCompleteTextField < NSTextField
     tableView = NSTableView.alloc.initWithFrame CGRectZero
 
     tableView.setSelectionHighlightStyle NSTableViewSelectionHighlightStyleRegular
+#    tableView.setSelectionHighlightStyle NSTableViewSelectionHighlightStyleSourceList
     tableView.setBackgroundColor NSColor.clearColor
     tableView.setRowSizeStyle NSTableViewRowSizeStyleSmall
     tableView.setIntercellSpacing NSMakeSize(10.0, 0.0)
     tableView.setHeaderView nil
     tableView.setRefusesFirstResponder true
     tableView.setTarget self
-    #    tableView.setDoubleAction = #selector(AutoCompleteTextField.insert(_:))
     tableView.addTableColumn(column1)
     tableView.setDelegate self
     tableView.setDataSource self
@@ -70,7 +80,6 @@ class WuAutoCompleteTextField < NSTextField
     contentViewController.view = contentView
 
     @autoCompletePopover = NSPopover.alloc.init
-    #    @autoCompletePopover.setAppearance  NSAppearance.appearanceNamed(NSAppearanceNameVibrantLight)
     @autoCompletePopover.animates = false
     @autoCompletePopover.contentViewController = contentViewController
     @autoCompletePopover.becomeFirstResponder
@@ -99,14 +108,11 @@ class WuAutoCompleteTextField < NSTextField
         return #skip default behavior
       end
     when 36, 48, 49 # return, tab, space
-      p 'event'
-      p event
       if isShow
         insert(self)
       end
       return #//skip default behavior
     else
-      #break
     end
 
     super(event)
@@ -146,9 +152,9 @@ class WuAutoCompleteTextField < NSTextField
 
     if selectedRow >= 0 && selectedRow < matchCount
       setStringValue @matches[selectedRow]
-      #if @tableViewDelegate.respondsToSelector("didSelectItem:selectedItem:")
-        #@tableViewDelegate.didSelectItem(stringValue)
-      #end
+      if @tableViewDelegate.respondsToSelector("didSelectItem:selectedItem:")
+        @tableViewDelegate.didSelectItem(stringValue)
+      end
     end
 
     @autoCompletePopover.close()
@@ -157,9 +163,7 @@ class WuAutoCompleteTextField < NSTextField
   def completionsForPartialWordRange(charRange, indexOfSelectedItem: index)
 
     if @tableViewDelegate.respondsToSelector("textField:completions:forPartialWordRange:indexOfSelectedItem:")
-
       return self.tableViewDelegate.textField(self, completions:[], forPartialWordRange: charRange, indexOfSelectedItem: index)
-
     end
 
     return []
@@ -167,24 +171,18 @@ class WuAutoCompleteTextField < NSTextField
 
   ### popover delegate
   def popoverWillShow(notification)
-
-    p notification
     numberOfRows = [@autoCompleteTableView.numberOfRows, maxResults].min
     height = (@autoCompleteTableView.rowHeight + @autoCompleteTableView.intercellSpacing.height) * numberOfRows.to_f + 2 * 0.0
     frame = NSMakeRect(0, 0, @popOverWidth, height)
 
     @autoCompleteTableView.enclosingScrollView.frame = NSInsetRect(frame, @popOverPadding, @popOverPadding)
     @autoCompletePopover.contentSize = NSMakeSize(NSWidth(frame), NSHeight(frame))
-
-  end
-
-  def popoverWillClose(notification)
-    p notification
   end
 
   ### NSTableView delegate
   def tableView(tableView, rowViewForRow:row)
-    return AutoCompleteTableRowView.alloc.init
+    p 'hallo'
+    AutoCompleteTableRowView.alloc.init
   end
 
   def tableView(tableView, viewForTableColumn:tableColumn, row:myrow)
@@ -213,7 +211,6 @@ class WuAutoCompleteTextField < NSTextField
     cellView
   end
 
-  #Must implement numberOfRowsInTableView: and tableView:objectValueForTableColumn:row
   def numberOfRowsInTableView(tableView)
     if @matches.nil?
       0
