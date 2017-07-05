@@ -13,8 +13,6 @@ This is for the blue background. not working
   end
 
   def setSelected(selected)
-    p 'ha;l;ol09'
-
     super selected
     setNeedsDisplay(true)
 
@@ -181,7 +179,6 @@ class WuAutoCompleteTextField < NSTextField
 
   ### NSTableView delegate
   def tableView(tableView, rowViewForRow:row)
-    p 'hallo'
     AutoCompleteTableRowView.alloc.init
   end
 
