@@ -135,21 +135,20 @@ class Ask
 
   def textField(textField, completions:somecompletions, forPartialWordRange:partialWordRange, indexOfSelectedItem:theIndexOfSelectedItem)
 
-    matches = Entry.where(:title).contains(textField.stringValue).map(&:title).uniq
-    mp matches
+    matches = Entry.where(:title).contains(textField.stringValue,NSCaseInsensitivePredicateOption).map(&:title).uniq
     matches
   end
 
   def log(msg)
 
-    p msg
+#    p msg
     if @last_time
 
       last_entry =  Entry.last
       now = NSDate::date
 
       distanceBetweenDates = now.timeIntervalSinceDate(last_entry.created_at)
-      p distanceBetweenDates.to_i
+#      p distanceBetweenDates.to_i
 
       last_entry.time_delta = distanceBetweenDates.to_i
 

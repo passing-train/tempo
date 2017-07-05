@@ -4,7 +4,7 @@
 - [x] multiple alerts
 - [x] bij geen match foutmelding
 - [x] bredere popover
-- [ ] Case sensitive search
+- [x] Case sensitive search
 - [ ] code cleanup
 
 # Commercial Time Tracking App for Mac
