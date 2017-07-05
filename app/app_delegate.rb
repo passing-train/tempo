@@ -51,10 +51,6 @@ class AppDelegate
 
   def show_cum_log
     logweb_controller_action 'update_webview_with_cum_log'
-#    @logweb_controller ||= LogwebWindowController.alloc.init
-#    @logweb_controller.update_webview()
-#    @logweb_controller.showWindow(self)
-#    @logweb_controller.window.orderFrontRegardless
   end
 
   def reset_log

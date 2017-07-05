@@ -1,6 +1,22 @@
+#module AutoCompleteTableViewDelegate
+#
+#  def textField(somevar, completions, forPartialWordRange, indexOfSelectedItem)
+#    ''
+#  end
+#end
+#
+
+#@objc protocol AutoCompleteTableViewDelegate:NSObjectProtocol{
+#    func textField(_ textField:NSTextField,completions words:[String],forPartialWordRange charRange:NSRange,indexOfSelectedItem index:Int) ->[String]
+#    @objc optional func didSelectItem(_ selectedItem: String)
+#}
+
+
+
+
 class Ask
 
-
+#  include AutoCompleteTableViewDelegate
   include CDQ
 
   PROMPTS = ["What\'re you working on?",
@@ -38,6 +54,7 @@ class Ask
     begin
       ask
     rescue => e
+      NSLog("Error %@", e)
       alert = NSAlert.alertWithMessageText('Problem asking for input: ' + e.message,
                                            defaultButton: "OK", alternateButton: nil,
                                            otherButton: nil, informativeTextWithFormat: "")
@@ -65,8 +82,16 @@ class Ask
 
   def input(prompt, default_value="")
     alert = NSAlert.alertWithMessageText(prompt, defaultButton: "OK", alternateButton: "Cancel", otherButton: nil, informativeTextWithFormat: "")
-    input_field = NSTextField.alloc.initWithFrame(NSMakeRect(0, 0, 200, 24))
+
+    #@AutoCompleteTableViewDelegate
+
+    input_field = AutoCompleteTextField.alloc.initWithFrame(NSMakeRect(0, 0, 200, 24))
+    input_field.awakeFromNib
     input_field.stringValue = default_value
+
+    input_field.tableViewDelegate = self
+    input_field.delegate = self
+
     alert.accessoryView = input_field
     alert.window.collectionBehavior = NSWindowCollectionBehaviorCanJoinAllSpaces
     alert.window.level = NSFloatingWindowLevel
@@ -76,6 +101,61 @@ class Ask
 
     input_field.stringValue if button == 1
   end
+
+  def didSelectItem(somevar, selectedItem: aSelectedItem)
+    input_field.stringValue = aSelectedItem
+    NSLog("%@", aSelectedItem)
+  end
+
+  def textField(textField, completions:somecompletions, forPartialWordRange:partialWordRange, indexOfSelectedItem:theIndexOfSelectedItem)
+
+    NSLog('text:%@',textField.stringValue)
+    matches = ['hallo' , 'dag']
+    matches
+  end
+
+#  def textField(somevar, completions, forPartialWordRange, indexOfSelectedItem)
+#    NSLog('hallo')
+#    matches = ['hallo' , 'dag']
+#    matches
+#  end
+=begin
+      func textField(_ textField: NSTextField, completions words: [String], forPartialWordRange charRange: NSRange, indexOfSelectedItem index: Int) -> [String] {
+        var matches = [String]()
+        //先按简拼  再按全拼  并保留上一次的match
+        for station in stationData.allStation
+        {
+            if let _ = station.FirstLetter.range(of: textField.stringValue, options: NSString.CompareOptions.anchored)
+            {
+                matches.append(station.Name)
+            }
+        }
+        if(matches.count == 0)
+        {
+            for station in stationData.allStation
+            {
+                if let _ = station.Spell.range(of: textField.stringValue, options: NSString.CompareOptions.anchored)
+                {
+                    matches.append(station.Name)
+                }
+            }
+        }
+        //再按汉字
+        if(matches.count == 0)
+        {
+            for station in stationData.allStation
+            {
+                if let _ = station.Name.range(of: textField.stringValue, options: NSString.CompareOptions.anchored)
+                {
+                    matches.append(station.Name)
+                }
+            }
+        }
+
+        return matches
+    }
+
+=end
 
   def log(msg)
 

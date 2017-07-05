@@ -1,0 +1,18 @@
+{
+  "name": "AutoCompleteTextFieldClassic",
+  "version": "1.0.4",
+  "license": "MIT",
+  "summary": "AutoCompleteTextField for OS X",
+  "homepage": "https://github.com/fancymax/AutoCompleteTextField",
+  "authors": "Max Lin",
+  "source": {
+    "git": "https://github.com/mipmip/AutoCompleteTextField.git",
+    "tag": "1.0.4"
+  },
+  "frameworks": "Foundation",
+  "requires_arc": true,
+  "platforms": {
+    "osx": "10.10"
+  },
+  "source_files": "AutoCompleteTextField.swift"
+}
