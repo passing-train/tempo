@@ -110,7 +110,7 @@ open class AutoCompleteTextField:NSTextField{
             if isShow{
                 self.autoCompleteTableView?.selectRowIndexes(IndexSet(integer: row + 1), byExtendingSelection: false)
                 self.autoCompleteTableView?.scrollRowToVisible((self.autoCompleteTableView?.selectedRow)!)
-//                self.insert(self)
+                self.insert(self)
                 return //skip default behavior
             }
 
@@ -173,6 +173,7 @@ open class AutoCompleteTextField:NSTextField{
         let index = 0
         self.matches = self.completionsForPartialWordRange(subStringRange, indexOfSelectedItem: index)
 
+        return
         if self.matches!.count > 0 {
             self.autoCompleteTableView?.reloadData()
             self.autoCompleteTableView?.selectRowIndexes(IndexSet(integer: index), byExtendingSelection: false)

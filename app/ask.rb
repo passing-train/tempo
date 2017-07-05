@@ -74,6 +74,7 @@ class Ask
 
     answer = input(picked, @last_answer)
 
+    p answer
     if answer
       @last_answer = answer
       log(@last_answer)
@@ -85,7 +86,9 @@ class Ask
 
     #@AutoCompleteTableViewDelegate
 
-    input_field = AutoCompleteTextField.alloc.initWithFrame(NSMakeRect(0, 0, 200, 24))
+#    input_field = NSTextField.alloc.initWithFrame(NSMakeRect(0, 0, 200, 24))
+    input_field = WuAutoCompleteTextField.alloc.initWithFrame(NSMakeRect(0, 0, 200, 24))
+    #input_field = AutoCompleteTextField.alloc.initWithFrame(NSMakeRect(0, 0, 200, 24))
     input_field.awakeFromNib
     input_field.stringValue = default_value
 
@@ -103,7 +106,9 @@ class Ask
   end
 
   def didSelectItem(somevar, selectedItem: aSelectedItem)
-    input_field.stringValue = aSelectedItem
+    if aSelectedItem
+      input_field.stringValue = aSelectedItem
+    end
     NSLog("%@", aSelectedItem)
   end
 

@@ -15,3 +15,8 @@ nbproject
 .sass-cache
 .idea
 .dat*
+vendor/Pods/.build
+vendor/Build
+vendor/build
+.build
+build-MacOSX
