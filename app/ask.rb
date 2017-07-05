@@ -75,6 +75,7 @@ class Ask
     answer = input(picked, @last_answer)
 
     p answer
+
     if answer
       @last_answer = answer
       log(@last_answer)
@@ -82,88 +83,66 @@ class Ask
   end
 
   def input(prompt, default_value="")
-    alert = NSAlert.alertWithMessageText(prompt, defaultButton: "OK", alternateButton: "Cancel", otherButton: nil, informativeTextWithFormat: "")
+    #    alert = NSAlert.alertWithMessageText(prompt, defaultButton: "OK", alternateButton: "Cancel", otherButton: nil, informativeTextWithFormat: "")
+    #@alert ||= NSAlert.alloc.init
+    @alert = NSAlert.alloc.init
+    @alert.addButtonWithTitle("Add entry")
+    @alert.addButtonWithTitle("Cancel")
 
-    #@AutoCompleteTableViewDelegate
+    @okbutton = @alert.buttons.objectAtIndex 0
+    @oldTarget = @okbutton.target
+    @oldAction = @okbutton.action
 
-#    input_field = NSTextField.alloc.initWithFrame(NSMakeRect(0, 0, 200, 24))
-    input_field = WuAutoCompleteTextField.alloc.initWithFrame(NSMakeRect(0, 0, 200, 24))
-    #input_field = AutoCompleteTextField.alloc.initWithFrame(NSMakeRect(0, 0, 200, 24))
-    input_field.awakeFromNib
-    input_field.stringValue = default_value
+    @okbutton.setTarget self
+    @okbutton.setAction "verifyPopover:"
+    @alert.setMessageText(prompt)
 
-    input_field.tableViewDelegate = self
-    input_field.delegate = self
+    #alert.addButtonWithTitle(prompt, defaultButton: "OK", alternateButton: "Cancel", otherButton: nil, informativeTextWithFormat: "")
 
-    alert.accessoryView = input_field
-    alert.window.collectionBehavior = NSWindowCollectionBehaviorCanJoinAllSpaces
-    alert.window.level = NSFloatingWindowLevel
-    alert.window.setInitialFirstResponder(input_field)
-    alert.window.makeFirstResponder(input_field)
-    button = alert.runModal
+    @input_field = WuAutoCompleteTextField.alloc.initWithFrame(NSMakeRect(0, 0, 200, 24))
+    @input_field.awakeFromNib
+    @input_field.stringValue = default_value
 
-    input_field.stringValue if button == 1
+    @input_field.tableViewDelegate = self
+    @input_field.delegate = self
+
+    @alert.accessoryView = @input_field
+    @alert.window.collectionBehavior = NSWindowCollectionBehaviorCanJoinAllSpaces
+    @alert.window.level = NSFloatingWindowLevel
+    @alert.window.setInitialFirstResponder(@input_field)
+    @alert.window.makeFirstResponder(@input_field)
+    buttonClicked = @alert.runModal
+
+    p buttonClicked
+    @input_field.tableViewDelegate = self
+    @input_field.stringValue if buttonClicked == 1000
   end
 
-  def didSelectItem(somevar, selectedItem: aSelectedItem)
-    if aSelectedItem
-      input_field.stringValue = aSelectedItem
+  def verifyPopover notification
+    unless @input_field.autoCompletePopover.isShown
+      @okbutton.setTarget @oldTarget
+      @okbutton.setAction @oldAction
+      @okbutton.performClick(@alert)
     end
-    NSLog("%@", aSelectedItem)
   end
+
+#  def didSelectItem(somevar, selectedItem: aSelectedItem)
+#    if aSelectedItem
+#      input_field.stringValue = aSelectedItem
+#    end
+#    NSLog("%@", aSelectedItem)
+#  end
 
   def textField(textField, completions:somecompletions, forPartialWordRange:partialWordRange, indexOfSelectedItem:theIndexOfSelectedItem)
 
-    NSLog('text:%@',textField.stringValue)
-    matches = ['hallo' , 'dag']
+    matches = Entry.where(:title).contains(textField.stringValue).map(&:title).uniq
+    mp matches
     matches
   end
 
-#  def textField(somevar, completions, forPartialWordRange, indexOfSelectedItem)
-#    NSLog('hallo')
-#    matches = ['hallo' , 'dag']
-#    matches
-#  end
-=begin
-      func textField(_ textField: NSTextField, completions words: [String], forPartialWordRange charRange: NSRange, indexOfSelectedItem index: Int) -> [String] {
-        var matches = [String]()
-        //先按简拼  再按全拼  并保留上一次的match
-        for station in stationData.allStation
-        {
-            if let _ = station.FirstLetter.range(of: textField.stringValue, options: NSString.CompareOptions.anchored)
-            {
-                matches.append(station.Name)
-            }
-        }
-        if(matches.count == 0)
-        {
-            for station in stationData.allStation
-            {
-                if let _ = station.Spell.range(of: textField.stringValue, options: NSString.CompareOptions.anchored)
-                {
-                    matches.append(station.Name)
-                }
-            }
-        }
-        //再按汉字
-        if(matches.count == 0)
-        {
-            for station in stationData.allStation
-            {
-                if let _ = station.Name.range(of: textField.stringValue, options: NSString.CompareOptions.anchored)
-                {
-                    matches.append(station.Name)
-                }
-            }
-        }
-
-        return matches
-    }
-
-=end
-
   def log(msg)
 
+    p msg
     if @last_time
 
       last_entry =  Entry.last

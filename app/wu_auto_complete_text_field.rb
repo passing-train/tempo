@@ -28,12 +28,13 @@ end
 
 
 class WuAutoCompleteTextField < NSTextField
-  attr_accessor :autoCompleteTableView
   attr_reader :maxResults
+  attr_accessor :autoCompleteTableView
   attr_accessor :tableViewDelegate
+  attr_accessor :autoCompletePopover
 
   def awakeFromNib
-    @popOverWidth = 110.0
+    @popOverWidth = 210.0
     @popOverPadding = 0.0
     @maxResults = 10
     @tableViewDelegate = nil
@@ -72,6 +73,7 @@ class WuAutoCompleteTextField < NSTextField
     #    @autoCompletePopover.setAppearance  NSAppearance.appearanceNamed(NSAppearanceNameVibrantLight)
     @autoCompletePopover.animates = false
     @autoCompletePopover.contentViewController = contentViewController
+    @autoCompletePopover.becomeFirstResponder
     @autoCompletePopover.delegate = self
 
     @matches = []
@@ -97,6 +99,8 @@ class WuAutoCompleteTextField < NSTextField
         return #skip default behavior
       end
     when 36, 48, 49 # return, tab, space
+      p 'event'
+      p event
       if isShow
         insert(self)
       end
@@ -105,12 +109,11 @@ class WuAutoCompleteTextField < NSTextField
       #break
     end
 
-#    super(theEvent)
+    super(event)
     complete(self)
   end
 
   def complete(sender)
-#    lengthOfWord = stringValue.characters.count
     lengthOfWord = stringValue.length
     subStringRange = NSMakeRange(0, lengthOfWord)
 
@@ -123,7 +126,6 @@ class WuAutoCompleteTextField < NSTextField
     index = 0
     @matches = completionsForPartialWordRange(subStringRange, indexOfSelectedItem: index)
 
-    p @matches
     if @matches.length > 0
 
       @autoCompleteTableView.reloadData()
@@ -144,9 +146,9 @@ class WuAutoCompleteTextField < NSTextField
 
     if selectedRow >= 0 && selectedRow < matchCount
       setStringValue @matches[selectedRow]
-      if @tableViewDelegate.respondsToSelector("didSelectItem:selectedItem:")
+      #if @tableViewDelegate.respondsToSelector("didSelectItem:selectedItem:")
         #@tableViewDelegate.didSelectItem(stringValue)
-      end
+      #end
     end
 
     @autoCompletePopover.close()
@@ -163,11 +165,10 @@ class WuAutoCompleteTextField < NSTextField
     return []
   end
 
-
   ### popover delegate
   def popoverWillShow(notification)
 
-#    numberOfRows = min(@autoCompleteTableView.numberOfRows, maxResults)
+    p notification
     numberOfRows = [@autoCompleteTableView.numberOfRows, maxResults].min
     height = (@autoCompleteTableView.rowHeight + @autoCompleteTableView.intercellSpacing.height) * numberOfRows.to_f + 2 * 0.0
     frame = NSMakeRect(0, 0, @popOverWidth, height)
@@ -175,6 +176,10 @@ class WuAutoCompleteTextField < NSTextField
     @autoCompleteTableView.enclosingScrollView.frame = NSInsetRect(frame, @popOverPadding, @popOverPadding)
     @autoCompletePopover.contentSize = NSMakeSize(NSWidth(frame), NSHeight(frame))
 
+  end
+
+  def popoverWillClose(notification)
+    p notification
   end
 
   ### NSTableView delegate

@@ -1,3 +1,12 @@
+# Todo AutoCorrect
+
+- [x] enter should close popup and not submit alert
+- [x] multiple alerts
+- [x] bij geen match foutmelding
+- [x] bredere popover
+- [ ] Case sensitive search
+- [ ] code cleanup
+
 # Commercial Time Tracking App for Mac
 
 ## Naming App Store
@@ -41,7 +50,7 @@ motion validate pim@lingewoud.nl
 
 ```
 
-### Missing required icons 
+### Missing required icons
 
 ```
 ✗ Missing required icons. The application bundle does not contain an icon in ICNS format, containing both a 512x512 and a 512x512@2x image. For further assistance, see the Apple Human Interface Guidelines.
