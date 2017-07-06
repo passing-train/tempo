@@ -133,7 +133,6 @@ class WuAutoCompleteTextField < NSTextField
     if @matches.length > 0
 
       @autoCompleteTableView.reloadData()
-      @autoCompleteTableView.selectRowIndexes(NSIndexSet.indexSetWithIndex(index), byExtendingSelection: false)
       @autoCompleteTableView.scrollRowToVisible(index)
 
       rect = visibleRect
