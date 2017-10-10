@@ -21,6 +21,7 @@ class AppDelegate
       addItemWithTitle('Ask', action: 'ask_early', keyEquivalent: '!')
       addItemWithTitle('Show Flat Time Log', action: 'show_flat_log', keyEquivalent: 'i')
       addItemWithTitle('Show Cumulated Time Log', action: 'show_cum_log', keyEquivalent: 'l')
+      addItemWithTitle('Show Day Totals Log', action: 'show_day_totals_log', keyEquivalent: 'd')
       addItemWithTitle('Export Log to CSV', action: 'export_csv_log', keyEquivalent: '')
       addItemWithTitle('Clear log', action: 'reset_log', keyEquivalent: 'i')
     end

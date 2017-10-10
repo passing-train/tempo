@@ -53,6 +53,10 @@ class AppDelegate
     logweb_controller_action 'update_webview_with_cum_log'
   end
 
+  def show_day_totals_log
+    logweb_controller_action 'update_webview_with_day_totals'
+  end
+
   def reset_log
     Entry.all.each do |entry|
       entry.destroy

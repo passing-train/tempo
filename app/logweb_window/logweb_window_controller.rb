@@ -16,7 +16,6 @@ class LogwebWindowController < NSWindowController
       @button_print.target = self
       @button_print.action = 'printContent:'
 
-
       @web_view = @layout.get(:web_view)
       @web_view.setFrameLoadDelegate self
 
@@ -25,6 +24,11 @@ class LogwebWindowController < NSWindowController
 
   def update_webview_with_cum_log
     temp_file = NSApp.delegate.export.create_cumulated_markdown_file
+    update_webview_with_markdown_file temp_file
+  end
+
+  def update_webview_with_day_totals
+    temp_file = NSApp.delegate.export.create_cumulated_daytotals_markdown_file
     update_webview_with_markdown_file temp_file
   end
 
