@@ -33,11 +33,16 @@ class Ask
   def ask_and_schedule
 
     old_app = NSWorkspace.sharedWorkspace.frontmostApplication
+
+    NSRunningApplication.currentApplication.activateWithOptions(NSApplicationActivateIgnoringOtherApps)
+
     @timer = nil
     begin
       ask
     rescue => e
       NSLog("Error %@", e)
+      NSRunningApplication.currentApplication.activateWithOptions(NSApplicationActivateIgnoringOtherApps)
+      NSApp.activateIgnoringOtherApps
       alert = NSAlert.alertWithMessageText('Problem asking for input: ' + e.message,
                                            defaultButton: "OK", alternateButton: nil,
                                            otherButton: nil, informativeTextWithFormat: "")

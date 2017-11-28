@@ -205,7 +205,7 @@ class Export
 
   def create_cumulated_markdown_file(file = File.join(@snippet_path, 'snippets_temp_cum.md'))
 
-    interpret_day_totals(['date', 'day', 'activity', 'time_spent'])
+    #interpret_day_totals(['date', 'day', 'activity', 'time_spent'])
 
     Motion::FileUtils.rm(file) if File.exist?(file)
 

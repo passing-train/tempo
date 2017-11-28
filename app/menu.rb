@@ -19,6 +19,7 @@ class AppDelegate
 
     addMenu('File') do
       addItemWithTitle('Ask', action: 'ask_early', keyEquivalent: '!')
+      addItemWithTitle('New Ask Window', action: 'open_ask_window', keyEquivalent: 'x')
       addItemWithTitle('Show Flat Time Log', action: 'show_flat_log', keyEquivalent: 'i')
       addItemWithTitle('Show Cumulated Time Log', action: 'show_cum_log', keyEquivalent: 'l')
       addItemWithTitle('Show Day Totals Log', action: 'show_day_totals_log', keyEquivalent: 'd')

@@ -11,6 +11,10 @@ class AppDelegate
 
   def applicationDidFinishLaunching(notification)
 
+    @hotKeyManager = SPHotKeyManager::instance
+    hk = SPHotKey.alloc.initWithTarget(self, action:'ask_early', object:nil, keyCode:0x12, modifierFlags:(NSCommandKeyMask+NSShiftKeyMask))
+    @hotKeyManager.registerHotKey(hk)
+
     cdq.setup
     NSUserDefaults.standardUserDefaults.registerDefaults PREFS_DEFAULTS
     buildMenu
@@ -22,6 +26,12 @@ class AppDelegate
 
   def applicationShouldOpenUntitledFile sender
     return false;
+  end
+
+  def open_ask_window
+    @ask_window_controller ||= AskWindowController.alloc.init
+    @ask_window_controller.showWindow(self)
+    @ask_window_controller.window.orderFrontRegardless
   end
 
   def openPreferences(sender)
