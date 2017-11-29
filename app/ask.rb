@@ -37,15 +37,14 @@ class Ask
     NSRunningApplication.currentApplication.activateWithOptions(NSApplicationActivateIgnoringOtherApps)
 
     @timer = nil
+
     begin
+
       ask
+
     rescue => e
       NSLog("Error %@", e)
-      NSRunningApplication.currentApplication.activateWithOptions(NSApplicationActivateIgnoringOtherApps)
-      NSApp.activateIgnoringOtherApps
-      alert = NSAlert.alertWithMessageText('Problem asking for input: ' + e.message,
-                                           defaultButton: "OK", alternateButton: nil,
-                                           otherButton: nil, informativeTextWithFormat: "")
+      alert = NSAlert.alertWithMessageText('Problem asking for input: ' + e.message, defaultButton: "OK", alternateButton: nil, otherButton: nil, informativeTextWithFormat: "")
       alert.runModal
     end
 
@@ -60,14 +59,31 @@ class Ask
   def ask
     picked = PROMPTS[rand*PROMPTS.length]
 
-    answer = input(picked, @last_answer)
+#    answer = input(picked, @last_answer)
+    input_window(picked, @last_answer)
 
+    #p answer
+
+    #if answer
+      #@last_answer = answer
+      #log(@last_answer)
+    #end
+  end
+
+  def set_new_answer(answer)
+#    @new_answer = answer
     p answer
 
     if answer
       @last_answer = answer
       log(@last_answer)
     end
+  end
+
+  def input_window(prompt, default_value="")
+    @ask_window_controller ||= AskWindowController.alloc.init_with_arguments(self, prompt, default_value)
+    @ask_window_controller.showWindow(self)
+    @ask_window_controller.window.orderFrontRegardless
   end
 
   def input(prompt, default_value="")
