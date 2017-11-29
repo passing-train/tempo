@@ -13,12 +13,18 @@ class AskWindowController < NSWindowController
     super.tap do
       self.window = layout.window
 
-      @task_text_field = @layout.get(:task_title)
       @task_label = @layout.get(:task_title_label)
+
+      @task_text_field = @layout.get(:task_title)
+      @task_text_field.tableViewDelegate = @parent
+      @task_text_field.delegate = @parent
+
+      self.window.setInitialFirstResponder(@task_text_field)
+      self.window.makeFirstResponder(@task_text_field)
 
       @button_ok = @layout.get(:button_ok)
       @button_ok.target = self
-      @button_ok.action = 'write_and_close_window:'
+      @button_ok.action = 'verify_popover:'
 
       @button_cancel = @layout.get(:button_cancel)
       @button_cancel.target = self
@@ -39,6 +45,12 @@ class AskWindowController < NSWindowController
 
   def close_window(sender)
     window.close
+  end
+
+  def verify_popover sender
+    unless @task_text_field.autoCompletePopover.isShown
+      write_and_close_window sender
+    end
   end
 
   def write_and_close_window(sender)

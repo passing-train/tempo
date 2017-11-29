@@ -8,8 +8,12 @@ class AskWindowLayout < MK::WindowLayout
 
     add NSButton, :button_cancel
     add NSButton, :button_ok
-    add NSTextField, :task_title
+#    add NSTextField, :task_title
     add NSTextField, :task_title_label
+
+    @input_field = WuAutoCompleteTextField.alloc.initWithFrame(NSMakeRect(0, 0, 200, 24))
+    @input_field.awakeFromNib
+    add @input_field, :task_title
 
   end
 
@@ -87,10 +91,8 @@ class AskWindowLayout < MK::WindowLayout
     selectable false
     bordered false
     bezeled false
-    #string_value title
 
     cell do
-      #alignment NSRightTextAlignment
       scrollable false
       drawsBackground false
     end

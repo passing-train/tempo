@@ -86,6 +86,17 @@ class Ask
     @ask_window_controller.set_prompt prompt
     @ask_window_controller.set_default_value default_value
 
+
+#    @alert.accessoryView = @input_field
+#    @alert.window.collectionBehavior = NSWindowCollectionBehaviorCanJoinAllSpaces
+#    @alert.window.level = NSFloatingWindowLevel
+#    @alert.window.setInitialFirstResponder(@input_field)
+#    @alert.window.makeFirstResponder(@input_field)
+#    buttonClicked = @alert.runModal
+
+#    @input_field.tableViewDelegate = self
+#    @input_field.stringValue if buttonClicked == 1000
+
     @ask_window_controller.showWindow(self)
     @ask_window_controller.window.orderFrontRegardless
   end
