@@ -4,10 +4,8 @@ class AskWindowController < NSWindowController
     @layout ||= AskWindowLayout.new
   end
 
-  def init_with_arguments(parent, prompt, default_answer)
+  def init_with_arguments(parent)
     @parent = parent
-    @prompt = prompt
-    @default_answer = default_answer
     init
   end
 
@@ -16,7 +14,7 @@ class AskWindowController < NSWindowController
       self.window = layout.window
 
       @task_text_field = @layout.get(:task_title)
-      @task_text_field.setStringValue @default_answer
+      @task_label = @layout.get(:task_title_label)
 
       @button_ok = @layout.get(:button_ok)
       @button_ok.target = self
@@ -26,6 +24,17 @@ class AskWindowController < NSWindowController
       @button_cancel.target = self
       @button_cancel.action = 'close_window:'
     end
+  end
+
+  def set_default_value default_answer
+    @task_text_field.setStringValue default_answer
+  end
+
+  def set_prompt prompt
+    boldFontName = NSFont.boldSystemFontOfSize(13.0)
+    str = NSMutableAttributedString.alloc.initWithString(prompt)
+    str.addAttribute(NSFontAttributeName, value:boldFontName, range:NSMakeRange(0, str.length))
+    @task_label.setAttributedStringValue str
   end
 
   def close_window(sender)

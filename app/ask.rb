@@ -81,7 +81,11 @@ class Ask
   end
 
   def input_window(prompt, default_value="")
-    @ask_window_controller ||= AskWindowController.alloc.init_with_arguments(self, prompt, default_value)
+    @ask_window_controller ||= AskWindowController.alloc.init_with_arguments(self)
+
+    @ask_window_controller.set_prompt prompt
+    @ask_window_controller.set_default_value default_value
+
     @ask_window_controller.showWindow(self)
     @ask_window_controller.window.orderFrontRegardless
   end

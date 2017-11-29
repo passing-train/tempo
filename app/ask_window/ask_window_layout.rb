@@ -3,7 +3,7 @@ class AskWindowLayout < MK::WindowLayout
 
   def layout
     frame from_center(size:[424, 150])
-    title "So what are you doing bro ?"
+    title "Wassup"
     style_mask (style_mask & ~NSWindowStyleMaskMiniaturizable & ~NSWindowStyleMaskResizable & ~NSWindowStyleMaskClosable)
 
     add NSButton, :button_cancel
