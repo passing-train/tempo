@@ -129,7 +129,7 @@ class Export
           dates_with_totals[date]['activities'][entry['activity']] = 0
         end
 
-        dates_with_totals[date]['activities'][entry['activity']] += entry['block_total_secs']
+        dates_with_totals[date]['activities'][entry['activity']] += entry['block_total_secs'] if entry['block_total_secs']
       end
     end
 
