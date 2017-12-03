@@ -15,7 +15,7 @@ Motion::Project::App.setup do |app|
   app.name = 'WassUp'
   app.copyright ="Copyright © 2017 MunsterMade. All rights reserved."
   app.deployment_target = "10.9"
-  app.version = "1.5.0.1"
+  app.version = "1.5.1.0"
   app.icon = "AppIcon.icns"
 
   app.frameworks << 'webkit'
