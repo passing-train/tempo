@@ -66,6 +66,9 @@ class AppDelegate
   def export_csv_log
     @export.export_csv_log
   end
+  def export_excel_daytotals
+    @export.export_excel_daytotals
+  end
 
   def ask_early
     @ask.ask_early

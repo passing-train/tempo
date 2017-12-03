@@ -26,6 +26,8 @@ Motion::Project::App.setup do |app|
   app.entitlements['com.apple.security.app-sandbox'] = true
   app.pods do
    pod "SimpleHotKey"
+   pod "XlsxReaderWriter", :git => 'https://github.com/charlymr/XlsxReaderWriter.git'
+
   end
 
 end

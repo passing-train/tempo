@@ -1,1 +1,0 @@
-../../../SimpleHotKey/HotKeyDemo/SPHotKeyManager.h

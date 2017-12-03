@@ -16,6 +16,7 @@ nbproject
 .idea
 .dat*
 vendor/Pods/.build
+vendor/Pods
 vendor/Build
 vendor/build
 .build

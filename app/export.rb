@@ -114,6 +114,8 @@ class Export
       dates[entry['date']] << entry
     end
 
+#    ap dates
+
     dates_with_totals = {}
     dates.each do | date, entries |
       if dates_with_totals[date].nil?
@@ -129,7 +131,7 @@ class Export
           dates_with_totals[date]['activities'][entry['activity']] = 0
         end
 
-        dates_with_totals[date]['activities'][entry['activity']] += entry['block_total_secs']
+        dates_with_totals[date]['activities'][entry['activity']] += entry['block_total_secs'] if entry['block_total_secs']
       end
     end
 
@@ -176,6 +178,51 @@ class Export
       alert.addButtonWithTitle "Ok"
       alert.runModal
     end
+  end
+
+  def export_excel_daytotals
+    documentPath = NSBundle.mainBundle.pathForResource("empty", ofType:"xlsx")
+    spreadsheet = BRAOfficeDocumentPackage.open documentPath
+
+#    worksheet = spreadsheet.workbook.createWorksheetNamed "Foo"
+#    worksheet = spreadsheet.workbook.worksheets[0]
+#    worksheet.cellForCellReference("Y24", shouldCreate:true).setStringValue "FOO / BAR"
+#    worksheet.cellForCellReference("B1", shouldCreate:true).setNumberFormat "0.103"
+#    p worksheet
+#    p spreadsheet
+
+
+    rows = interpret
+
+    if rows.length > 0
+
+      rows_arr = []
+      rows_arr << rows[0].keys
+
+      rows.each do | row |
+        rows_arr << row.values
+      end
+
+      panel = NSSavePanel.savePanel
+      panel.setNameFieldStringValue "time-entries.xlsx"
+      panel.beginWithCompletionHandler(
+        lambda do | result |
+          if result == NSFileHandlingPanelOKButton
+            #spreadsheet.save
+            spreadsheet.saveAs(panel.URL.path)
+          end
+        end
+      )
+
+    else
+      alert = NSAlert.alloc.init
+      alert.setMessageText  "Cannot export"
+      alert.setInformativeText "There are not entries."
+      alert.addButtonWithTitle "Ok"
+      alert.runModal
+    end
+
+
   end
 
   def create_markdown_header(title, keys)
