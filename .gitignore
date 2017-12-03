@@ -17,6 +17,7 @@ nbproject
 .dat*
 vendor/Pods/.build
 vendor/Build
+vendor
 vendor/build
 .build
 build-MacOSX
