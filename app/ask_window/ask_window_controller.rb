@@ -43,10 +43,6 @@ class AskWindowController < NSWindowController
     @task_label.setAttributedStringValue str
   end
 
-  def close_window(sender)
-    window.close
-  end
-
   def verify_popover sender
     unless @task_text_field.autoCompletePopover.isShown
       write_and_close_window sender
@@ -55,6 +51,11 @@ class AskWindowController < NSWindowController
 
   def write_and_close_window(sender)
     @parent.set_new_answer(@task_text_field.stringValue)
+    close_window sender
+  end
+
+  def close_window(sender)
+    NSApp.delegate.set_menu_bar_normal
     window.close
   end
 

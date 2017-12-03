@@ -2,6 +2,7 @@ class AppDelegate
 
   attr_reader :export
   attr_reader :ask
+  attr_reader :status_item
 
   include CDQ
 
@@ -18,10 +19,32 @@ class AppDelegate
     cdq.setup
     NSUserDefaults.standardUserDefaults.registerDefaults PREFS_DEFAULTS
     buildMenu
+    setup_menu_bar
 
     @export = Export.alloc.init
     @ask = Ask.alloc.init
     @ask.ask_and_schedule
+  end
+
+  def clicked_menu_bar sender
+    ask_early
+    NSRunningApplication.currentApplication.activateWithOptions(NSApplicationActivateIgnoringOtherApps)
+  end
+
+  def setup_menu_bar
+    @status_item = NSStatusBar.systemStatusBar.statusItemWithLength(24.0)
+    @status_item.setHighlightMode(false)
+    @status_item.setImage(NSImage.imageNamed("menubar_normal"))
+    @status_item.setTarget(self)
+    @status_item.setAction('clicked_menu_bar:')
+  end
+
+  def set_menu_bar_active
+    @status_item.setImage(NSImage.imageNamed("menubar_wassup"))
+  end
+
+  def set_menu_bar_normal
+    @status_item.setImage(NSImage.imageNamed("menubar_normal"))
   end
 
   def applicationShouldOpenUntitledFile sender

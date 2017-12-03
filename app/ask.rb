@@ -32,6 +32,8 @@ class Ask
 
   def ask_and_schedule
 
+    NSApp.delegate.set_menu_bar_active
+
     old_app = NSWorkspace.sharedWorkspace.frontmostApplication
 
     NSRunningApplication.currentApplication.activateWithOptions(NSApplicationActivateIgnoringOtherApps)
