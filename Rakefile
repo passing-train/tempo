@@ -27,6 +27,7 @@ Motion::Project::App.setup do |app|
   app.pods do
    pod "SimpleHotKey"
    pod "XlsxReaderWriter", :git => 'https://github.com/charlymr/XlsxReaderWriter.git'
+#   pod "RSSheet", :path => "/Users/pim/RnD/forks/RSSheet"
 
   end
 

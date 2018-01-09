@@ -1,0 +1,30 @@
+PODS:
+  - SimpleHotKey (0.1)
+  - SSZipArchive (1.8.1)
+  - XlsxReaderWriter (2.3.2):
+    - SSZipArchive (~> 1.1)
+    - XMLDictionary (~> 1.4)
+  - XMLDictionary (1.4.1)
+
+DEPENDENCIES:
+  - SimpleHotKey
+  - XlsxReaderWriter (from `https://github.com/charlymr/XlsxReaderWriter.git`)
+
+EXTERNAL SOURCES:
+  XlsxReaderWriter:
+    :git: https://github.com/charlymr/XlsxReaderWriter.git
+
+CHECKOUT OPTIONS:
+  XlsxReaderWriter:
+    :commit: 1e3ee00576e3ed363c2d297c027fb99e05a1f203
+    :git: https://github.com/charlymr/XlsxReaderWriter.git
+
+SPEC CHECKSUMS:
+  SimpleHotKey: 50c187cb388c80c6d8185fa6c4cd702aebb586fa
+  SSZipArchive: 04547dfa448be5ed7ecbaf7eaf8a6e9eb9b42997
+  XlsxReaderWriter: 5f2a461de379fb293cd6936623f2334baad432ad
+  XMLDictionary: fa07b6ff422b3a91d47a5de9bc82e3fc04fbd167
+
+PODFILE CHECKSUM: fda86ec223708563c947982bb6ad95d3269e2aef
+
+COCOAPODS: 1.2.1

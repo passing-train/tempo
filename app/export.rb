@@ -185,12 +185,12 @@ class Export
     spreadsheet = BRAOfficeDocumentPackage.open documentPath
 
 #    worksheet = spreadsheet.workbook.createWorksheetNamed "Foo"
-#    worksheet = spreadsheet.workbook.worksheets[0]
-#    worksheet.cellForCellReference("Y24", shouldCreate:true).setStringValue "FOO / BAR"
-#    worksheet.cellForCellReference("B1", shouldCreate:true).setNumberFormat "0.103"
-#    p worksheet
-#    p spreadsheet
 
+    worksheet = spreadsheet.workbook.worksheets[0]
+    worksheet.cellForCellReference("A1", shouldCreate:true).setStringValue "FOO-BAR"
+#    worksheet.cellForCellReference("B1", shouldCreate:true).setNumberFormat "0.103"
+    p worksheet
+    p spreadsheet
 
     rows = interpret
 

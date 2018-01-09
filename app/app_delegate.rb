@@ -57,6 +57,12 @@ class AppDelegate
     @ask_window_controller.window.orderFrontRegardless
   end
 
+  def open_list_entries_window
+    @list_entries_window_controller ||= ListEntriesWindowController.alloc.init
+    @list_entries_window_controller.showWindow(self)
+    @list_entries_window_controller.window.orderFrontRegardless
+  end
+
   def openPreferences(sender)
     @prefs_controller ||= PrefsWindowController.alloc.init
     @prefs_controller.showWindow(self)

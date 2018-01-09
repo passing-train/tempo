@@ -105,7 +105,8 @@ class WuAutoCompleteTextField < NSTextField
         @autoCompleteTableView.scrollRowToVisible(@autoCompleteTableView.selectedRow)
         return #skip default behavior
       end
-    when 36, 48, 49 # return, tab, space
+    #when 36, 48, 49 # return, tab, space
+    when 36, 49 # return, tab, space
       if isShow
         insert(self)
       end
