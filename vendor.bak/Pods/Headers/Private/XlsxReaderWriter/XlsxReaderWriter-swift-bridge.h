@@ -1,1 +1,0 @@
-../../../XlsxReaderWriter/XlsxReaderWriter/XlsxReaderWriter-swift-bridge.h
