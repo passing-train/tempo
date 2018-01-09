@@ -13,9 +13,9 @@ end
 Motion::Project::App.setup do |app|
   # Use `rake config' to see complete project settings.
   app.name = 'WassUp'
-  app.copyright ="Copyright © 2017 MunsterMade. All rights reserved."
+  app.copyright ="Copyright © 2018 MunsterMade. All rights reserved."
   app.deployment_target = "10.9"
-  app.version = "1.5.1.0"
+  app.version = "1.5.2.0"
   app.icon = "AppIcon.icns"
 
   app.frameworks << 'webkit'
@@ -26,6 +26,7 @@ Motion::Project::App.setup do |app|
   app.entitlements['com.apple.security.app-sandbox'] = true
   app.pods do
    pod "SimpleHotKey"
+   pod "XlsxReaderWriter", :git => 'https://github.com/charlymr/XlsxReaderWriter.git'
   end
 
 end
@@ -33,7 +34,9 @@ end
 
 desc "installapp"
 task :installapp do
+#  Rake::Task["build"].execute
   path = `find build -name "#{App.config.name}.app"|grep Development`.strip
   system "cp -av '#{path}' '/Applications/'"
 end
+
 task :"build:simulator" => :"schema:build"

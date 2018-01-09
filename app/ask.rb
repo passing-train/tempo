@@ -79,7 +79,6 @@ class Ask
   end
 
   def textField(textField, completions:somecompletions, forPartialWordRange:partialWordRange, indexOfSelectedItem:theIndexOfSelectedItem)
-
     matches = Entry.where(:title).contains(textField.stringValue,NSCaseInsensitivePredicateOption).map(&:title).uniq
     matches
   end

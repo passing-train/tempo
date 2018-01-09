@@ -20,10 +20,12 @@ class AppDelegate
     addMenu('File') do
       addItemWithTitle('Ask', action: 'ask_early', keyEquivalent: '!')
       addItemWithTitle('New Ask Window', action: 'open_ask_window', keyEquivalent: 'x')
+      addItemWithTitle('Edit entries', action: 'open_list_entries_window', keyEquivalent: 'e')
       addItemWithTitle('Show Flat Time Log', action: 'show_flat_log', keyEquivalent: 'i')
       addItemWithTitle('Show Cumulated Time Log', action: 'show_cum_log', keyEquivalent: 'l')
-      addItemWithTitle('Show Day Totals Log', action: 'show_day_totals_log', keyEquivalent: 'd')
+      addItemWithTitle('Show Day Totals Log', action: 'show_day_totals_log', keyEquivalent: '')
       addItemWithTitle('Export Log to CSV', action: 'export_csv_log', keyEquivalent: '')
+      addItemWithTitle('Export Day Totals to CSV for Exact Online', action: 'export_exact_day_totals', keyEquivalent: 'd')
       addItemWithTitle('Clear log', action: 'reset_log', keyEquivalent: 'i')
     end
 

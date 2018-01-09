@@ -2,7 +2,7 @@ class AskWindowLayout < MK::WindowLayout
   ASK_WINDOW_IDENTIFIER = 'ASKWINDOW'
 
   def layout
-    frame from_center(size:[424, 150])
+    frame from_center(size:[444, 150])
     title "Wassup"
     style_mask (style_mask & ~NSWindowStyleMaskMiniaturizable & ~NSWindowStyleMaskResizable & ~NSWindowStyleMaskClosable)
 
@@ -10,6 +10,9 @@ class AskWindowLayout < MK::WindowLayout
     add NSButton, :button_ok
 #    add NSTextField, :task_title
     add NSTextField, :task_title_label
+
+    #add NSTextField, :customer_field
+    #add NSTextField, :project_field
 
     @input_field = WuAutoCompleteTextField.alloc.initWithFrame(NSMakeRect(0, 0, 200, 24))
     @input_field.awakeFromNib
@@ -21,7 +24,7 @@ class AskWindowLayout < MK::WindowLayout
     configure_as_label_with_title('Whats going on?')
 
     constraints do
-      width 340
+      width 300
       height 20
       left.equals(:superview, :left).plus(20)
       top.equals(:superview, :top).plus(15)
@@ -33,9 +36,33 @@ class AskWindowLayout < MK::WindowLayout
     tag 1
 
     constraints do
-      width 384
+      width 344
       height 25
       left.equals(:superview, :left).plus(20)
+      top.equals(:task_title_label, :bottom).plus(10)
+    end
+  end
+
+  def customer_field_style
+    configure_as_textinput_with_value ""
+    tag 2
+
+    constraints do
+      width 38
+      height 25
+      left.equals(:task_title, :right).plus(10)
+      top.equals(:task_title_label, :bottom).plus(10)
+    end
+  end
+
+  def project_field_style
+    configure_as_textinput_with_value ""
+    tag 3
+
+    constraints do
+      width 100
+      height 25
+      left.equals(:customer_field, :right).plus(10)
       top.equals(:task_title_label, :bottom).plus(10)
     end
   end

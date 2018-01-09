@@ -57,6 +57,13 @@ class AppDelegate
     @ask_window_controller.window.orderFrontRegardless
   end
 
+  def open_list_entries_window
+    @list_entries_window_controller ||= ListEntriesWindowController.alloc.init
+    @list_entries_window_controller.showWindow(self)
+    @list_entries_window_controller.window.orderFrontRegardless
+    @list_entries_window_controller.tableUpdate
+  end
+
   def openPreferences(sender)
     @prefs_controller ||= PrefsWindowController.alloc.init
     @prefs_controller.showWindow(self)
@@ -65,6 +72,14 @@ class AppDelegate
 
   def export_csv_log
     @export.export_csv_log
+  end
+
+  def export_excel_daytotals
+    @export.export_excel_daytotals
+  end
+
+  def export_exact_day_totals
+    @export.export_exact_day_totals
   end
 
   def ask_early
