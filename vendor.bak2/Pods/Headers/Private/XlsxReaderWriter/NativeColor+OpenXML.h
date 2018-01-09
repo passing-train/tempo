@@ -1,1 +1,0 @@
-../../../XlsxReaderWriter/XlsxReaderWriter/NativeColor+OpenXML.h
