@@ -87,6 +87,19 @@ class WuAutoCompleteTextField < NSTextField
 
   end
 
+  #def mouseDown theEvent
+
+    #globalLocation = theEvent.locationInWindow
+    #localLocation = self.convertPoint(globalLocation.fromView:false)
+    #clickedRow = self.rowAtPoint(localLocation)
+
+    #super.mouseDown(theEvent)
+
+    #if (clickedRow != -1) 
+        #self.extendedDelegate.tableView(self.didClickedRow:clickedRow)
+    #end
+  #end
+
   def keyUp(event)
     row = @autoCompleteTableView.selectedRow
     isShow = @autoCompletePopover.isShown
@@ -105,8 +118,8 @@ class WuAutoCompleteTextField < NSTextField
         @autoCompleteTableView.scrollRowToVisible(@autoCompleteTableView.selectedRow)
         return #skip default behavior
       end
-    #when 36, 48, 49 # return, tab, space
-    when 36, 49 # return, tab, space
+    when 36, 48, 49 # return, tab, space
+    #when 36, 49 # return, tab, space
       if isShow
         insert(self)
       end

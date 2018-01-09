@@ -2,7 +2,7 @@ class AskWindowLayout < MK::WindowLayout
   ASK_WINDOW_IDENTIFIER = 'ASKWINDOW'
 
   def layout
-    frame from_center(size:[544, 150])
+    frame from_center(size:[444, 150])
     title "Wassup"
     style_mask (style_mask & ~NSWindowStyleMaskMiniaturizable & ~NSWindowStyleMaskResizable & ~NSWindowStyleMaskClosable)
 
@@ -11,8 +11,8 @@ class AskWindowLayout < MK::WindowLayout
 #    add NSTextField, :task_title
     add NSTextField, :task_title_label
 
-    add NSTextField, :customer_field
-    add NSTextField, :project_field
+    #add NSTextField, :customer_field
+    #add NSTextField, :project_field
 
     @input_field = WuAutoCompleteTextField.alloc.initWithFrame(NSMakeRect(0, 0, 200, 24))
     @input_field.awakeFromNib

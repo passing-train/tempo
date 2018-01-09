@@ -83,6 +83,8 @@ class Export
       row = interpret_add_key_val(row, keys, 'time_first_log', cum_start_time)
       row = interpret_add_key_val(row, keys, 'time_last_log', @timeFormat.stringFromDate(entry.created_at))
       row = interpret_add_key_val(row, keys, 'activity', entry.title)
+      row = interpret_add_key_val(row, keys, 'project_id', entry.project_id)
+      row = interpret_add_key_val(row, keys, 'customer_id', entry.customer_id)
       row = interpret_add_key_val(row, keys, 'time_delta', time_delta_display)
       row = interpret_add_key_val(row, keys, 'time_spent', block_total_display)
       row = interpret_add_key_val(row, keys, 'block_total_secs', block_total_secs)
@@ -114,7 +116,7 @@ class Export
       dates[entry['date']] << entry
     end
 
-#    ap dates
+    #ap dates
 
     dates_with_totals = {}
     dates.each do | date, entries |
@@ -135,7 +137,7 @@ class Export
       end
     end
 
-#    ap dates_with_totals
+    #ap dates_with_totals
 
     flat_activity_totals = []
     dates_with_totals.each do | date, entry |
@@ -145,6 +147,60 @@ class Export
     end
 
 #    ap flat_activity_totals
+    flat_activity_totals
+  end
+
+  def interpret_day_totals_exact(keys)
+
+    rows = interpret(keys,true)
+    dates = {}
+    rows.each do | entry |
+      dates[entry['date']] = [] if dates[entry['date']].nil?
+      dates[entry['date']] << entry
+    end
+
+    dates_with_totals = {}
+    dates.each do | date, entries |
+      if dates_with_totals[date].nil?
+        dates_with_totals[date] = {
+          'date'=> date,
+    #      'day' => entries[0]['day'],
+          'activities' => {}
+        }
+      end
+
+      entries.each do | entry|
+        if dates_with_totals[date]['activities'][entry['activity']].nil?
+          dates_with_totals[date]['activities'][entry['activity']] = {
+            'time_spent' => 0,
+            'project_id' => entry['project_id'],
+            'customer_id' => entry['customer_id']
+          }
+        end
+
+        dates_with_totals[date]['activities'][entry['activity']]['time_spent'] += entry['block_total_secs'] if entry['block_total_secs']
+      end
+    end
+
+    #ap dates_with_totals
+
+    flat_activity_totals = []
+    dates_with_totals.each do | date, entry |
+      entry['activities'].each do | activity, act_record |
+
+       flat_activity_totals << {
+        'medewerker' => '2',
+        'artikel' => 'dev',
+        'date'=> entry['date'],
+        'customer_id'=> act_record['customer_id'],
+        'project_id'=> act_record['project_id'],
+        'activity' => activity,
+        'time_spent'=> TimeUtility::format_time_from_seconds_to_metric_hours(act_record['time_spent'])
+      }
+      end
+    end
+
+    #ap flat_activity_totals
     flat_activity_totals
   end
 
@@ -270,6 +326,44 @@ class Export
     handle.flush
 
     file
+
+  end
+
+  def export_exact_day_totals
+
+    #    Relatie;Datum;Medewerker;Artikel;Notities;Aantal;Project
+
+#    keys = ['customer_id', 'day', 'activity', 'time_spent', 'project_id']
+
+    keys = ['date', 'customer_id', 'activity','time_spent', 'block_total_secs', 'project_id']
+    rows = interpret_day_totals_exact(keys)
+
+    if rows.length > 0
+
+      rows_arr = []
+      rows_arr << rows[0].keys
+
+      rows.each do | row |
+        rows_arr << row.values
+      end
+
+      panel = NSSavePanel.savePanel
+      panel.setNameFieldStringValue "export_exact_day_totals.csv"
+      panel.beginWithCompletionHandler(
+        lambda do | result |
+          if result == NSFileHandlingPanelOKButton
+            rows_arr.to_csv.writeToFile(panel.URL, atomically:true, encoding:NSUTF8StringEncoding, error:nil)
+          end
+        end
+      )
+
+    else
+      alert = NSAlert.alloc.init
+      alert.setMessageText  "Cannot export"
+      alert.setInformativeText "There are not entries."
+      alert.addButtonWithTitle "Ok"
+      alert.runModal
+    end
 
   end
 

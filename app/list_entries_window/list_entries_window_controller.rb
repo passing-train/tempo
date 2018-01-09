@@ -13,7 +13,6 @@ class ListEntriesWindowController < NSWindowController
       @layout = layout
 
       populateEntries
-      p @entries
 
       @button_update = @layout.get(:button_update)
       @button_update.target = self
@@ -30,22 +29,23 @@ class ListEntriesWindowController < NSWindowController
     end
   end
 
-
   def populateEntries
     entries = Entry.sort_by(:title).map(&:title).uniq
 
     @entries = []
 
-    #p entries
     entries.each do |e|
       @entries << Entry.where(:title).eq(e).first
     end
+  end
 
+  def tableUpdate
+    populateEntries
+    @table_view.reloadData
   end
 
   def update sender
     @last_selected_row = @table_view.selectedRow
-    p @entries[@last_selected_row].title
     Entry.where(:title).eq(@entries[@last_selected_row].title).each do |e|
       e.title = @entry_field.stringValue.to_s
       e.project_id = @project_field.stringValue.to_s
@@ -82,7 +82,6 @@ class ListEntriesWindowController < NSWindowController
 
   def tableViewSelectionDidChange sender
     idx = @table_view.selectedRow
-    p idx
     if idx == -1
       disable_edit
     else
@@ -121,8 +120,5 @@ class ListEntriesWindowController < NSWindowController
 
     return text_field
   end
-
-#  def tableViewColumnDidResize(notification)
-#  end
 
 end

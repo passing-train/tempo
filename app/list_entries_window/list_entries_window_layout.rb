@@ -29,6 +29,8 @@ class ListEntriesWindowLayout < MK::WindowLayout
     end
   end
 
+
+
   def button_update_style
     key_equivalent "\r"
     bezel_style NSRoundedBezelStyle
