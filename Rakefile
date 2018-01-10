@@ -28,14 +28,12 @@ Motion::Project::App.setup do |app|
    pod "SimpleHotKey"
    pod "XlsxReaderWriter", :git => 'https://github.com/charlymr/XlsxReaderWriter.git'
   end
-
 end
-
 
 desc "installapp"
 task :installapp do
-#  Rake::Task["build"].execute
-  path = `find build -name "#{App.config.name}.app"|grep Development`.strip
+  Rake::Task["build"].execute
+  path = `find build -name "#{App.config.name}.app"|grep Release`.strip
   system "cp -av '#{path}' '/Applications/'"
 end
 
