@@ -24,6 +24,8 @@ Motion::Project::App.setup do |app|
   app.codesign_certificate = '3rd Party Mac Developer Application: Lingewoud (3WQRKDPTP8)'
 
   app.entitlements['com.apple.security.app-sandbox'] = true
+  app.entitlements['com.apple.security.files.user-selected.read-write'] = true
+
   app.pods do
    pod "SimpleHotKey"
    pod "XlsxReaderWriter", :git => 'https://github.com/charlymr/XlsxReaderWriter.git'
@@ -32,8 +34,9 @@ end
 
 desc "installapp"
 task :installapp do
-  Rake::Task["build"].execute
+  Rake::Task["build:release"].execute
   path = `find build -name "#{App.config.name}.app"|grep Release`.strip
+  system "rm -Rfv '/Applications/WassUp.app'"
   system "cp -av '#{path}' '/Applications/'"
 end
 
