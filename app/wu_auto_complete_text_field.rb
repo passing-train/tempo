@@ -42,7 +42,7 @@ class WuAutoCompleteTextField < NSTextField
   attr_accessor :autoCompletePopover
 
   def awakeFromNib
-    @popOverWidth = 210.0
+    @popOverWidth = 350.0
     @popOverPadding = 0.0
     @maxResults = 10
     @tableViewDelegate = nil

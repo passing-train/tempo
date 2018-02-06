@@ -2,7 +2,6 @@ class AppDelegate
   def buildMenu
     @mainMenu = NSMenu.new
 
-
     appName = NSBundle.mainBundle.infoDictionary['CFBundleName']
     addMenu(appName) do
       addItemWithTitle("About #{appName}", action: 'orderFrontStandardAboutPanel:', keyEquivalent: '')
@@ -19,25 +18,32 @@ class AppDelegate
 
     addMenu('File') do
       addItemWithTitle('Ask', action: 'ask_early', keyEquivalent: '!')
-      addItemWithTitle('New Ask Window', action: 'open_ask_window', keyEquivalent: 'x')
-      addItemWithTitle('Edit entries', action: 'open_list_entries_window', keyEquivalent: 'e')
-      addItemWithTitle('Show Flat Time Log', action: 'show_flat_log', keyEquivalent: 'i')
-      addItemWithTitle('Show Cumulated Time Log', action: 'show_cum_log', keyEquivalent: 'l')
-      addItemWithTitle('Show Day Totals Log', action: 'show_day_totals_log', keyEquivalent: '')
-      addItemWithTitle('Export Log to CSV', action: 'export_csv_log', keyEquivalent: '')
+      addItem(NSMenuItem.separatorItem)
       addItemWithTitle('Export Day Totals to CSV for Exact Online', action: 'export_exact_day_totals', keyEquivalent: 'd')
-      addItemWithTitle('Clear log', action: 'reset_log', keyEquivalent: 'i')
+      addItem(NSMenuItem.separatorItem)
+      addItemWithTitle('Clear database', action: 'reset_log', keyEquivalent: '')
     end
 
     addMenu('Edit') do
       addItemWithTitle('Undo', action: 'undo:', keyEquivalent: 'z')
       addItemWithTitle('Redo', action: 'redo:', keyEquivalent: 'Z')
       addItem(NSMenuItem.separatorItem)
+      addItemWithTitle('Edit entries', action: 'open_list_entries_window', keyEquivalent: 'e')
+      addItem(NSMenuItem.separatorItem)
       addItemWithTitle('Cut', action: 'cut:', keyEquivalent: 'x')
       addItemWithTitle('Copy', action: 'copy:', keyEquivalent: 'c')
       addItemWithTitle('Paste', action: 'paste:', keyEquivalent: 'v')
       addItemWithTitle('Delete', action: 'delete:', keyEquivalent: '')
       addItemWithTitle('Select All', action: 'selectAll:', keyEquivalent: 'a')
+    end
+
+    addMenu('Log') do
+      addItemWithTitle('Show Day Totals Log', action: 'show_day_totals_log', keyEquivalent: '')
+    end
+    addMenu('Developer') do
+      addItemWithTitle('Export Log to CSV', action: 'export_csv_log', keyEquivalent: '')
+      addItemWithTitle('Show Flat Time Log', action: 'show_flat_log', keyEquivalent: '')
+      addItemWithTitle('Show Cumulated Time Log', action: 'show_cum_log', keyEquivalent: '')
     end
 
     NSApp.helpMenu = addMenu('Help') do

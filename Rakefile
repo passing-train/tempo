@@ -40,4 +40,11 @@ task :installapp do
   system "cp -av '#{path}' '/Applications/'"
 end
 
+desc "populateEntriesFromProd"
+task :populateEntriesFromProd do
+  system "cp -v '/Users/pim/Library/Containers/com.lingewoud.wassup/Data/Documents/WassUp.sqlite' '/Users/pim/Documents/'"
+  system "cp -v '/Users/pim/Library/Containers/com.lingewoud.wassup/Data/Documents/WassUp.sqlite-shm' '/Users/pim/Documents/'"
+  system "cp -v '/Users/pim/Library/Containers/com.lingewoud.wassup/Data/Documents/WassUp.sqlite-wal' '/Users/pim/Documents/'"
+end
+
 task :"build:simulator" => :"schema:build"

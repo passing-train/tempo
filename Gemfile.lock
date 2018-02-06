@@ -61,6 +61,7 @@ GEM
     motion-cocoapods (1.8.1)
       cocoapods (>= 1.0.0)
     motion-csv (0.0.2)
+    motion-date (1.0)
     motion-fileutils (0.1.1)
     motion-kit (1.1.1)
       dbt (~> 1.1, >= 1.1.5)
@@ -98,6 +99,7 @@ DEPENDENCIES
   cdq
   motion-cocoapods
   motion-csv
+  motion-date
   motion-fileutils
   motion-kit
   motion-markdown-it

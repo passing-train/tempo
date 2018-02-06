@@ -12,6 +12,10 @@ class AppDelegate
 
   def applicationDidFinishLaunching(notification)
 
+
+    p    NSFileManager.defaultManager.URLsForDirectory(NSDocumentDirectory,  inDomains:NSUserDomainMask).lastObject.path
+    ap    NSFileManager.defaultManager.URLsForDirectory(NSDocumentDirectory,  inDomains:NSUserDomainMask).lastObject.absoluteString
+
     @hotKeyManager = SPHotKeyManager::instance
     hk = SPHotKey.alloc.initWithTarget(self, action:'ask_early', object:nil, keyCode:0x12, modifierFlags:(NSCommandKeyMask+NSShiftKeyMask))
     @hotKeyManager.registerHotKey(hk)
@@ -51,10 +55,8 @@ class AppDelegate
     return false;
   end
 
-  def open_ask_window
-    @ask_window_controller ||= AskWindowController.alloc.init
-    @ask_window_controller.showWindow(self)
-    @ask_window_controller.window.orderFrontRegardless
+  def ask_early
+    @ask.ask_early
   end
 
   def open_list_entries_window
@@ -82,9 +84,6 @@ class AppDelegate
     @export.export_exact_day_totals
   end
 
-  def ask_early
-    @ask.ask_early
-  end
 
   def logweb_controller_action action
     @logweb_controller ||= LogwebWindowController.alloc.init
@@ -106,11 +105,21 @@ class AppDelegate
   end
 
   def reset_log
-    Entry.all.each do |entry|
-      entry.destroy
+    alert = NSAlert.alloc.init
+    alert.addButtonWithTitle  "OK"
+    alert.addButtonWithTitle "Cancel"
+    alert.setMessageText "Clear all activity entries?"
+    alert.setInformativeText "Deleted entries cannot be restored."
+    alert.setAlertStyle NSWarningAlertStyle
+
+    if alert.runModal == NSAlertFirstButtonReturn
+      Entry.all.each do |entry|
+        entry.destroy
+      end
+
+      cdq.save
+      @ask.reset_last
     end
-    cdq.save
-    @ask.reset_last
   end
 
 end

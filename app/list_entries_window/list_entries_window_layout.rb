@@ -1,11 +1,19 @@
 class ListEntriesWindowLayout < MK::WindowLayout
 
   def layout
-    frame from_center(size:[590, 550])
+    frame from_center(size:[990, 550])
     title "Wassup List"
 
     add NSScrollView, :outer_view do
       document_view add NSTableView, :table_view
+    end
+
+    add NSBox, :line do
+      box_type NSBoxSeparator
+      frame from_bottom(size: [1, '100%'])
+      constraints do
+        right.equals(:superview, :right).minus 294
+      end
     end
 
     add NSTextField, :lbl_entry_field
@@ -17,32 +25,32 @@ class ListEntriesWindowLayout < MK::WindowLayout
     add NSTextField, :project_field
 
     add NSButton, :button_update
+
+    add NSTextField, :lbl_addextratime_field
+    add NSTextField, :addextratime_field
+    add NSButton, :button_divideextra
+    add NSButton, :button_lastdayextra
+
   end
 
   def outer_view_style
     has_vertical_scroller true
     constraints do
       top.equals(:superview, :top)
-      right.equals(:superview, :right)
+      right.equals(:superview, :right).minus 295
       left.equals(:superview, :left)
-      bottom.equals(:superview, :bottom).minus 70
+      bottom.equals(:superview, :bottom)
     end
   end
 
-
-
-  def button_update_style
-    key_equivalent "\r"
-    bezel_style NSRoundedBezelStyle
-
+  def lbl_entry_field_style
+    configure_as_label_with_title "Entry"
     constraints do
-      width 100
-      height 20
-      left.equals(:project_field, :right).plus(20)
-      bottom.equals(:superview, :bottom).minus(22)
+      width 300
+      height 25
+      left.equals(:superview, :right).minus 278
+      top.equals(:superview, :top).plus 25
     end
-
-    title "update entry"
   end
 
   def entry_field_style
@@ -50,20 +58,21 @@ class ListEntriesWindowLayout < MK::WindowLayout
     tag 1
 
     constraints do
-      width 300
-      height 25
-      left.equals(:superview, :left).plus(10)
-      bottom.equals(:superview, :bottom).minus(20)
+      width 243
+      height 46
+      left.equals(:superview, :right).minus 278
+      top.equals(:superview, :top).plus 46
     end
   end
 
-  def lbl_entry_field_style
-    configure_as_label_with_title "entry"
+  def lbl_customer_field_style
+    configure_as_label_with_title "Customer"
+
     constraints do
-      width 300
+      width 200
       height 25
-      left.equals(:superview, :left).plus(10)
-      bottom.equals(:superview, :bottom).minus(40)
+      left.equals(:superview, :right).minus 278
+      top.equals(:superview, :top).plus 112
     end
   end
 
@@ -72,45 +81,102 @@ class ListEntriesWindowLayout < MK::WindowLayout
     tag 2
 
     constraints do
-      width 50
+      width 243
       height 25
-      left.equals(:entry_field, :right).plus(10)
-      bottom.equals(:superview, :bottom).minus(20)
+      left.equals(:superview, :right).minus 278
+      top.equals(:superview, :top).plus 134
     end
   end
 
-  def lbl_customer_field_style
-    configure_as_label_with_title "cst"
+  def lbl_project_field_style
+    configure_as_label_with_title "Project"
 
     constraints do
-      width 50
+      width 200
       height 25
-      left.equals(:entry_field, :right).plus(10)
-      bottom.equals(:superview, :bottom).minus(40)
+      left.equals(:superview, :right).minus 278
+      top.equals(:superview, :top).plus 177
     end
   end
 
   def project_field_style
     configure_as_textinput_with_value ""
-    tag 2
+    tag 3
 
     constraints do
-      width 80
+      width 243
       height 25
-      left.equals(:customer_field, :right).plus(10)
-      bottom.equals(:superview, :bottom).minus(20)
+      left.equals(:superview, :right).minus 278
+      top.equals(:superview, :top).plus 196
     end
   end
 
-  def lbl_project_field_style
-    configure_as_label_with_title "project"
+
+  def button_update_style
+    key_equivalent "\r"
+    bezel_style NSRoundedBezelStyle
 
     constraints do
-      width 80
-      height 25
-      left.equals(:customer_field, :right).plus(10)
-      bottom.equals(:superview, :bottom).minus(40)
+      width 120
+      height 20
+      left.equals(:superview, :right).minus 153
+      top.equals(:superview, :top).plus 238
     end
+
+    title "update entry"
+  end
+
+
+  def lbl_addextratime_field_style
+    configure_as_label_with_title "Add extra time"
+
+    constraints do
+      width 200
+      height 25
+      left.equals(:superview, :right).minus 278
+      top.equals(:superview, :top).plus 310
+    end
+  end
+
+  def addextratime_field_style
+    configure_as_textinput_with_value ""
+    tag 4
+
+    constraints do
+      width 90
+      height 25
+      left.equals(:superview, :right).minus 278
+      top.equals(:superview, :top).plus 334
+    end
+  end
+
+
+  def button_divideextra_style
+    key_equivalent "\r"
+    bezel_style NSRoundedBezelStyle
+
+    constraints do
+      width 120
+      height 20
+      left.equals(:superview, :right).minus 153
+      top.equals(:superview, :top).plus 368
+    end
+
+    title "equally devide"
+  end
+
+  def button_lastdayextra_style
+    key_equivalent "\r"
+    bezel_style NSRoundedBezelStyle
+
+    constraints do
+      width 120
+      height 20
+      left.equals(:superview, :right).minus 278
+      top.equals(:superview, :top).plus 368
+    end
+
+    title "add to last date"
   end
 
   def table_view_style
@@ -138,6 +204,20 @@ class ListEntriesWindowLayout < MK::WindowLayout
 
     add_column('project') do
       title 'Project'
+      min_width 102
+      width parent_bounds.size.width - 170
+      resizing_mask NSTableColumnUserResizingMask
+    end
+
+    add_column('total_day_time') do
+      title 'Time today'
+      min_width 102
+      width parent_bounds.size.width - 170
+      resizing_mask NSTableColumnUserResizingMask
+    end
+
+    add_column('total_time') do
+      title 'Total time'
       min_width 102
       width parent_bounds.size.width - 170
       resizing_mask NSTableColumnUserResizingMask

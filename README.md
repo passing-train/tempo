@@ -22,6 +22,9 @@ nag to get back to useful work.
 rake archive:distribution
 ```
 
+### SQLITE
+/Users/pim/Library/Containers/com.lingewoud.wassup/Data/Documents
+
 #### Fout certicaat
 ➜  wassup git:(master) rake archive:distribution
      Build ./build/MacOSX-10.9-Release

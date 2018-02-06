@@ -326,7 +326,6 @@ class Export
     handle.flush
 
     file
-
   end
 
   def export_exact_day_totals
