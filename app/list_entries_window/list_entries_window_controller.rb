@@ -1,6 +1,7 @@
 class ListEntriesWindowController < NSWindowController
 
   include CDQ
+
   def layout
     @layout ||= ListEntriesWindowLayout.new
   end
@@ -27,10 +28,15 @@ class ListEntriesWindowController < NSWindowController
       @project_field = @layout.get(:project_field)
       @customer_field = @layout.get(:customer_field)
 
+      @addextratime_field = @layout.get(:addextratime_field)
+
+      @button_lastdayextra = @layout.get(:button_lastdayextra)
+      @button_lastdayextra.target = self
+      @button_lastdayextra.action = 'add_extra_time_last_day:'
+
       @last_selected_row = nil
+      disable_edit
     end
-
-
 
   end
 
@@ -74,6 +80,32 @@ class ListEntriesWindowController < NSWindowController
     indexSet = NSIndexSet.indexSetWithIndex @last_selected_row
     @table_view.selectRowIndexes(indexSet, byExtendingSelection:false)
     self.window.makeFirstResponder @table_view
+  end
+
+  def add_extra_time_last_day sender
+    if @addextratime_field.stringValue != @addextratime_field.stringValue.to_s.to_f.to_s
+      alert = NSAlert.alloc.init
+      alert.setMessageText  "Can't add time"
+      alert.setInformativeText "Please enter a float value. 1 and a half hour is 1.5."
+      alert.addButtonWithTitle "Ok"
+      alert.runModal
+    else
+      @last_selected_row = @table_view.selectedRow
+
+      last_day_entry = Entry.where(:title).eq(@entries[@last_selected_row].title).sort_by('created_at').last
+      last_day_entry.extra_time = last_day_entry.extra_time + TimeUtility::format_time_from_metric_hours_to_seconds(@addextratime_field.stringValue.to_f)
+
+      p @addextratime_field.stringValue.to_f
+      cdq.save
+      @table_view.reloadData
+
+      disable_edit
+      indexSet = NSIndexSet.indexSetWithIndex @last_selected_row
+      @table_view.selectRowIndexes(indexSet, byExtendingSelection:false)
+      self.window.makeFirstResponder @table_view
+
+    end
+    @addextratime_field.setStringValue ''
   end
 
   def interpret_add_key_val(row, keys, key, val)
@@ -132,6 +164,8 @@ class ListEntriesWindowController < NSWindowController
         block_total += entry.time_delta
       end
 
+      block_total += entry.extra_time
+
       time_delta_display = TimeUtility::format_time_from_seconds block_total
 
       # weergeven als nieuwe dag of laatste blok
@@ -180,6 +214,10 @@ class ListEntriesWindowController < NSWindowController
       @customer_field.setEditable false
 
       @button_update.setEnabled false
+
+      @addextratime_field.setStringValue ''
+      @addextratime_field.setEditable false
+      @button_lastdayextra.setEnabled false
   end
 
   def enable_edit
@@ -187,6 +225,9 @@ class ListEntriesWindowController < NSWindowController
       @project_field.setEditable true
       @customer_field.setEditable true
       @button_update.setEnabled true
+
+      @addextratime_field.setEditable true
+      @button_lastdayextra.setEnabled true
   end
 
   def tableViewSelectionDidChange sender

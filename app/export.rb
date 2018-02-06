@@ -63,6 +63,8 @@ class Export
         block_total += entry.time_delta
       end
 
+      block_total += entry.extra_time
+
       time_delta_display = TimeUtility::format_time_from_seconds block_total
 
       # weergeven als nieuwe dag of laatste blok

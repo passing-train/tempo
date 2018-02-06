@@ -7,14 +7,13 @@ class AppDelegate
   include CDQ
 
   PREFS_DEFAULTS = {
-    'AskInterval' => 20
+    'AskInterval' => 20,
+    'VaryInterval' => false
   }
 
   def applicationDidFinishLaunching(notification)
 
-
-    p    NSFileManager.defaultManager.URLsForDirectory(NSDocumentDirectory,  inDomains:NSUserDomainMask).lastObject.path
-    ap    NSFileManager.defaultManager.URLsForDirectory(NSDocumentDirectory,  inDomains:NSUserDomainMask).lastObject.absoluteString
+    NSUserNotificationCenter.defaultUserNotificationCenter.setDelegate(self)
 
     @hotKeyManager = SPHotKeyManager::instance
     hk = SPHotKey.alloc.initWithTarget(self, action:'ask_early', object:nil, keyCode:0x12, modifierFlags:(NSCommandKeyMask+NSShiftKeyMask))
@@ -28,6 +27,21 @@ class AppDelegate
     @export = Export.alloc.init
     @ask = Ask.alloc.init
     @ask.ask_and_schedule
+    self.showNotification
+  end
+
+  def showNotification
+    notification = NSUserNotification.alloc.init
+    notification.title = "What's happening"
+    notification.informativeText = "Please tell me where you're working on."
+    #notification.soundName = NSUserNotificationDefaultSoundName
+    notification.setDeliveryDate(NSDate.dateWithTimeIntervalSinceNow(3))
+    NSUserNotificationCenter.defaultUserNotificationCenter.scheduleNotification(notification)
+  end
+
+  def userNotificationCenter(center, didActivateNotification: notification)
+    @status_item.popUpStatusItemMenu(@status_menu)
+    center.removeDeliveredNotification(notification)
   end
 
   def clicked_menu_bar sender

@@ -52,13 +52,23 @@ class Ask
 
     interval = NSUserDefaults.standardUserDefaults.integerForKey('AskInterval')
 
-    # -5..5 + 20 yields a range of 15-25 minutes.
-    wait_time = (((rand*10).to_i-5)+interval)*60
+    if NSUserDefaults.standardUserDefaults.boolForKey('VaryInterval')
+      # -5..5 + 20 yields a range of 15-25 minutes.
+      wait_time = (((rand*10).to_i-5)+interval)*60
+      p 'VaryInterval'
+    else
+      wait_time = interval*60
+      p 'NoVaryInterval'
+    end
+
     @timer = NSTimer.scheduledTimerWithTimeInterval(wait_time, target: self, selector: 'ask_and_schedule', userInfo: nil, repeats: false)
     old_app.activateWithOptions(NSApplicationActivateIgnoringOtherApps)
   end
 
   def ask
+
+    NSApp.delegate.showNotification
+
     picked = PROMPTS[rand*PROMPTS.length]
     input_window(picked, @last_answer)
   end

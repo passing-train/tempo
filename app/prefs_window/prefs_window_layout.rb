@@ -7,11 +7,14 @@ class PrefsWindowLayout < MK::WindowLayout
       style_mask (style_mask & ~NSResizableWindowMask)
 
       add NSButton, :button_close
-      add NSTextField, :time_interval_label
+      add NSTextField, :lbl_time_interval
       add NSTextField, :time_interval
+
+      add NSTextField, :lbl_check_vary_interval
+      add NSButton, :check_vary_interval
   end
 
-  def time_interval_label_style
+  def lbl_time_interval_style
     configure_as_label_with_title('Ask interval time')
 
     constraints do
@@ -30,8 +33,34 @@ class PrefsWindowLayout < MK::WindowLayout
     constraints do
       width 40
       height 20
-      left.equals(:time_interval_label, :right).plus(10)
+      left.equals(:superview, :left).plus(120)
       top.equals(:superview, :top).plus(20)
+    end
+  end
+
+  def lbl_check_vary_interval_style
+    configure_as_label_with_title('Vary interval time')
+
+    constraints do
+      width 80
+      height 20
+      left.equals(:superview, :left).plus(20)
+      top.equals(:superview, :top).plus(50)
+    end
+  end
+
+
+  def check_vary_interval_style
+    tag 2
+    button_type NSSwitchButton
+    bezel_style 0
+    title ''
+
+    constraints do
+      width 40
+      height 20
+      left.equals(:superview, :left).plus(120)
+      top.equals(:superview, :top).plus(50)
     end
   end
 

@@ -28,7 +28,7 @@ class ListEntriesWindowLayout < MK::WindowLayout
 
     add NSTextField, :lbl_addextratime_field
     add NSTextField, :addextratime_field
-    add NSButton, :button_divideextra
+#    add NSButton, :button_divideextra
     add NSButton, :button_lastdayextra
 
   end
@@ -209,6 +209,13 @@ class ListEntriesWindowLayout < MK::WindowLayout
       resizing_mask NSTableColumnUserResizingMask
     end
 
+    add_column('total_time') do
+      title 'Total time'
+      min_width 102
+      width parent_bounds.size.width - 170
+      resizing_mask NSTableColumnUserResizingMask
+    end
+
     add_column('total_day_time') do
       title 'Time today'
       min_width 102
@@ -216,12 +223,6 @@ class ListEntriesWindowLayout < MK::WindowLayout
       resizing_mask NSTableColumnUserResizingMask
     end
 
-    add_column('total_time') do
-      title 'Total time'
-      min_width 102
-      width parent_bounds.size.width - 170
-      resizing_mask NSTableColumnUserResizingMask
-    end
   end
 
   def configure_as_textinput_with_value value
