@@ -33,13 +33,12 @@ This is for the blue background. not working
 =end
 end
 
-
-
 class WuAutoCompleteTextField < NSTextField
   attr_reader :maxResults
   attr_accessor :autoCompleteTableView
   attr_accessor :tableViewDelegate
   attr_accessor :autoCompletePopover
+  attr_accessor :popOverWidth
 
   def awakeFromNib
     @popOverWidth = 350.0
@@ -80,7 +79,7 @@ class WuAutoCompleteTextField < NSTextField
     @autoCompletePopover = NSPopover.alloc.init
     @autoCompletePopover.animates = false
     @autoCompletePopover.contentViewController = contentViewController
-    @autoCompletePopover.becomeFirstResponder
+#    @autoCompletePopover.becomeFirstResponder
     @autoCompletePopover.delegate = self
 
     @matches = []
@@ -103,12 +102,22 @@ class WuAutoCompleteTextField < NSTextField
   def keyUp(event)
     row = @autoCompleteTableView.selectedRow
     isShow = @autoCompletePopover.isShown
+    if isShow
+    #  p "hjafsdfds'"
+    #  p self.window
+    #  p      self.becomeFirstResponder
+#      self.window.makeFirstResponder @autoCompletePopover
+#      p @autoCompletePopover.becomeFirstResponder
+    end
 
+
+    p event.keyCode
     case event.keyCode
     when 125 #down
       if isShow
         @autoCompleteTableView.selectRowIndexes(NSIndexSet.indexSetWithIndex((row + 1)), byExtendingSelection: false)
         @autoCompleteTableView.scrollRowToVisible(@autoCompleteTableView.selectedRow)
+        insert(self)
         return #skip default behavior
       end
 
@@ -116,12 +125,15 @@ class WuAutoCompleteTextField < NSTextField
       if isShow
         @autoCompleteTableView.selectRowIndexes(NSIndexSet.indexSetWithIndex((row - 1)), byExtendingSelection: false)
         @autoCompleteTableView.scrollRowToVisible(@autoCompleteTableView.selectedRow)
+        insert(self)
         return #skip default behavior
       end
     when 36, 48, 49 # return, tab, space
     #when 36, 49 # return, tab, space
       if isShow
+        p "hallo"
         insert(self)
+        @autoCompletePopover.close()
       end
       return #//skip default behavior
     else
@@ -168,7 +180,6 @@ class WuAutoCompleteTextField < NSTextField
       end
     end
 
-    @autoCompletePopover.close()
   end
 
   def completionsForPartialWordRange(charRange, indexOfSelectedItem: index)

@@ -21,7 +21,12 @@ class ListEntriesWindowLayout < MK::WindowLayout
     add NSTextField, :lbl_project_field
 
     add NSTextField, :entry_field
-    add NSTextField, :customer_field
+#    add NSTextField, :customer_field
+    @customer_field = WuAutoCompleteTextField.alloc.initWithFrame(NSMakeRect(0, 0, 300, 24))
+    @customer_field.awakeFromNib
+    @customer_field.popOverWidth = 150.0
+    add @customer_field, :customer_field
+
     add NSTextField, :project_field
 
     add NSButton, :button_update

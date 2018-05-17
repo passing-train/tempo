@@ -21,12 +21,19 @@ class ListEntriesWindowController < NSWindowController
       @button_update.target = self
       @button_update.action = 'update:'
 
+
       @table_view = @layout.get(:table_view)
       @table_view.delegate = self
       @table_view.dataSource = self
       @entry_field = @layout.get(:entry_field)
       @project_field = @layout.get(:project_field)
+
       @customer_field = @layout.get(:customer_field)
+      @customer_field.tableViewDelegate = self
+      @customer_field.delegate = self
+
+#      self.window.setInitialFirstResponder(@customer_field)
+#      self.window.makeFirstResponder(@customer_field)
 
       @addextratime_field = @layout.get(:addextratime_field)
 
@@ -39,6 +46,29 @@ class ListEntriesWindowController < NSWindowController
     end
 
   end
+
+
+  def keyUp(event)
+
+    case event.keyCode
+    when 36, 48, 49 # return, tab, space
+      if @customer_field.autoCompletePopover.isShown
+        @customer_field.autoCompletePopover.close()
+        return
+      end
+    else
+    end
+
+  end
+
+  def textField(textField, completions:somecompletions, forPartialWordRange:partialWordRange, indexOfSelectedItem:theIndexOfSelectedItem)
+
+    p textField
+
+    matches = Customer.where(:name).contains(textField.stringValue,NSCaseInsensitivePredicateOption).map(&:name).uniq
+    matches
+  end
+
 
   def setDateFormats
     @dateFormat = NSDateFormatter.new
@@ -70,7 +100,12 @@ class ListEntriesWindowController < NSWindowController
     Entry.where(:title).eq(@entries[@last_selected_row].title).each do |e|
       e.title = @entry_field.stringValue.to_s
       e.project_id = @project_field.stringValue.to_s
-      e.customer_id = @customer_field.stringValue.to_i
+
+      customer = Customer.where(:name).eq(@customer_field.stringValue.to_s).first
+      if customer
+        e.customer_id = customer.customer_id.to_i
+      end
+
     end
     cdq.save
     populateEntries
@@ -238,7 +273,14 @@ class ListEntriesWindowController < NSWindowController
       enable_edit
       @entry_field.setStringValue @entries[idx].title
       @project_field.setStringValue @entries[idx].project_id.to_s
-      @customer_field.setStringValue @entries[idx].customer_id.to_s
+
+      p @entries[idx].customer_id
+
+      customer = Customer.where(:customer_id).eq(@entries[idx].customer_id).first
+      if customer
+        @customer_field.setStringValue customer.name.to_s
+      end
+
     end
   end
 
@@ -263,7 +305,10 @@ class ListEntriesWindowController < NSWindowController
     when 'entry'
       text_field.stringValue = record.title
     when 'customer'
-      text_field.stringValue = record.customer_id.to_s
+      customer = Customer.where(:customer_id).eq(record.customer_id).first
+      if customer
+        text_field.stringValue = customer.name.to_s
+      end
     when 'project'
       text_field.stringValue = record.project_id.to_s
     when 'total_day_time'
