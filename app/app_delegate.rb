@@ -80,6 +80,13 @@ class AppDelegate
     @list_entries_window_controller.tableUpdate
   end
 
+  def open_manage_customers_window
+    @list_manage_customers_constroller ||= ManageCustomersWindowController.alloc.init
+    @list_manage_customers_constroller.showWindow(self)
+    @list_manage_customers_constroller.window.orderFrontRegardless
+    @list_manage_customers_constroller.tableUpdate
+  end
+
   def openPreferences(sender)
     @prefs_controller ||= PrefsWindowController.alloc.init
     @prefs_controller.showWindow(self)
