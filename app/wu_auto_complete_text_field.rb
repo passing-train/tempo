@@ -39,12 +39,14 @@ class WuAutoCompleteTextField < NSTextField
   attr_accessor :tableViewDelegate
   attr_accessor :autoCompletePopover
   attr_accessor :popOverWidth
+  attr_accessor :wu_identifier
 
   def awakeFromNib
     @popOverWidth = 350.0
     @popOverPadding = 0.0
     @maxResults = 10
     @tableViewDelegate = nil
+    @wu_identifier = 'noid'
 
     column1 = NSTableColumn.alloc.initWithIdentifier "text"
     column1.setWidth (@popOverWidth - 2.0 * @popOverPadding)
@@ -105,6 +107,8 @@ class WuAutoCompleteTextField < NSTextField
     if isShow
     end
 
+    p "wufield"+ event.keyCode.to_s
+
     case event.keyCode
     when 125 #down
       if isShow
@@ -122,10 +126,11 @@ class WuAutoCompleteTextField < NSTextField
         return #skip default behavior
       end
     when 36, 48, 49 # return, tab, space
-      if isShow
+#      if isShow
         insert(self)
+        p 'joho'
         @autoCompletePopover.close()
-      end
+#      end
       return #//skip default behavior
     else
     end

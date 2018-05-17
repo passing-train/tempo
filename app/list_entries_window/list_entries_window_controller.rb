@@ -26,11 +26,14 @@ class ListEntriesWindowController < NSWindowController
       @table_view.delegate = self
       @table_view.dataSource = self
       @entry_field = @layout.get(:entry_field)
-      @project_field = @layout.get(:project_field)
 
       @customer_field = @layout.get(:customer_field)
       @customer_field.tableViewDelegate = self
       @customer_field.delegate = self
+
+      @project_field = @layout.get(:project_field)
+      @project_field.tableViewDelegate = self
+      @project_field.delegate = self
 
       @addextratime_field = @layout.get(:addextratime_field)
 
@@ -46,12 +49,19 @@ class ListEntriesWindowController < NSWindowController
 
   def keyUp(event)
 
+    p event.keyCode
     case event.keyCode
     when 36, 48, 49 # return, tab, space
       if @customer_field.autoCompletePopover.isShown
         @customer_field.autoCompletePopover.close()
         return
       end
+
+      if @project_field.autoCompletePopover.isShown
+        @project_field.autoCompletePopover.close()
+        return
+      end
+
     else
     end
 
@@ -59,7 +69,12 @@ class ListEntriesWindowController < NSWindowController
 
   def textField(textField, completions:somecompletions, forPartialWordRange:partialWordRange, indexOfSelectedItem:theIndexOfSelectedItem)
 
-    matches = Customer.where(:name).contains(textField.stringValue,NSCaseInsensitivePredicateOption).map(&:name).uniq
+    if textField.wu_identifier == 'customer'
+      matches = Customer.where(:name).contains(textField.stringValue,NSCaseInsensitivePredicateOption).map(&:name).uniq
+    else
+      matches = Project.where(:project_id).contains(textField.stringValue,NSCaseInsensitivePredicateOption).map(&:project_id).uniq
+    end
+
     matches
   end
 
