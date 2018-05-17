@@ -18,6 +18,11 @@ class ManageCustomersWindowController < NSWindowController
       @button_update.target = self
       @button_update.action = 'update:'
 
+      @button_delete = @layout.get(:button_delete)
+      @button_delete.target = self
+      @button_delete.action = 'delete:'
+
+
       @table_view = @layout.get(:table_view)
       @table_view.delegate = self
       @table_view.dataSource = self
@@ -67,16 +72,34 @@ class ManageCustomersWindowController < NSWindowController
 
   end
 
+  def delete sender
+
+    @last_selected_row = @table_view.selectedRow
+
+    Customer.where(:customer_id).eq(@customers[@last_selected_row].customer_id).each do |e|
+      e.destroy
+    end
+
+    cdq.save
+    populateCustomers
+    @table_view.reloadData
+    disable_edit
+
+    self.window.makeFirstResponder @table_view
+  end
+
   def disable_edit
       @button_mode = 'add'
       @name_field.setStringValue ''
       @customer_id_field.setStringValue ''
       @button_update.setTitle 'Add customer'
+      @button_delete.setEnabled false
   end
 
   def enable_edit
       @button_mode = 'edit'
       @button_update.setTitle 'Edit customer'
+      @button_delete.setEnabled true
   end
 
   def tableViewSelectionDidChange sender

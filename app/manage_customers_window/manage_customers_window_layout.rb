@@ -23,6 +23,7 @@ class ManageCustomersWindowLayout < MK::WindowLayout
     add NSTextField, :customer_id_field
 
     add NSButton, :button_update
+    add NSButton, :button_delete
 
   end
 
@@ -81,7 +82,6 @@ class ManageCustomersWindowLayout < MK::WindowLayout
     end
   end
 
-
   def button_update_style
     key_equivalent "\r"
     bezel_style NSRoundedBezelStyle
@@ -89,11 +89,25 @@ class ManageCustomersWindowLayout < MK::WindowLayout
     constraints do
       width 120
       height 20
-      left.equals(:superview, :right).minus 153
-      top.equals(:superview, :top).plus 238
+      left.equals(:customer_id_field, :left)
+      top.equals(:customer_id_field, :bottom).plus 20
     end
 
     title "add customer"
+  end
+
+  def button_delete_style
+    key_equivalent "\r"
+    bezel_style NSRoundedBezelStyle
+
+    constraints do
+      width 120
+      height 20
+      left.equals(:button_update, :right).plus 10
+      top.equals(:customer_id_field, :bottom).plus 20
+    end
+
+    title "delete customer"
   end
 
   def table_view_style
