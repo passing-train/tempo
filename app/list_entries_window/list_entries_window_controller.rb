@@ -21,6 +21,14 @@ class ListEntriesWindowController < NSWindowController
       @button_update.target = self
       @button_update.action = 'update:'
 
+      @button_delete = @layout.get(:button_delete)
+      @button_delete.target = self
+      @button_delete.action = 'delete:'
+
+      @button_cancel = @layout.get(:button_cancel)
+      @button_cancel.target = self
+      @button_cancel.action = 'cancel:'
+      @button_cancel.setEnabled false
 
       @table_view = @layout.get(:table_view)
       @table_view.delegate = self
@@ -29,11 +37,11 @@ class ListEntriesWindowController < NSWindowController
 
       @customer_field = @layout.get(:customer_field)
       @customer_field.tableViewDelegate = self
-      @customer_field.delegate = self
+#      @customer_field.delegate = self
 
       @project_field = @layout.get(:project_field)
       @project_field.tableViewDelegate = self
-      @project_field.delegate = self
+#      @project_field.delegate = self
 
       @addextratime_field = @layout.get(:addextratime_field)
 
@@ -47,21 +55,34 @@ class ListEntriesWindowController < NSWindowController
 
   end
 
-  def keyUp(event)
+  def cancel sender
+    disable_edit
+    @table_view.deselectAll sender
+    self.window.makeFirstResponder @table_view
+  end
 
+  def delete sender
+
+    @last_selected_row = @table_view.selectedRow
+    Entry.where(:title).eq(@entries[@last_selected_row].title).each do |e|
+      e.destroy
+    end
+
+    cdq.save
+    populateEntries
+    @table_view.reloadData
+    disable_edit
+
+    self.window.makeFirstResponder @table_view
+  end
+
+  def keyUp(event)
     p event.keyCode
     case event.keyCode
-    when 36, 48, 49 # return, tab, space
-      if @customer_field.autoCompletePopover.isShown
-        @customer_field.autoCompletePopover.close()
-        return
-      end
-
-      if @project_field.autoCompletePopover.isShown
-        @project_field.autoCompletePopover.close()
-        return
-      end
-
+    when 36, 48, 51, 49 # return, tab, space
+      p '?'
+      @customer_field.autoCompletePopover.close()
+      @project_field.autoCompletePopover.close()
     else
     end
 
@@ -127,7 +148,9 @@ class ListEntriesWindowController < NSWindowController
   end
 
   def add_extra_time_last_day sender
-    if @addextratime_field.stringValue != @addextratime_field.stringValue.to_s.to_f.to_s
+    if @addextratime_field.stringValue != @addextratime_field.stringValue.to_s.to_i.to_s and
+        @addextratime_field.stringValue != @addextratime_field.stringValue.to_s.to_f.to_s
+
       alert = NSAlert.alloc.init
       alert.setMessageText  "Can't add time"
       alert.setInformativeText "Please enter a float value. 1 and a half hour is 1.5."
@@ -257,6 +280,9 @@ class ListEntriesWindowController < NSWindowController
       @customer_field.setEditable false
 
       @button_update.setEnabled false
+      @button_delete.setEnabled false
+      @button_cancel.setEnabled false
+
 
       @addextratime_field.setStringValue ''
       @addextratime_field.setEditable false
@@ -268,6 +294,8 @@ class ListEntriesWindowController < NSWindowController
       @project_field.setEditable true
       @customer_field.setEditable true
       @button_update.setEnabled true
+      @button_delete.setEnabled true
+      @button_cancel.setEnabled true
 
       @addextratime_field.setEditable true
       @button_lastdayextra.setEnabled true

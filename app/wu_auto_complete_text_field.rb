@@ -81,8 +81,9 @@ class WuAutoCompleteTextField < NSTextField
     @autoCompletePopover = NSPopover.alloc.init
     @autoCompletePopover.animates = false
     @autoCompletePopover.contentViewController = contentViewController
-#    @autoCompletePopover.becomeFirstResponder
+    #@autoCompletePopover.becomeFirstResponder
     @autoCompletePopover.delegate = self
+    @autoCompletePopover.setBehaviour NSPopOverBehaviourTransient
 
     @matches = []
 
@@ -125,11 +126,13 @@ class WuAutoCompleteTextField < NSTextField
         insert(self)
         return #skip default behavior
       end
-    when 36, 48, 49 # return, tab, space
+    when 36, 48, 51,  49 # return, tab, space
 #      if isShow
-        insert(self)
+      #  insert(self)
         p 'joho'
-        @autoCompletePopover.close()
+      self.autoCompletePopover.close()
+      #  @autoCompletePopover.close
+      #  @autoCompletePopover.performClose self
 #      end
       return #//skip default behavior
     else

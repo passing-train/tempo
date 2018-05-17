@@ -36,6 +36,8 @@ class ListEntriesWindowLayout < MK::WindowLayout
     add @project_field, :project_field
 
     add NSButton, :button_update
+    add NSButton, :button_delete
+    add NSButton, :button_cancel
 
     add NSTextField, :lbl_addextratime_field
     add NSTextField, :addextratime_field
@@ -128,14 +130,43 @@ class ListEntriesWindowLayout < MK::WindowLayout
     bezel_style NSRoundedBezelStyle
 
     constraints do
-      width 120
+      width 80
       height 20
-      left.equals(:superview, :right).minus 153
-      top.equals(:superview, :top).plus 238
+      left.equals(:project_field, :left)
+      top.equals(:project_field, :bottom).plus 20
     end
 
-    title "update entry"
+    title "update"
   end
+
+  def button_delete_style
+    key_equivalent "\r"
+    bezel_style NSRoundedBezelStyle
+
+    constraints do
+      width 80
+      height 20
+      left.equals(:button_update, :right).plus 10
+      top.equals(:project_field, :bottom).plus 20
+    end
+
+    title "delete"
+  end
+
+  def button_cancel_style
+    key_equivalent "\r"
+    bezel_style NSRoundedBezelStyle
+
+    constraints do
+      width 80
+      height 20
+      left.equals(:button_delete, :right).plus 10
+      top.equals(:project_field, :bottom).plus 20
+    end
+
+    title "cancel"
+  end
+
 
 
   def lbl_addextratime_field_style
