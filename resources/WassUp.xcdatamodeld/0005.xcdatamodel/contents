@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model name="" userDefinedModelVersionIdentifier="0005" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="2061" systemVersion="12D78" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
+  <entity name="Entry" syncable="YES" representedClassName="Entry" codeGenerationType="class">
+    <attribute optional="NO" syncable="YES" attributeType="String" name="title"/>
+    <attribute optional="YES" syncable="YES" attributeType="Date" name="created_at"/>
+    <attribute optional="YES" syncable="YES" attributeType="Integer 32" name="time_delta" defaultValueString="0"/>
+    <attribute optional="YES" syncable="YES" attributeType="Boolean" name="last_in_block" defaultValueString="YES"/>
+    <attribute optional="YES" syncable="YES" attributeType="Integer 32" name="customer_id" defaultValueString="0"/>
+    <attribute optional="YES" syncable="YES" attributeType="String" name="project_id"/>
+    <attribute optional="YES" syncable="YES" attributeType="Float" name="extra_time" defaultValueString="0.0"/>
+    <relationship optional="YES" deletionRule="Nullify" syncable="YES" name="customer" inverseEntity="Customer" destinationEntity="Customer" inverseName="entries" maxCount="1"/>
+  </entity>
+  <entity name="Customer" syncable="YES" representedClassName="Customer" codeGenerationType="class">
+    <attribute optional="NO" syncable="YES" attributeType="String" name="name"/>
+    <attribute optional="NO" syncable="YES" attributeType="Integer 32" name="customer_id" defaultValueString="0"/>
+    <relationship optional="YES" deletionRule="Nullify" syncable="YES" name="entries" inverseEntity="Entry" destinationEntity="Entry" inverseName="customer" toMany="YES"/>
+    <relationship optional="YES" deletionRule="Nullify" syncable="YES" name="projects" inverseEntity="Project" destinationEntity="Project" inverseName="customer" toMany="YES"/>
+  </entity>
+  <entity name="Project" syncable="YES" representedClassName="Project" codeGenerationType="class">
+    <attribute optional="NO" syncable="YES" attributeType="String" name="name"/>
+    <attribute optional="YES" syncable="YES" attributeType="Integer 32" name="customer_id" defaultValueString="0"/>
+    <relationship optional="YES" deletionRule="Nullify" syncable="YES" name="entries" inverseEntity="Entry" destinationEntity="Entry" inverseName="project" toMany="YES"/>
+    <relationship optional="YES" deletionRule="Nullify" syncable="YES" name="customer" inverseEntity="Customer" destinationEntity="Customer" inverseName="projects" maxCount="1"/>
+  </entity>
+</model>

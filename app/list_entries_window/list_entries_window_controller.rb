@@ -32,9 +32,6 @@ class ListEntriesWindowController < NSWindowController
       @customer_field.tableViewDelegate = self
       @customer_field.delegate = self
 
-#      self.window.setInitialFirstResponder(@customer_field)
-#      self.window.makeFirstResponder(@customer_field)
-
       @addextratime_field = @layout.get(:addextratime_field)
 
       @button_lastdayextra = @layout.get(:button_lastdayextra)
@@ -46,7 +43,6 @@ class ListEntriesWindowController < NSWindowController
     end
 
   end
-
 
   def keyUp(event)
 
@@ -62,8 +58,6 @@ class ListEntriesWindowController < NSWindowController
   end
 
   def textField(textField, completions:somecompletions, forPartialWordRange:partialWordRange, indexOfSelectedItem:theIndexOfSelectedItem)
-
-    p textField
 
     matches = Customer.where(:name).contains(textField.stringValue,NSCaseInsensitivePredicateOption).map(&:name).uniq
     matches
@@ -130,7 +124,6 @@ class ListEntriesWindowController < NSWindowController
       last_day_entry = Entry.where(:title).eq(@entries[@last_selected_row].title).sort_by('created_at').last
       last_day_entry.extra_time = last_day_entry.extra_time + TimeUtility::format_time_from_metric_hours_to_seconds(@addextratime_field.stringValue.to_f)
 
-      p @addextratime_field.stringValue.to_f
       cdq.save
       @table_view.reloadData
 
@@ -273,8 +266,6 @@ class ListEntriesWindowController < NSWindowController
       enable_edit
       @entry_field.setStringValue @entries[idx].title
       @project_field.setStringValue @entries[idx].project_id.to_s
-
-      p @entries[idx].customer_id
 
       customer = Customer.where(:customer_id).eq(@entries[idx].customer_id).first
       if customer

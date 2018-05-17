@@ -30,6 +30,7 @@ class AppDelegate
       addItem(NSMenuItem.separatorItem)
       addItemWithTitle('Time entries', action: 'open_list_entries_window', keyEquivalent: 'e')
       addItemWithTitle('Customers', action: 'open_manage_customers_window', keyEquivalent: 'k')
+      addItemWithTitle('Projects', action: 'open_manage_projects_window', keyEquivalent: 'w')
       addItem(NSMenuItem.separatorItem)
       addItemWithTitle('Cut', action: 'cut:', keyEquivalent: 'x')
       addItemWithTitle('Copy', action: 'copy:', keyEquivalent: 'c')

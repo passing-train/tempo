@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model name="" userDefinedModelVersionIdentifier="0005 add_customers_and_projects" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="2061" systemVersion="12D78" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
+<model name="" userDefinedModelVersionIdentifier="0006" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="2061" systemVersion="12D78" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
   <entity name="Entry" syncable="YES" representedClassName="Entry" codeGenerationType="class">
     <attribute optional="NO" syncable="YES" attributeType="String" name="title"/>
     <attribute optional="YES" syncable="YES" attributeType="Date" name="created_at"/>
@@ -17,8 +17,7 @@
     <relationship optional="YES" deletionRule="Nullify" syncable="YES" name="projects" inverseEntity="Project" destinationEntity="Project" inverseName="customer" toMany="YES"/>
   </entity>
   <entity name="Project" syncable="YES" representedClassName="Project" codeGenerationType="class">
-    <attribute optional="NO" syncable="YES" attributeType="String" name="name"/>
-    <attribute optional="NO" syncable="YES" attributeType="Integer 32" name="customer_id" defaultValueString="0"/>
+    <attribute optional="NO" syncable="YES" attributeType="String" name="project_id"/>
     <relationship optional="YES" deletionRule="Nullify" syncable="YES" name="entries" inverseEntity="Entry" destinationEntity="Entry" inverseName="project" toMany="YES"/>
     <relationship optional="YES" deletionRule="Nullify" syncable="YES" name="customer" inverseEntity="Customer" destinationEntity="Customer" inverseName="projects" maxCount="1"/>
   </entity>

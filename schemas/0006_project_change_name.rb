@@ -1,4 +1,4 @@
-schema "0005" do
+schema "0006" do
   entity "Entry" do
     string :title, optional: false
     datetime :created_at
@@ -18,8 +18,7 @@ schema "0005" do
   end
 
   entity "Project" do
-    string :name, optional: false
-    integer32 :customer_id, optional: true
+    string :project_id, optional: false
     has_many :entries
     belongs_to :customer
   end

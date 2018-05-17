@@ -1,4 +1,4 @@
-schema "0004 add_multiplefields" do
+schema "0004" do
   entity "Entry" do
     string :title, optional: false
     datetime :created_at

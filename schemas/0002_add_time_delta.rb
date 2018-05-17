@@ -1,4 +1,4 @@
-schema "0002 add_time_delta" do
+schema "0002" do
   entity "Entry" do
     string :title, optional: false
     datetime :created_at

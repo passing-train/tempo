@@ -1,9 +1,9 @@
-class ManageCustomersWindowController < NSWindowController
+class ManageProjectsWindowController < NSWindowController
 
   include CDQ
 
   def layout
-    @layout ||= ManageCustomersWindowLayout.new
+    @layout ||= ManageProjectsWindowLayout.new
   end
 
   def init
@@ -12,7 +12,7 @@ class ManageCustomersWindowController < NSWindowController
 
       @layout = layout
 
-      populateCustomers
+      populateProjects
 
       @button_update = @layout.get(:button_update)
       @button_update.target = self
@@ -25,14 +25,13 @@ class ManageCustomersWindowController < NSWindowController
       @button_cancel = @layout.get(:button_cancel)
       @button_cancel.target = self
       @button_cancel.action = 'cancel:'
-      @button_cancel.setEnabled false
 
       @table_view = @layout.get(:table_view)
       @table_view.delegate = self
       @table_view.dataSource = self
 
-      @name_field = @layout.get(:name_field)
-      @customer_id_field = @layout.get(:customer_id_field)
+#      @name_field = @layout.get(:name_field)
+      @project_id_field = @layout.get(:project_id_field)
 
       @last_selected_row = nil
       @button_mode = 'add'
@@ -40,12 +39,12 @@ class ManageCustomersWindowController < NSWindowController
     end
   end
 
-  def populateCustomers
-    @customers = Customer.sort_by(:name)
+  def populateProjects
+    @projects = Project.sort_by(:project_id)
   end
 
   def tableUpdate
-    populateCustomers
+    populateProjects
     @table_view.reloadData
   end
 
@@ -58,18 +57,18 @@ class ManageCustomersWindowController < NSWindowController
   def update sender
 
     if @button_mode == 'add'
-      Customer.create(name: @name_field.stringValue.to_s, customer_id: @customer_id_field.stringValue.to_i)
+      Project.create(project_id: @project_id_field.stringValue.to_s)
     else
       @last_selected_row = @table_view.selectedRow
 
-      Customer.where(:customer_id).eq(@customers[@last_selected_row].customer_id).each do |e|
-        e.name = @name_field.stringValue.to_s
-        e.customer_id = @customer_id_field.stringValue.to_i
+      Project.where(:project_id).eq(@projects[@last_selected_row].project_id).each do |e|
+#        e.name = @name_field.stringValue.to_s
+        e.project_id = @project_id_field.stringValue.to_s
       end
     end
 
     cdq.save
-    populateCustomers
+    populateProjects
     @table_view.reloadData
     disable_edit
 
@@ -86,12 +85,12 @@ class ManageCustomersWindowController < NSWindowController
 
     @last_selected_row = @table_view.selectedRow
 
-    Customer.where(:customer_id).eq(@customers[@last_selected_row].customer_id).each do |e|
+    Project.where(:project_id).eq(@projects[@last_selected_row].project_id).each do |e|
       e.destroy
     end
 
     cdq.save
-    populateCustomers
+    populateProjects
     @table_view.reloadData
     disable_edit
 
@@ -100,16 +99,16 @@ class ManageCustomersWindowController < NSWindowController
 
   def disable_edit
       @button_mode = 'add'
-      @name_field.setStringValue ''
-      @customer_id_field.setStringValue ''
-      @button_update.setTitle 'Add customer'
+#      @name_field.setStringValue ''
+      @project_id_field.setStringValue ''
+      @button_update.setTitle 'Add project'
       @button_delete.setEnabled false
       @button_cancel.setEnabled false
   end
 
   def enable_edit
       @button_mode = 'edit'
-      @button_update.setTitle 'Edit customer'
+      @button_update.setTitle 'Edit project'
       @button_delete.setEnabled true
       @button_cancel.setEnabled true
   end
@@ -120,13 +119,13 @@ class ManageCustomersWindowController < NSWindowController
       disable_edit
     else
       enable_edit
-      @name_field.setStringValue @customers[idx].name
-      @customer_id_field.setStringValue @customers[idx].customer_id.to_s
+#      @name_field.setStringValue @projects[idx].name
+      @project_id_field.setStringValue @projects[idx].project_id.to_s
     end
   end
 
   def numberOfRowsInTableView(table_view)
-    @customers.length
+    @projects.length
   end
 
   def tableView(table_view, viewForTableColumn: column, row: rowidx)
@@ -140,13 +139,13 @@ class ManageCustomersWindowController < NSWindowController
       text_field.bezeled = false
     end
 
-    record = @customers[rowidx]
+    record = @projects[rowidx]
 
     case column.identifier
-    when 'name'
-      text_field.stringValue = record.name
-    when 'customer_id'
-      text_field.stringValue = record.customer_id.to_s
+#    when 'name'
+#      text_field.stringValue = record.name
+    when 'project_id'
+      text_field.stringValue = record.project_id.to_s
     end
 
     return text_field

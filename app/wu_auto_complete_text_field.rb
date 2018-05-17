@@ -103,15 +103,8 @@ class WuAutoCompleteTextField < NSTextField
     row = @autoCompleteTableView.selectedRow
     isShow = @autoCompletePopover.isShown
     if isShow
-    #  p "hjafsdfds'"
-    #  p self.window
-    #  p      self.becomeFirstResponder
-#      self.window.makeFirstResponder @autoCompletePopover
-#      p @autoCompletePopover.becomeFirstResponder
     end
 
-
-    p event.keyCode
     case event.keyCode
     when 125 #down
       if isShow
@@ -129,9 +122,7 @@ class WuAutoCompleteTextField < NSTextField
         return #skip default behavior
       end
     when 36, 48, 49 # return, tab, space
-    #when 36, 49 # return, tab, space
       if isShow
-        p "hallo"
         insert(self)
         @autoCompletePopover.close()
       end
