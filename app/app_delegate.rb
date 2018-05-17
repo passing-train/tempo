@@ -34,9 +34,8 @@ class AppDelegate
     notification = NSUserNotification.alloc.init
     notification.title = "What's happening"
     notification.informativeText = "Please tell me where you're working on."
-    #notification.soundName = NSUserNotificationDefaultSoundName
-    notification.setDeliveryDate(NSDate.dateWithTimeIntervalSinceNow(3))
-    NSUserNotificationCenter.defaultUserNotificationCenter.scheduleNotification(notification)
+#    notification.soundName = NSUserNotificationDefaultSoundName
+    NSUserNotificationCenter.defaultUserNotificationCenter.deliverNotification(notification)
   end
 
   def userNotificationCenter(center, didActivateNotification: notification)

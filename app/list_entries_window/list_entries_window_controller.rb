@@ -135,6 +135,7 @@ class ListEntriesWindowController < NSWindowController
         e.customer_id = customer.customer_id.to_i
       end
 
+
     end
     cdq.save
     populateEntries
@@ -312,6 +313,8 @@ class ListEntriesWindowController < NSWindowController
       customer = Customer.where(:customer_id).eq(@entries[idx].customer_id).first
       if customer
         @customer_field.setStringValue customer.name.to_s
+      else
+        @customer_field.setStringValue ''
       end
 
     end
