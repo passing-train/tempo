@@ -232,36 +232,36 @@ class ListEntriesWindowLayout < MK::WindowLayout
 
     add_column('entry') do
       title 'Entry'
-      min_width 102
+      min_width 202
       width 300
       resizing_mask NSTableColumnUserResizingMask
     end
 
     add_column('customer') do
       title 'Customer'
-      min_width 50
-      width parent_bounds.size.width - 170
+      min_width 100
+      width 130
       resizing_mask NSTableColumnUserResizingMask
     end
 
     add_column('project') do
       title 'Project'
-      min_width 102
-      width parent_bounds.size.width - 170
+      min_width 100
+      width 110
       resizing_mask NSTableColumnUserResizingMask
     end
 
     add_column('total_time') do
       title 'Total time'
-      min_width 102
-      width parent_bounds.size.width - 170
+      min_width 60
+      width 70
       resizing_mask NSTableColumnUserResizingMask
     end
 
     add_column('total_day_time') do
       title 'Time today'
-      min_width 102
-      width parent_bounds.size.width - 170
+      min_width 60
+      width 70
       resizing_mask NSTableColumnUserResizingMask
     end
 

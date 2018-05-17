@@ -38,28 +38,6 @@ class ManageProjectsWindowLayout < MK::WindowLayout
     end
   end
 
-  #def lbl_name_field_style
-    #configure_as_label_with_title "Name"
-    #constraints do
-      #width 300
-      #height 25
-      #left.equals(:superview, :right).minus 278
-      #top.equals(:superview, :top).plus 25
-    #end
-  #end
-
-  #def name_field_style
-    #configure_as_textinput_with_value ""
-    #tag 1
-
-    #constraints do
-      #width 243
-      #height 46
-      #left.equals(:superview, :right).minus 278
-      #top.equals(:superview, :top).plus 46
-    #end
-  #end
-
   def lbl_project_id_field_style
     configure_as_label_with_title "Project ID"
 
@@ -134,17 +112,10 @@ class ManageProjectsWindowLayout < MK::WindowLayout
 
     autoresizing_mask NSViewWidthSizable | NSViewHeightSizable
 
-    #add_column('name') do
-      #title 'Name'
-      #min_width 102
-      #width 300
-      #resizing_mask NSTableColumnUserResizingMask
-    #end
-
     add_column('project_id') do
       title 'Project ID'
-      min_width 50
-      width parent_bounds.size.width - 170
+      min_width 120
+      width 200
       resizing_mask NSTableColumnUserResizingMask
     end
 

@@ -77,7 +77,6 @@ class ListEntriesWindowController < NSWindowController
   end
 
   def keyUp(event)
-    p event.keyCode
     case event.keyCode
     when 36, 48, 51, 49 # return, tab, space
       @customer_field.autoCompletePopover.close()

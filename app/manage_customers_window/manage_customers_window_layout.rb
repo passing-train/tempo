@@ -136,15 +136,15 @@ class ManageCustomersWindowLayout < MK::WindowLayout
 
     add_column('name') do
       title 'Name'
-      min_width 102
-      width 300
+      min_width 100
+      width 130
       resizing_mask NSTableColumnUserResizingMask
     end
 
     add_column('customer_id') do
       title 'Customer ID'
-      min_width 50
-      width parent_bounds.size.width - 170
+      min_width 100
+      width 130
       resizing_mask NSTableColumnUserResizingMask
     end
 
