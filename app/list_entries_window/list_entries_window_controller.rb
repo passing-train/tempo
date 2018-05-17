@@ -80,7 +80,6 @@ class ListEntriesWindowController < NSWindowController
     p event.keyCode
     case event.keyCode
     when 36, 48, 51, 49 # return, tab, space
-      p '?'
       @customer_field.autoCompletePopover.close()
       @project_field.autoCompletePopover.close()
     else

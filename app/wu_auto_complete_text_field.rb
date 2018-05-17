@@ -51,39 +51,38 @@ class WuAutoCompleteTextField < NSTextField
     column1 = NSTableColumn.alloc.initWithIdentifier "text"
     column1.setWidth (@popOverWidth - 2.0 * @popOverPadding)
 
-    tableView = NSTableView.alloc.initWithFrame CGRectZero
+    @autoCompleteTableView = NSTableView.alloc.initWithFrame CGRectZero
+    #@autoCompleteTableView.setSelectionHighlightStyle NSTableViewSelectionHighlightStyleSourceList
+    @autoCompleteTableView.setSelectionHighlightStyle NSTableViewSelectionHighlightStyleRegular
+    @autoCompleteTableView.setBackgroundColor NSColor.clearColor
+    @autoCompleteTableView.setRowSizeStyle NSTableViewRowSizeStyleSmall
+    @autoCompleteTableView.setIntercellSpacing NSMakeSize(10.0, 0.0)
+    @autoCompleteTableView.setHeaderView nil
+    @autoCompleteTableView.setRefusesFirstResponder true
+    @autoCompleteTableView.setTarget self
+    @autoCompleteTableView.addTableColumn(column1)
+    @autoCompleteTableView.setDelegate self
+    @autoCompleteTableView.setDataSource self
 
-    tableView.setSelectionHighlightStyle NSTableViewSelectionHighlightStyleRegular
-#    tableView.setSelectionHighlightStyle NSTableViewSelectionHighlightStyleSourceList
-    tableView.setBackgroundColor NSColor.clearColor
-    tableView.setRowSizeStyle NSTableViewRowSizeStyleSmall
-    tableView.setIntercellSpacing NSMakeSize(10.0, 0.0)
-    tableView.setHeaderView nil
-    tableView.setRefusesFirstResponder true
-    tableView.setTarget self
-    tableView.addTableColumn(column1)
-    tableView.setDelegate self
-    tableView.setDataSource self
+#    @autoCompleteTableView = tableView
 
-    @autoCompleteTableView = tableView
+    @tableSrollView = NSScrollView.alloc.initWithFrame(NSZeroRect)
+    @tableSrollView.setDrawsBackground false
+    @tableSrollView.setDocumentView @autoCompleteTableView
+    @tableSrollView.setHasVerticalScroller true
 
-    tableSrollView = NSScrollView.alloc.initWithFrame(NSZeroRect)
-    tableSrollView.setDrawsBackground false
-    tableSrollView.setDocumentView tableView
-    tableSrollView.setHasVerticalScroller true
+    @contentView = NSView.alloc.initWithFrame([[0, 0], [@popOverWidth, 1]])
+    @contentView.addSubview(@tableSrollView)
 
-    contentView = NSView.alloc.initWithFrame([[0, 0], [@popOverWidth, 1]])
-    contentView.addSubview(tableSrollView)
-
-    contentViewController = NSViewController.alloc.init
-    contentViewController.view = contentView
+    @contentViewController = NSViewController.alloc.init
+    @contentViewController.view = @contentView
 
     @autoCompletePopover = NSPopover.alloc.init
     @autoCompletePopover.animates = false
-    @autoCompletePopover.contentViewController = contentViewController
+    @autoCompletePopover.contentViewController = @contentViewController
     #@autoCompletePopover.becomeFirstResponder
     @autoCompletePopover.delegate = self
-    @autoCompletePopover.setBehaviour NSPopOverBehaviourTransient
+#    @autoCompletePopover.setBehaviour NSPopOverBehaviourTransient
 
     @matches = []
 
@@ -105,8 +104,6 @@ class WuAutoCompleteTextField < NSTextField
   def keyUp(event)
     row = @autoCompleteTableView.selectedRow
     isShow = @autoCompletePopover.isShown
-    if isShow
-    end
 
     p "wufield"+ event.keyCode.to_s
 
@@ -126,14 +123,8 @@ class WuAutoCompleteTextField < NSTextField
         insert(self)
         return #skip default behavior
       end
-    when 36, 48, 51,  49 # return, tab, space
-#      if isShow
-      #  insert(self)
-        p 'joho'
+    when 36, 48, 51, 49 # return, tab, space
       self.autoCompletePopover.close()
-      #  @autoCompletePopover.close
-      #  @autoCompletePopover.performClose self
-#      end
       return #//skip default behavior
     else
     end
