@@ -82,7 +82,7 @@ class AskWindowLayout < MK::WindowLayout
 
     constraints do
       height 16
-      left.equals(:lbl_time_today_field, :left)
+      right.equals(:lbl_time_today_field, :right)
       top.equals(:lbl_time_today_field, :bottom).plus(5)
     end
   end
