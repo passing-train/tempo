@@ -107,8 +107,13 @@ class Ask
       cdq.save
     end
 
+    last_same_entry = Entry.where(:title).eq(msg).sort_by('created_at').last
+    if last_same_entry
+      Entry.create(title: msg, customer_id: last_same_entry.customer_id, project_id: last_same_entry.project_id)
+    else
+      Entry.create(title: msg)
+    end
 
-    Entry.create(title: msg)
     cdq.save
 
     @last_time = NSDate::date
