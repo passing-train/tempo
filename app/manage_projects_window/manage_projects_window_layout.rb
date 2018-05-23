@@ -16,10 +16,10 @@ class ManageProjectsWindowLayout < MK::WindowLayout
       end
     end
 
-#    add NSTextField, :lbl_name_field
+    add NSTextField, :lbl_description_field
     add NSTextField, :lbl_project_id_field
 
-#    add NSTextField, :name_field
+    add NSTextField, :description_field
     add NSTextField, :project_id_field
 
     add NSButton, :button_update
@@ -61,6 +61,29 @@ class ManageProjectsWindowLayout < MK::WindowLayout
     end
   end
 
+  def lbl_description_field_style
+    configure_as_label_with_title "Project ID"
+
+    constraints do
+      width 200
+      height 25
+      left.equals(:superview, :right).minus 278
+      top.equals(:project_id_field, :bottom).plus 20
+    end
+  end
+
+  def description_field_style
+    configure_as_textinput_with_value ""
+    tag 2
+
+    constraints do
+      width 243
+      height 46
+      left.equals(:superview, :right).minus 278
+      top.equals(:lbl_description_field, :bottom).plus 10
+    end
+  end
+
   def button_update_style
     key_equivalent "\r"
     bezel_style NSRoundedBezelStyle
@@ -69,7 +92,7 @@ class ManageProjectsWindowLayout < MK::WindowLayout
       width 80
       height 20
       left.equals(:project_id_field, :left)
-      top.equals(:project_id_field, :bottom).plus 20
+      top.equals(:description_field, :bottom).plus 20
     end
 
     title "add"
@@ -83,7 +106,7 @@ class ManageProjectsWindowLayout < MK::WindowLayout
       width 80
       height 20
       left.equals(:button_update, :right).plus 10
-      top.equals(:project_id_field, :bottom).plus 20
+      top.equals(:description_field, :bottom).plus 20
     end
 
     title "delete"
@@ -97,7 +120,7 @@ class ManageProjectsWindowLayout < MK::WindowLayout
       width 80
       height 20
       left.equals(:button_delete, :right).plus 10
-      top.equals(:project_id_field, :bottom).plus 20
+      top.equals(:description_field, :bottom).plus 20
     end
 
     title "cancel"
@@ -114,6 +137,13 @@ class ManageProjectsWindowLayout < MK::WindowLayout
 
     add_column('project_id') do
       title 'Project ID'
+      min_width 120
+      width 200
+      resizing_mask NSTableColumnUserResizingMask
+    end
+
+    add_column('project_description') do
+      title 'Description'
       min_width 120
       width 200
       resizing_mask NSTableColumnUserResizingMask

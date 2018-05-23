@@ -37,6 +37,7 @@ class WuAutoCompleteTextField < NSTextField
   attr_reader :maxResults
   attr_accessor :autoCompleteTableView
   attr_accessor :tableViewDelegate
+  attr_accessor :myDelegate
   attr_accessor :autoCompletePopover
   attr_accessor :popOverWidth
   attr_accessor :wu_identifier
@@ -46,6 +47,7 @@ class WuAutoCompleteTextField < NSTextField
     @popOverPadding = 0.0
     @maxResults = 10
     @tableViewDelegate = nil
+    @myDelegate = nil
     @wu_identifier = 'noid'
 
     column1 = NSTableColumn.alloc.initWithIdentifier "text"
@@ -105,7 +107,7 @@ class WuAutoCompleteTextField < NSTextField
     row = @autoCompleteTableView.selectedRow
     isShow = @autoCompletePopover.isShown
 
-    p "wufield"+ event.keyCode.to_s
+    #p "wufield"+ event.keyCode.to_s
 
     case event.keyCode
     when 125 #down
@@ -124,7 +126,12 @@ class WuAutoCompleteTextField < NSTextField
         return #skip default behavior
       end
     when 36, 48, 51, 49 # return, tab, space
+      if @myDelegate.respondsToSelector("didClickedCloseKey")
+        @myDelegate.didClickedCloseKey
+      end
+
       self.autoCompletePopover.close()
+
       return #//skip default behavior
     else
     end
@@ -134,10 +141,10 @@ class WuAutoCompleteTextField < NSTextField
   end
 
   def complete(sender)
+
     lengthOfWord = stringValue.length
     subStringRange = NSMakeRange(0, lengthOfWord)
 
-    # This happens when we just started a new word or if we have already typed the entire word
     if subStringRange.length == 0 || lengthOfWord == 0
       @autoCompletePopover.close() if @autoCompletePopover
       return

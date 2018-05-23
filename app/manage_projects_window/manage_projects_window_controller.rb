@@ -30,7 +30,7 @@ class ManageProjectsWindowController < NSWindowController
       @table_view.delegate = self
       @table_view.dataSource = self
 
-#      @name_field = @layout.get(:name_field)
+      @description_field = @layout.get(:description_field)
       @project_id_field = @layout.get(:project_id_field)
 
       @last_selected_row = nil
@@ -57,12 +57,12 @@ class ManageProjectsWindowController < NSWindowController
   def update sender
 
     if @button_mode == 'add'
-      Project.create(project_id: @project_id_field.stringValue.to_s)
+      Project.create(project_id: @project_id_field.stringValue.to_s, project_description: @description_field.stringValue.to_s)
     else
       @last_selected_row = @table_view.selectedRow
 
       Project.where(:project_id).eq(@projects[@last_selected_row].project_id).each do |e|
-#        e.name = @name_field.stringValue.to_s
+        e.project_description = @description_field.stringValue.to_s
         e.project_id = @project_id_field.stringValue.to_s
       end
     end
@@ -99,7 +99,7 @@ class ManageProjectsWindowController < NSWindowController
 
   def disable_edit
       @button_mode = 'add'
-#      @name_field.setStringValue ''
+      @description_field.setStringValue ''
       @project_id_field.setStringValue ''
       @button_update.setTitle 'Add project'
       @button_delete.setEnabled false
@@ -119,7 +119,11 @@ class ManageProjectsWindowController < NSWindowController
       disable_edit
     else
       enable_edit
-#      @name_field.setStringValue @projects[idx].name
+      if @projects[idx].project_description
+        @description_field.setStringValue @projects[idx].project_description
+      else
+        @description_field.setStringValue ''
+      end
       @project_id_field.setStringValue @projects[idx].project_id.to_s
     end
   end
@@ -142,10 +146,14 @@ class ManageProjectsWindowController < NSWindowController
     record = @projects[rowidx]
 
     case column.identifier
-#    when 'name'
-#      text_field.stringValue = record.name
     when 'project_id'
       text_field.stringValue = record.project_id.to_s
+    when 'project_description'
+      if record.project_description
+        text_field.stringValue = record.project_description
+      else
+        text_field.stringValue = ''
+      end
     end
 
     return text_field

@@ -35,13 +35,16 @@ class ListEntriesWindowController < NSWindowController
       @table_view.dataSource = self
       @entry_field = @layout.get(:entry_field)
 
+      #@table_view.tableColumns.each do |col|
+        #sortDescriptor = NSSortDescriptor.sortDescriptorWithKey(col.identifier, ascending:true, selector:'compare:')
+        #col.setSortDescriptorPrototype sortDescriptor
+      #end
+
       @customer_field = @layout.get(:customer_field)
       @customer_field.tableViewDelegate = self
-#      @customer_field.delegate = self
 
       @project_field = @layout.get(:project_field)
       @project_field.tableViewDelegate = self
-#      @project_field.delegate = self
 
       @addextratime_field = @layout.get(:addextratime_field)
 
@@ -97,7 +100,6 @@ class ListEntriesWindowController < NSWindowController
     matches
   end
 
-
   def setDateFormats
     @dateFormat = NSDateFormatter.new
     @dateFormat.setDateFormat "YYYY-MM-dd"
@@ -108,8 +110,9 @@ class ListEntriesWindowController < NSWindowController
   end
 
 
-  def populateEntries
-    entries = Entry.sort_by(:title).map(&:title).uniq
+  def populateEntries sortBy=:title
+
+    entries = Entry.sort_by(sortBy).map(&:title).uniq
 
     @entries = []
 
@@ -125,7 +128,9 @@ class ListEntriesWindowController < NSWindowController
 
   def update sender
     @last_selected_row = @table_view.selectedRow
+
     Entry.where(:title).eq(@entries[@last_selected_row].title).each do |e|
+
       e.title = @entry_field.stringValue.to_s
       e.project_id = @project_field.stringValue.to_s
 
@@ -133,9 +138,8 @@ class ListEntriesWindowController < NSWindowController
       if customer
         e.customer_id = customer.customer_id.to_i
       end
-
-
     end
+
     cdq.save
     populateEntries
     @table_view.reloadData
@@ -171,102 +175,6 @@ class ListEntriesWindowController < NSWindowController
 
     end
     @addextratime_field.setStringValue ''
-  end
-
-  def interpret_add_key_val(row, keys, key, val)
-    if(!keys.kind_of?(Array)||keys.include?(key))
-      row[key] = val
-    end
-    row
-  end
-
-  #TODO Refactor
-  def find_total_time title, today_only=false
-
-    last_only = true
-    last_entry = nil
-    block_total = 0
-    cum_start_time = 0
-    keys = ['created_at','time_spent', 'block_total_secs']
-    total_secs = 0
-    rows = []
-
-    i = 0
-
-    today = Date.today.to_s[0,10]
-    entries = Entry.where(:title).eq(title).sort_by('created_at')
-
-    entries.each do |entry|
-
-      if today_only
-        next unless today == @dateFormat.stringFromDate(entry.created_at)
-      end
-
-      if block_total == 0 ||  cum_start_time == 0
-        cum_start_time = @timeFormat.stringFromDate(entry.created_at)
-      end
-
-      if Entry.all.sort_by('created_at')[i]
-        day_next_entry = @dateFormat.stringFromDate(Entry.all.sort_by('created_at')[i].created_at)
-      else
-        day_next_entry = nil
-      end
-
-      row = {}
-
-      if last_entry.nil? || entry.title != last_entry.title || last_entry.last_in_block?
-        block_total = 0
-      end
-
-      ## Voorkom te lange blokken, dan behandelen als een extra stuk
-      interval = NSUserDefaults.standardUserDefaults.integerForKey('AskInterval')
-      extra_marge = 30
-      if entry.time_delta > (interval + 5 + extra_marge) * 60
-        block_total += (interval + 5) * 60 + extra_marge
-        work_break = true
-      else
-        work_break = false
-        block_total += entry.time_delta
-      end
-
-      block_total += entry.extra_time
-
-      time_delta_display = TimeUtility::format_time_from_seconds block_total
-
-      # weergeven als nieuwe dag of laatste blok
-      if entry.last_in_block? ||
-          @dateFormat.stringFromDate(entry.created_at) != day_next_entry ||
-          work_break
-        block_total_display = TimeUtility::format_time_from_seconds block_total
-        block_total_secs = block_total
-        block_total = 0
-      else
-        block_total_display = ''
-      end
-
-      row = interpret_add_key_val(row, keys, 'date', @dateFormat.stringFromDate(entry.created_at))
-      row = interpret_add_key_val(row, keys, 'created_at', entry.created_at)
-      row = interpret_add_key_val(row, keys, 'time_spent', block_total_display)
-      row = interpret_add_key_val(row, keys, 'block_total_secs', block_total_secs)
-
-      if !last_only ||
-          entry.last_in_block? ||
-          @dateFormat.stringFromDate(entry.created_at) != day_next_entry ||
-          work_break ||
-          time_delta_display == '00:00'
-
-        rows << row
-      end
-
-      last_entry = entry
-
-    end
-
-    rows.each do | r |
-      total_secs = total_secs + r['block_total_secs']
-    end
-
-    TimeUtility::format_time_from_seconds total_secs
   end
 
   def disable_edit
@@ -308,13 +216,14 @@ class ListEntriesWindowController < NSWindowController
       enable_edit
       @entry_field.setStringValue @entries[idx].title
       @project_field.setStringValue @entries[idx].project_id.to_s
+      @customer_field.setStringValue @entries[idx].customer_name
 
-      customer = Customer.where(:customer_id).eq(@entries[idx].customer_id).first
-      if customer
-        @customer_field.setStringValue customer.name.to_s
-      else
-        @customer_field.setStringValue ''
-      end
+      #customer = Customer.where(:customer_id).eq(@entries[idx].customer_id).first
+      #if customer
+        #@customer_field.setStringValue customer.name.to_s
+      #else
+        #@customer_field.setStringValue ''
+      #end
 
     end
   end
@@ -340,19 +249,45 @@ class ListEntriesWindowController < NSWindowController
     when 'entry'
       text_field.stringValue = record.title
     when 'customer'
-      customer = Customer.where(:customer_id).eq(record.customer_id).first
-      if customer
-        text_field.stringValue = customer.name.to_s
-      end
+      text_field.stringValue = record.customer_name
+      #customer = Customer.where(:customer_id).eq(record.customer_id).first
+      #if customer
+        #text_field.stringValue = customer.name.to_s
+      #end
     when 'project'
       text_field.stringValue = record.project_id.to_s
     when 'total_day_time'
-      text_field.stringValue = find_total_time record.title, true
+      text_field.stringValue = record.time_today
     when 'total_time'
-      text_field.stringValue = find_total_time record.title
+      text_field.stringValue = record.total_time
     end
 
     return text_field
+  end
+
+  def tableView(aTableView, sortDescriptorsDidChange:oldDescriptors)
+    p oldDescriptors
+    p 'sorting'
+    p aTableView.sortDescriptors
+    p aTableView.sortDescriptors[0].key
+
+    #case aTableView.sortDescriptors[0].key
+    #when 'entry'
+      #populateEntries :title
+    #when 'customer'
+      #populateEntries :customer_id
+    #when 'project'
+      #populateEntries :project_id
+    #when 'total_day_time'
+    #when 'total_time'
+    #end
+
+    p @entries
+
+    @entries = @entries.sortedArrayUsingDescriptors aTableView.sortDescriptors
+    p @entries
+    @table_view.reloadData
+    #[aTableView reloadData];
   end
 
 end

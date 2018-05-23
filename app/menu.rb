@@ -19,7 +19,7 @@ class AppDelegate
     addMenu('File') do
       addItemWithTitle('Ask', action: 'ask_early', keyEquivalent: '!')
       addItem(NSMenuItem.separatorItem)
-      addItemWithTitle('Export Day Totals to CSV for Exact Online', action: 'export_exact_day_totals', keyEquivalent: 'd')
+      addItemWithTitle('Export Day Totals to CSV for Exact Online', action: 'export_exact_day_totals', keyEquivalent: 't')
       addItem(NSMenuItem.separatorItem)
       addItemWithTitle('Clear database', action: 'reset_log', keyEquivalent: '')
     end
@@ -30,7 +30,7 @@ class AppDelegate
       addItem(NSMenuItem.separatorItem)
       addItemWithTitle('Time entries', action: 'open_list_entries_window', keyEquivalent: 'e')
       addItemWithTitle('Customers', action: 'open_manage_customers_window', keyEquivalent: 'k')
-      addItemWithTitle('Projects', action: 'open_manage_projects_window', keyEquivalent: 'w')
+      addItemWithTitle('Projects', action: 'open_manage_projects_window', keyEquivalent: 'd')
       addItem(NSMenuItem.separatorItem)
       addItemWithTitle('Cut', action: 'cut:', keyEquivalent: 'x')
       addItemWithTitle('Copy', action: 'copy:', keyEquivalent: 'c')

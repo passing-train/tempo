@@ -17,12 +17,12 @@ class Export
     @timeFormat.setDateFormat " HH:mm"
   end
 
-  def interpret_add_key_val(row, keys, key, val)
-    if(!keys.kind_of?(Array)||keys.include?(key))
-      row[key] = val
-    end
-    row
-  end
+  #def interpret_add_key_val(row, keys, key, val)
+    #if(!keys.kind_of?(Array)||keys.include?(key))
+      #row[key] = val
+    #end
+    #row
+  #end
 
   def interpret(keys = nil, last_only = false)
     last_entry = nil
@@ -78,19 +78,19 @@ class Export
         block_total_display = ''
       end
 
-      row = interpret_add_key_val(row, keys, 'created_at', entry.created_at)
-      row = interpret_add_key_val(row, keys, 'day', @dayFormat.stringFromDate(entry.created_at))
-      row = interpret_add_key_val(row, keys, 'date', @dateFormat.stringFromDate(entry.created_at))
-      row = interpret_add_key_val(row, keys, 'time', @timeFormat.stringFromDate(entry.created_at))
-      row = interpret_add_key_val(row, keys, 'time_first_log', cum_start_time)
-      row = interpret_add_key_val(row, keys, 'time_last_log', @timeFormat.stringFromDate(entry.created_at))
-      row = interpret_add_key_val(row, keys, 'activity', entry.title)
-      row = interpret_add_key_val(row, keys, 'project_id', entry.project_id)
-      row = interpret_add_key_val(row, keys, 'customer_id', entry.customer_id)
-      row = interpret_add_key_val(row, keys, 'time_delta', time_delta_display)
-      row = interpret_add_key_val(row, keys, 'time_spent', block_total_display)
-      row = interpret_add_key_val(row, keys, 'block_total_secs', block_total_secs)
-      row = interpret_add_key_val(row, keys, 'last_in_block', entry.last_in_block)
+      row = GeneralUtility::interpret_add_key_val(row, keys, 'created_at', entry.created_at)
+      row = GeneralUtility::interpret_add_key_val(row, keys, 'day', @dayFormat.stringFromDate(entry.created_at))
+      row = GeneralUtility::interpret_add_key_val(row, keys, 'date', @dateFormat.stringFromDate(entry.created_at))
+      row = GeneralUtility::interpret_add_key_val(row, keys, 'time', @timeFormat.stringFromDate(entry.created_at))
+      row = GeneralUtility::interpret_add_key_val(row, keys, 'time_first_log', cum_start_time)
+      row = GeneralUtility::interpret_add_key_val(row, keys, 'time_last_log', @timeFormat.stringFromDate(entry.created_at))
+      row = GeneralUtility::interpret_add_key_val(row, keys, 'activity', entry.title)
+      row = GeneralUtility::interpret_add_key_val(row, keys, 'project_id', entry.project_id)
+      row = GeneralUtility::interpret_add_key_val(row, keys, 'customer_id', entry.customer_id)
+      row = GeneralUtility::interpret_add_key_val(row, keys, 'time_delta', time_delta_display)
+      row = GeneralUtility::interpret_add_key_val(row, keys, 'time_spent', block_total_display)
+      row = GeneralUtility::interpret_add_key_val(row, keys, 'block_total_secs', block_total_secs)
+      row = GeneralUtility::interpret_add_key_val(row, keys, 'last_in_block', entry.last_in_block)
 
       if !last_only ||
           entry.last_in_block? ||
@@ -396,7 +396,7 @@ class Export
 
     handle ||= open(file, 'ab')
 
-    keys = ['date', 'day','time', 'activity']
+    keys = ['date', 'day','time', 'activity', 'customer_id', 'project_id']
     handle << create_markdown_header('Time Report', keys)
 
     rows = interpret(keys, false)

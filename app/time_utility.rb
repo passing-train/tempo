@@ -22,4 +22,22 @@ class TimeUtility
     end
   end
 
+  def self.dateFormat
+    dateFormat = NSDateFormatter.new
+    dateFormat.setDateFormat "YYYY-MM-dd"
+    dateFormat
+  end
+
+  def self.dayFormat
+    dayFormat = NSDateFormatter.new
+    dayFormat.setDateFormat "EEEE"
+    dayFormat
+  end
+
+  def self.timeFormat
+    timeFormat = NSDateFormatter.new
+    timeFormat.setDateFormat " HH:mm"
+    timeFormat
+  end
+
 end

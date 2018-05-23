@@ -30,6 +30,7 @@ class AppDelegate
     self.showNotification
   end
 
+
   def showNotification
     notification = NSUserNotification.alloc.init
     notification.title = "What's happening"
