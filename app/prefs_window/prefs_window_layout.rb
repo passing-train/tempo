@@ -3,7 +3,7 @@ class PrefsWindowLayout < MK::WindowLayout
 
   def layout
       frame from_center(size:[380, 220])
-      title "WassUp Preferences"
+      title "Tempo Preferences"
       style_mask (style_mask & ~NSResizableWindowMask)
 
       add NSButton, :button_close

@@ -2,7 +2,7 @@ class ListEntriesWindowLayout < MK::WindowLayout
 
   def layout
     frame from_center(size:[990, 550])
-    title "Wassup List"
+    title "Tempo List"
 
     add NSScrollView, :outer_view do
       document_view add NSTableView, :table_view

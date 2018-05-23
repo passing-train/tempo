@@ -3,7 +3,7 @@ class LogwebWindowLayout < MK::WindowLayout
 
   def layout
       frame from_center(size:[580, 520])
-      title "WassUp Time Log"
+      title "Tempo Time Log"
 
       add NSButton, :button_close
       add NSButton, :button_print

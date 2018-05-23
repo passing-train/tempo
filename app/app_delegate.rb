@@ -58,7 +58,7 @@ class AppDelegate
   end
 
   def set_menu_bar_active
-    @status_item.setImage(NSImage.imageNamed("menubar_wassup"))
+    @status_item.setImage(NSImage.imageNamed("menubar_Tempo"))
   end
 
   def set_menu_bar_normal

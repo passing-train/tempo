@@ -2,7 +2,7 @@ class ManageCustomersWindowLayout < MK::WindowLayout
 
   def layout
     frame from_center(size:[700, 550])
-    title "Wassup: Customers"
+    title "Tempo: Customers"
 
     add NSScrollView, :outer_view do
       document_view add NSTableView, :table_view

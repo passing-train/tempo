@@ -2,7 +2,7 @@ class ManageProjectsWindowLayout < MK::WindowLayout
 
   def layout
     frame from_center(size:[700, 550])
-    title "Wassup: Projects"
+    title "Tempo: Projects"
 
     add NSScrollView, :outer_view do
       document_view add NSTableView, :table_view

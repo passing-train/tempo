@@ -12,15 +12,15 @@ end
 
 Motion::Project::App.setup do |app|
   # Use `rake config' to see complete project settings.
-  app.name = 'WassUp'
+  app.name = 'Tempo'
   app.copyright ="Copyright © 2018 MunsterMade. All rights reserved."
   app.deployment_target = "10.9"
-  app.version = "1.6.0.3"
+  app.version = "1.6.0.4"
   app.icon = "AppIcon.icns"
 
   app.frameworks << 'webkit'
   app.frameworks << 'Carbon'
-  app.identifier = 'com.lingewoud.wassup'
+  app.identifier = 'com.lingewoud.Tempo'
   app.codesign_certificate = '3rd Party Mac Developer Application: Lingewoud (3WQRKDPTP8)'
 
   app.entitlements['com.apple.security.app-sandbox'] = true
@@ -36,15 +36,15 @@ desc "installapp"
 task :installapp do
   Rake::Task["build:release"].execute
   path = `find build -name "#{App.config.name}.app"|grep Release`.strip
-  system "rm -Rfv '/Applications/WassUp.app'"
+  system "rm -Rfv '/Applications/Tempo.app'"
   system "cp -av '#{path}' '/Applications/'"
 end
 
 desc "populateEntriesFromProd"
 task :populateEntriesFromProd do
-  system "cp -v '/Users/pim/Library/Containers/com.lingewoud.wassup/Data/Documents/WassUp.sqlite' '/Users/pim/Documents/'"
-  system "cp -v '/Users/pim/Library/Containers/com.lingewoud.wassup/Data/Documents/WassUp.sqlite-shm' '/Users/pim/Documents/'"
-  system "cp -v '/Users/pim/Library/Containers/com.lingewoud.wassup/Data/Documents/WassUp.sqlite-wal' '/Users/pim/Documents/'"
+  system "cp -v '/Users/pim/Library/Containers/com.lingewoud.Tempo/Data/Documents/Tempo.sqlite' '/Users/pim/Documents/'"
+  system "cp -v '/Users/pim/Library/Containers/com.lingewoud.Tempo/Data/Documents/Tempo.sqlite-shm' '/Users/pim/Documents/'"
+  system "cp -v '/Users/pim/Library/Containers/com.lingewoud.Tempo/Data/Documents/Tempo.sqlite-wal' '/Users/pim/Documents/'"
 end
 
 task :"build:simulator" => :"schema:build"

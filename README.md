@@ -1,10 +1,4 @@
-# Commercial Time Tracking App for Mac
-
-## Naming App Store
-- Whazzup (original fork) 300duizend
-- Wazzup (original fork) 2miljoen
-- Wassup (more hits) 11miljoen
-- Whassup (more hits) 600duizend
+# Time Tracking App for Mac
 
 ## A passive time tracker
 Whazzup is a OS X application which asks on a regular (but slightly
@@ -23,12 +17,12 @@ rake archive:distribution
 ```
 
 ### SQLITE
-/Users/pim/Library/Containers/com.lingewoud.wassup/Data/Documents
+/Users/pim/Library/Containers/com.lingewoud.Tempo/Data/Documents
 
 #### Fout certicaat
-➜  wassup git:(master) rake archive:distribution
+➜  Tempo git:(master) rake archive:distribution
      Build ./build/MacOSX-10.9-Release
-  Codesign ./build/MacOSX-10.9-Release/WassUp.app
+  Codesign ./build/MacOSX-10.9-Release/Tempo.app
     ERROR! Cannot find any Mac Distribution certificate in the keychain.
 
 - Zorg dat er geen dubbele certificaten zijn
@@ -39,7 +33,7 @@ rake archive:distribution
 ```
 motion validate pim@lingewoud.nl
 
-✗ Error: Unable to validate archive '././build/MacOSX-10.9-Release/WassUp.pkg': (
+✗ Error: Unable to validate archive '././build/MacOSX-10.9-Release/Tempo.pkg': (
 ✗ Unable to process validateProductSoftwareAttributes request at this time due to a general error.
 
 ```
@@ -70,7 +64,7 @@ drwxr-xr-x+ 13 pim  staff      442  6 apr 17:17 AppIcon.iconset
 
 ### Entitlements
 
-✗ App sandbox not enabled. The following executables must include the \"com.apple.security.app-sandbox\" entitlement with a Boolean value of true in the entitlements property list: [( \"com.lingewoud.wassup.pkg/Payload/WassUp.app/Contents/MacOS/WassUp\", \"com.lingewoud.wassup.pkg/Payload/WassUp.app/Contents/Resources/imagesnap\" )] Refer to App Sandbox page at https://developer.apple.com/devcenter/mac/app-sandbox/ for more information on sandboxing your app.
+✗ App sandbox not enabled. The following executables must include the \"com.apple.security.app-sandbox\" entitlement with a Boolean value of true in the entitlements property list: [( \"com.lingewoud.Tempo.pkg/Payload/Tempo.app/Contents/MacOS/Tempo\", \"com.lingewoud.Tempo.pkg/Payload/Tempo.app/Contents/Resources/imagesnap\" )] Refer to App Sandbox page at https://developer.apple.com/devcenter/mac/app-sandbox/ for more information on sandboxing your app.
 
 voeg toe aan Rakefile:
 ```
