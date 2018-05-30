@@ -21,11 +21,11 @@ class AskWindowLayout < MK::WindowLayout
     add NSTextField, :customer_field
     add NSTextField, :project_field
 
+
     @appIcon = NSImage.imageNamed 'tempo-icon-128'
-    @appIconView = NSImageView.imageViewWithImage @appIcon
+    @appIconView = NSImageView.alloc.initWithFrame(NSMakeRect(0, 0, 300, 24))
+    @appIconView.setImage @appIcon
     add @appIconView, :app_icon
-    #
-    #tempo-icon-128.png
 
     @input_field = WuAutoCompleteTextField.alloc.initWithFrame(NSMakeRect(0, 0, 300, 24))
     @input_field.awakeFromNib
