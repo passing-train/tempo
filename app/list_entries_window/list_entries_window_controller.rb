@@ -15,6 +15,12 @@ class ListEntriesWindowController < NSWindowController
       @title = 'NSTableView'
       @layout = layout
 
+      @search_field = @layout.get(:search_field)
+      @search_field.delegate = self
+
+      @fltr_customer_field = @layout.get(:fltr_customer_field)
+      @fltr_customer_field.delegate = self
+
       populateEntries
 
       @button_update = @layout.get(:button_update)
@@ -35,10 +41,29 @@ class ListEntriesWindowController < NSWindowController
       @table_view.dataSource = self
       @entry_field = @layout.get(:entry_field)
 
-      #@table_view.tableColumns.each do |col|
-        #sortDescriptor = NSSortDescriptor.sortDescriptorWithKey(col.identifier, ascending:true, selector:'compare:')
-        #col.setSortDescriptorPrototype sortDescriptor
-      #end
+      @table_view.tableColumns.each do |col|
+      #  p col
+      #  p col.identifier
+      #  sortDescriptor = NSSortDescriptor.sortDescriptorWithKey(col.identifier, ascending:true, selector:'compare:')
+      #  col.setSortDescriptorPrototype sortDescriptor
+      end
+
+      descriptorEntry = NSSortDescriptor.sortDescriptorWithKey('entry' , ascending:true, selector:'compare:')
+      @table_view.tableColumns[0].sortDescriptorPrototype = descriptorEntry
+
+      descriptorCustomer = NSSortDescriptor.sortDescriptorWithKey('customer' , ascending:true, selector:'compare:')
+      @table_view.tableColumns[1].sortDescriptorPrototype = descriptorCustomer
+
+      descriptorProject = NSSortDescriptor.sortDescriptorWithKey('project' , ascending:true, selector:'compare:')
+      @table_view.tableColumns[2].sortDescriptorPrototype = descriptorProject
+
+#      descriptorTimeToday = NSSortDescriptor.sortDescriptorWithKey('time_today' , ascending:true, selector:'compare:')
+#      @table_view.tableColumns[4].sortDescriptorPrototype = descriptorTimeToday
+#
+#      descriptorTotalTime = NSSortDescriptor.sortDescriptorWithKey('total_time' , ascending:true, selector:'compare:')
+#      @table_view.tableColumns[3].sortDescriptorPrototype = descriptorTotalTime
+
+
 
       @customer_field = @layout.get(:customer_field)
       @customer_field.tableViewDelegate = self
@@ -48,6 +73,9 @@ class ListEntriesWindowController < NSWindowController
 
       @addextratime_field = @layout.get(:addextratime_field)
 
+
+
+
       @button_lastdayextra = @layout.get(:button_lastdayextra)
       @button_lastdayextra.target = self
       @button_lastdayextra.action = 'add_extra_time_last_day:'
@@ -55,6 +83,15 @@ class ListEntriesWindowController < NSWindowController
       @last_selected_row = nil
       disable_edit
     end
+
+  end
+
+  def controlTextDidChange sender
+    #NSTextField *textField = [notification object];
+    #NSLog(@"controlTextDidChange: stringValue == %@", [textField stringValue]);
+    p @search_field.stringValue
+    populateEntries
+    @table_view.reloadData
 
   end
 
@@ -110,9 +147,27 @@ class ListEntriesWindowController < NSWindowController
   end
 
 
-  def populateEntries sortBy=:title
+  def populateEntries sortBy=:title, ascending=true
 
-    entries = Entry.sort_by(sortBy).map(&:title).uniq
+    if ascending
+      order = :ascending
+    else
+      order = :descending
+    end
+
+    if @search_field.stringValue == '' and @fltr_customer_field.stringValue == ''
+      entries = Entry.sort_by(sortBy, order: order).map(&:title).uniq
+
+    elsif @search_field.stringValue != '' and @fltr_customer_field.stringValue == ''
+      entries = Entry.where("title LIKE[c] %@", "*#{@search_field.stringValue}*").sort_by(sortBy, order: order).map(&:title).uniq
+
+    elsif @search_field.stringValue == '' and @fltr_customer_field.stringValue != ''
+      entries = Entry.where("customer_id LIKE[c] %@", "*#{@fltr_customer_field.stringValue}*").sort_by(sortBy, order: order).map(&:title).uniq
+
+    else
+      entries = Entry.where("title LIKE[c] %@", "*#{@search_field.stringValue}*").where("customer_id LIKE[c] %@", "*#{@fltr_customer_field.stringValue}*").sort_by(sortBy, order: order).map(&:title).uniq
+
+    end
 
     @entries = []
 
@@ -266,28 +321,21 @@ class ListEntriesWindowController < NSWindowController
   end
 
   def tableView(aTableView, sortDescriptorsDidChange:oldDescriptors)
-    p oldDescriptors
-    p 'sorting'
-    p aTableView.sortDescriptors
-    p aTableView.sortDescriptors[0].key
 
-    #case aTableView.sortDescriptors[0].key
-    #when 'entry'
-      #populateEntries :title
-    #when 'customer'
-      #populateEntries :customer_id
-    #when 'project'
-      #populateEntries :project_id
-    #when 'total_day_time'
-    #when 'total_time'
-    #end
+    case aTableView.sortDescriptors[0].key
+    when 'entry'
+      populateEntries :title, aTableView.sortDescriptors[0].ascending
+    when 'customer'
+      populateEntries :customer_id, aTableView.sortDescriptors[0].ascending
+    when 'project'
+      populateEntries :project_id, aTableView.sortDescriptors[0].ascending
+#    when 'total_day_time'
+#      populateEntries :time_today, aTableView.sortDescriptors[0].ascending
+#    when 'total_time'
+#      populateEntries :total_time, aTableView.sortDescriptors[0].ascending
+    end
 
-    p @entries
-
-    @entries = @entries.sortedArrayUsingDescriptors aTableView.sortDescriptors
-    p @entries
     @table_view.reloadData
-    #[aTableView reloadData];
   end
 
 end

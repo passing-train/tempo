@@ -16,6 +16,13 @@ class ListEntriesWindowLayout < MK::WindowLayout
       end
     end
 
+
+    add NSTextField, :lbl_search_field
+    add NSTextField, :search_field
+
+    add NSTextField, :lbl_fltr_customer_field
+    add NSTextField, :fltr_customer_field
+
     add NSTextField, :lbl_entry_field
     add NSTextField, :lbl_customer_field
     add NSTextField, :lbl_project_field
@@ -49,7 +56,7 @@ class ListEntriesWindowLayout < MK::WindowLayout
   def outer_view_style
     has_vertical_scroller true
     constraints do
-      top.equals(:superview, :top)
+      top.equals(:superview, :top).plus 30
       right.equals(:superview, :right).minus 295
       left.equals(:superview, :left)
       bottom.equals(:superview, :bottom)
@@ -167,8 +174,6 @@ class ListEntriesWindowLayout < MK::WindowLayout
     title "cancel"
   end
 
-
-
   def lbl_addextratime_field_style
     configure_as_label_with_title "Add extra time"
 
@@ -189,6 +194,53 @@ class ListEntriesWindowLayout < MK::WindowLayout
       height 25
       left.equals(:superview, :right).minus 278
       top.equals(:superview, :top).plus 334
+    end
+  end
+
+
+  def lbl_search_field_style
+    configure_as_label_with_title "filter entries"
+
+    constraints do
+      width 80
+      height 25
+      left.equals(:superview, :left).plus 10
+      top.equals(:superview, :top).plus 5
+    end
+  end
+
+  def search_field_style
+    configure_as_textinput_with_value ""
+    tag 4
+
+    constraints do
+      width 100
+      height 20
+      left.equals(:lbl_search_field, :right).plus 10
+      top.equals(:superview, :top).plus 5
+    end
+  end
+
+  def lbl_fltr_customer_field_style
+    configure_as_label_with_title "filter customer id"
+
+    constraints do
+      width 120
+      height 25
+      left.equals(:search_field, :right).plus 10
+      top.equals(:superview, :top).plus 5
+    end
+  end
+
+  def fltr_customer_field_style
+    configure_as_textinput_with_value ""
+    tag 4
+
+    constraints do
+      width 100
+      height 20
+      left.equals(:lbl_fltr_customer_field, :right).plus 10
+      top.equals(:superview, :top).plus 5
     end
   end
 
