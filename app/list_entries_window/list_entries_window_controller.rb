@@ -69,6 +69,8 @@ class ListEntriesWindowController < NSWindowController
       @project_field = @layout.get(:project_field)
       @project_field.tableViewDelegate = self
 
+      @project_description = @layout.get(:project_description)
+
       @check_no_export = @layout.get(:check_no_export)
       @check_sticky = @layout.get(:check_sticky)
 
@@ -201,7 +203,9 @@ class ListEntriesWindowController < NSWindowController
       e.title = @entry_field.stringValue.to_s
 
       project = Project.where(:project_id).eq(@project_field.stringValue.to_s).first
-      unless project
+      p project
+
+      unless project.nil?
         project = Project.create(project_id: @project_field.stringValue.to_s)
       end
       e.project_id = @project_field.stringValue.to_s
@@ -265,6 +269,7 @@ class ListEntriesWindowController < NSWindowController
   def disable_edit
       @entry_field.setStringValue ''
       @project_field.setStringValue ''
+      @project_description.setStringValue ''
       @customer_field.setStringValue ''
 
       @entry_field.setEditable false
@@ -304,6 +309,7 @@ class ListEntriesWindowController < NSWindowController
       enable_edit
       @entry_field.setStringValue @entries[idx].title
       @project_field.setStringValue @entries[idx].project_id.to_s
+      @project_description.setStringValue @entries[idx].project_description.to_s
       @customer_field.setStringValue @entries[idx].customer_name
 
       if @entries[idx].not_in_export == 1

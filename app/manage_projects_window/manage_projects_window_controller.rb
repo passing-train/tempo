@@ -132,6 +132,7 @@ class ManageProjectsWindowController < NSWindowController
   def disable_edit
       @button_mode = 'add'
       @description_field.setStringValue ''
+      @customer_field.setStringValue ''
       @project_id_field.setStringValue ''
       @button_update.setTitle 'Add project'
       @button_delete.setEnabled false

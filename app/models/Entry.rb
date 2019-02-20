@@ -9,6 +9,15 @@ class Entry < CDQManagedObject
     end
   end
 
+  def project_description
+    project = Project.where(:project_id).eq(project_id).first if project_id
+    if project
+      project.project_description
+    else
+      ''
+    end
+  end
+
   def total_time_in_seconds today_only=false
 
     last_only = true

@@ -26,6 +26,7 @@ class ListEntriesWindowLayout < MK::WindowLayout
     add NSTextField, :lbl_entry_field
     add NSTextField, :lbl_customer_field
     add NSTextField, :lbl_project_field
+    add NSTextField, :project_description
 
     add NSTextField, :lbl_no_export
     add NSButton, :check_no_export
@@ -136,6 +137,17 @@ class ListEntriesWindowLayout < MK::WindowLayout
       top.equals(:superview, :top).plus 196
     end
   end
+  def project_description_style
+    configure_as_read_only_text "xxx"
+    tag 3
+
+    constraints do
+      width 243
+      height 25
+      left.equals(:superview, :right).minus 278
+      top.equals(:project_field, :bottom).plus 2
+    end
+  end
 
   def lbl_project_field_style
     configure_as_label_with_title "Project"
@@ -155,7 +167,7 @@ class ListEntriesWindowLayout < MK::WindowLayout
       width 220
       height 20
       left.equals(:check_sticky, :right).plus 10
-      top.equals(:project_field, :bottom).plus(20)
+      top.equals(:project_field, :bottom).plus(35)
     end
   end
 
@@ -169,7 +181,7 @@ class ListEntriesWindowLayout < MK::WindowLayout
       width 20
       height 20
       left.equals(:project_field, :left)
-      top.equals(:project_field, :bottom).plus 20
+      top.equals(:project_field, :bottom).plus 35
     end
   end
 
@@ -395,6 +407,24 @@ class ListEntriesWindowLayout < MK::WindowLayout
     bezeled true
 
     string_value value
+  end
+
+  def configure_as_read_only_text value
+#    boldFontName = NSFont.boldSystemFontOfSize(13.0)
+    #str = NSMutableAttributedString.alloc.initWithString(title)
+#    str.addAttribute(NSFontAttributeName, value:boldFontName, range:NSMakeRange(0, str.length))
+    #attributed_string_value str
+    string_value value
+
+    editable false
+    selectable false
+    bordered false
+    bezeled false
+
+    cell do
+      scrollable false
+      drawsBackground false
+    end
   end
 
   def configure_as_label_with_title title
