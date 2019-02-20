@@ -27,6 +27,12 @@ class ListEntriesWindowLayout < MK::WindowLayout
     add NSTextField, :lbl_customer_field
     add NSTextField, :lbl_project_field
 
+    add NSTextField, :lbl_no_export
+    add NSButton, :check_no_export
+
+    add NSTextField, :lbl_sticky
+    add NSButton, :check_sticky
+
     add NSTextField, :entry_field
 
     @customer_field = WuAutoCompleteTextField.alloc.initWithFrame(NSMakeRect(0, 0, 300, 24))
@@ -131,6 +137,67 @@ class ListEntriesWindowLayout < MK::WindowLayout
     end
   end
 
+  def lbl_project_field_style
+    configure_as_label_with_title "Project"
+
+    constraints do
+      width 200
+      height 25
+      left.equals(:superview, :right).minus 278
+      top.equals(:superview, :top).plus 177
+    end
+  end
+
+  def lbl_sticky_style
+    configure_as_label_with_title('Sticky (never delete)')
+
+    constraints do
+      width 220
+      height 20
+      left.equals(:check_sticky, :right).plus 10
+      top.equals(:project_field, :bottom).plus(20)
+    end
+  end
+
+  def check_sticky_style
+    tag 4
+    button_type NSSwitchButton
+    bezel_style 0
+    title ''
+
+    constraints do
+      width 20
+      height 20
+      left.equals(:project_field, :left)
+      top.equals(:project_field, :bottom).plus 20
+    end
+  end
+
+  def lbl_no_export_style
+    configure_as_label_with_title('Skip in export')
+
+    constraints do
+      width 100
+      height 20
+      left.equals(:check_no_export, :right).plus 10
+      top.equals(:lbl_sticky, :bottom).plus(10)
+    end
+  end
+
+  def check_no_export_style
+    tag 4
+    button_type NSSwitchButton
+    bezel_style 0
+    title ''
+
+    constraints do
+      width 20
+      height 20
+      left.equals(:project_field, :left)
+      top.equals(:lbl_sticky, :bottom).plus 10
+    end
+  end
+
 
   def button_update_style
     key_equivalent "\r"
@@ -140,7 +207,7 @@ class ListEntriesWindowLayout < MK::WindowLayout
       width 80
       height 20
       left.equals(:project_field, :left)
-      top.equals(:project_field, :bottom).plus 20
+      top.equals(:check_no_export, :bottom).plus 20
     end
 
     title "update"
@@ -154,7 +221,7 @@ class ListEntriesWindowLayout < MK::WindowLayout
       width 80
       height 20
       left.equals(:button_update, :right).plus 10
-      top.equals(:project_field, :bottom).plus 20
+      top.equals(:check_no_export, :bottom).plus 20
     end
 
     title "delete"
@@ -168,7 +235,7 @@ class ListEntriesWindowLayout < MK::WindowLayout
       width 80
       height 20
       left.equals(:button_delete, :right).plus 10
-      top.equals(:project_field, :bottom).plus 20
+      top.equals(:check_no_export, :bottom).plus 20
     end
 
     title "cancel"
@@ -181,7 +248,7 @@ class ListEntriesWindowLayout < MK::WindowLayout
       width 200
       height 25
       left.equals(:superview, :right).minus 278
-      top.equals(:superview, :top).plus 310
+      top.equals(:superview, :top).plus 360
     end
   end
 
@@ -193,8 +260,22 @@ class ListEntriesWindowLayout < MK::WindowLayout
       width 90
       height 25
       left.equals(:superview, :right).minus 278
-      top.equals(:superview, :top).plus 334
+      top.equals(:lbl_addextratime_field, :bottom).plus 1
     end
+  end
+
+  def button_lastdayextra_style
+    key_equivalent "\r"
+    bezel_style NSRoundedBezelStyle
+
+    constraints do
+      width 120
+      height 20
+      left.equals(:superview, :right).minus 278
+      top.equals(:addextratime_field, :bottom).plus 10
+    end
+
+    title "add to last date"
   end
 
 
@@ -259,19 +340,7 @@ class ListEntriesWindowLayout < MK::WindowLayout
     title "equally devide"
   end
 
-  def button_lastdayextra_style
-    key_equivalent "\r"
-    bezel_style NSRoundedBezelStyle
 
-    constraints do
-      width 120
-      height 20
-      left.equals(:superview, :right).minus 278
-      top.equals(:superview, :top).plus 368
-    end
-
-    title "add to last date"
-  end
 
   def table_view_style
 

@@ -21,7 +21,8 @@ class AppDelegate
       addItem(NSMenuItem.separatorItem)
       addItemWithTitle('Export Day Totals to CSV for Exact Online', action: 'export_exact_day_totals', keyEquivalent: 't')
       addItem(NSMenuItem.separatorItem)
-      addItemWithTitle('Clear database', action: 'reset_log', keyEquivalent: '')
+      addItemWithTitle('Delete all entries', action: 'delete_all_entries', keyEquivalent: '')
+      addItemWithTitle('Flush time in sticky entries', action: 'flush_sticky_entries', keyEquivalent: '')
       addItemWithTitle('Close', action: 'performClose:', keyEquivalent: 'w')
     end
 

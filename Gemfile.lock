@@ -2,7 +2,7 @@ GEM
   remote: https://rubygems.org/
   specs:
     CFPropertyList (2.3.5)
-    activesupport (4.2.10)
+    activesupport (4.2.11)
       i18n (~> 0.7)
       minitest (~> 5.1)
       thread_safe (~> 0.3, >= 0.3.4)
@@ -47,16 +47,18 @@ GEM
       netrc (= 0.7.8)
     cocoapods-try (1.1.0)
     colored2 (3.1.2)
+    concurrent-ruby (1.1.4)
     dbt (1.2.0)
     escape (0.0.4)
     fourflusher (2.0.1)
     fuzzy_match (2.0.4)
     gh_inspector (1.0.3)
-    i18n (0.8.6)
+    i18n (0.9.5)
+      concurrent-ruby (~> 1.0)
     linkify-it-rb (1.2.0)
       uc.micro-rb (~> 1.0)
     mdurl-rb (1.0.0.3)
-    minitest (5.10.3)
+    minitest (5.11.3)
     molinillo (0.5.7)
     motion-cocoapods (1.8.1)
       cocoapods (>= 1.0.0)
@@ -74,15 +76,15 @@ GEM
     nanaimo (0.2.3)
     nap (1.1.0)
     netrc (0.7.8)
-    plist (3.3.0)
+    plist (3.5.0)
     rake (12.1.0)
     ruby-macho (1.1.0)
-    ruby-xcdm (0.0.10)
+    ruby-xcdm (0.0.11)
       activesupport (~> 4.1)
       builder (~> 3.2)
       plist (~> 3.1)
     thread_safe (0.3.6)
-    tzinfo (1.2.3)
+    tzinfo (1.2.5)
       thread_safe (~> 0.1)
     uc.micro-rb (1.0.0)
     xcodeproj (1.5.0)
@@ -107,4 +109,4 @@ DEPENDENCIES
   rake
 
 BUNDLED WITH
-   1.13.6
+   1.16.3

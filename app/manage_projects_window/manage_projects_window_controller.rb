@@ -33,6 +33,9 @@ class ManageProjectsWindowController < NSWindowController
       @description_field = @layout.get(:description_field)
       @project_id_field = @layout.get(:project_id_field)
 
+      @customer_field = @layout.get(:customer_field)
+      @customer_field.tableViewDelegate = self
+
       @last_selected_row = nil
       @button_mode = 'add'
       disable_edit
@@ -54,16 +57,45 @@ class ManageProjectsWindowController < NSWindowController
     self.window.makeFirstResponder @table_view
   end
 
+  def keyUp(event)
+    case event.keyCode
+    when 36, 48, 51, 49 # return, tab, space
+      @customer_field.autoCompletePopover.close()
+    end
+  end
+
+  def textField(textField, completions:somecompletions, forPartialWordRange:partialWordRange, indexOfSelectedItem:theIndexOfSelectedItem)
+    if textField.wu_identifier == 'customer'
+      matches = Customer.where(:name).contains(textField.stringValue,NSCaseInsensitivePredicateOption).map(&:name).uniq
+    end
+
+    matches
+  end
+
+
   def update sender
 
+    customer = Customer.where(:name).eq(@customer_field.stringValue.to_s).first
+
+
     if @button_mode == 'add'
-      Project.create(project_id: @project_id_field.stringValue.to_s, project_description: @description_field.stringValue.to_s)
+
+      if customer
+        Project.create(project_id: @project_id_field.stringValue.to_s, project_description: @description_field.stringValue.to_s, customer_id: customer.customer_id.to_i)
+      else
+        Project.create(project_id: @project_id_field.stringValue.to_s, project_description: @description_field.stringValue.to_s)
+      end
+
     else
       @last_selected_row = @table_view.selectedRow
 
       Project.where(:project_id).eq(@projects[@last_selected_row].project_id).each do |e|
+
         e.project_description = @description_field.stringValue.to_s
         e.project_id = @project_id_field.stringValue.to_s
+        if customer
+          e.customer_id = customer.customer_id.to_i
+        end
       end
     end
 
@@ -119,6 +151,7 @@ class ManageProjectsWindowController < NSWindowController
       disable_edit
     else
       enable_edit
+      @customer_field.setStringValue @projects[idx].customer_name
       if @projects[idx].project_description
         @description_field.setStringValue @projects[idx].project_description
       else
@@ -148,6 +181,8 @@ class ManageProjectsWindowController < NSWindowController
     case column.identifier
     when 'project_id'
       text_field.stringValue = record.project_id.to_s
+    when 'customer'
+      text_field.stringValue = record.customer_name
     when 'project_description'
       if record.project_description
         text_field.stringValue = record.project_description

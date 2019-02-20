@@ -32,7 +32,7 @@ class Export
     rows = []
 
     i = 0
-    Entry.all.sort_by('created_at').each do |entry|
+    Entry.where(:not_in_export).eq(0).sort_by('created_at').each do |entry|
 
       i += 1
 
@@ -40,8 +40,8 @@ class Export
         cum_start_time = @timeFormat.stringFromDate(entry.created_at)
       end
 
-      if Entry.all.sort_by('created_at')[i]
-        day_next_entry = @dateFormat.stringFromDate(Entry.all.sort_by('created_at')[i].created_at)
+      if Entry.where(:not_in_export).eq(0).sort_by('created_at')[i]
+        day_next_entry = @dateFormat.stringFromDate(Entry.where(:not_in_export).eq(0).sort_by('created_at')[i].created_at)
       else
         day_next_entry = nil
       end

@@ -132,21 +132,39 @@ class AppDelegate
     logweb_controller_action 'update_webview_with_day_totals'
   end
 
-  def reset_log
+  def delete_all_entries
     alert = NSAlert.alloc.init
     alert.addButtonWithTitle  "OK"
     alert.addButtonWithTitle "Cancel"
-    alert.setMessageText "Clear all activity entries?"
+    alert.setMessageText "Delete all activity entries?"
     alert.setInformativeText "Deleted entries cannot be restored."
     alert.setAlertStyle NSWarningAlertStyle
 
     if alert.runModal == NSAlertFirstButtonReturn
-      Entry.all.each do |entry|
+      Entry.where(:sticky).eq(0).each do |entry|
         entry.destroy
       end
 
       cdq.save
       @ask.reset_last
+    end
+  end
+
+  def flush_sticky_entries
+    alert = NSAlert.alloc.init
+    alert.addButtonWithTitle  "OK"
+    alert.addButtonWithTitle "Cancel"
+    alert.setMessageText "Flush time in all sticky entries?"
+    alert.setInformativeText "Time calculations cannot be restored."
+    alert.setAlertStyle NSWarningAlertStyle
+
+    if alert.runModal == NSAlertFirstButtonReturn
+      Entry.where(:sticky).eq(1).each do |entry|
+        entry.time_delta = 0
+        entry.extra_time = 0
+      end
+
+      cdq.save
     end
   end
 

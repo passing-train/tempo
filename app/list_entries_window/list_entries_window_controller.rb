@@ -63,18 +63,16 @@ class ListEntriesWindowController < NSWindowController
 #      descriptorTotalTime = NSSortDescriptor.sortDescriptorWithKey('total_time' , ascending:true, selector:'compare:')
 #      @table_view.tableColumns[3].sortDescriptorPrototype = descriptorTotalTime
 
-
-
       @customer_field = @layout.get(:customer_field)
       @customer_field.tableViewDelegate = self
 
       @project_field = @layout.get(:project_field)
       @project_field.tableViewDelegate = self
 
+      @check_no_export = @layout.get(:check_no_export)
+      @check_sticky = @layout.get(:check_sticky)
+
       @addextratime_field = @layout.get(:addextratime_field)
-
-
-
 
       @button_lastdayextra = @layout.get(:button_lastdayextra)
       @button_lastdayextra.target = self
@@ -130,8 +128,22 @@ class ListEntriesWindowController < NSWindowController
 
     if textField.wu_identifier == 'customer'
       matches = Customer.where(:name).contains(textField.stringValue,NSCaseInsensitivePredicateOption).map(&:name).uniq
-    else
-      matches = Project.where(:project_id).contains(textField.stringValue,NSCaseInsensitivePredicateOption).map(&:project_id).uniq
+
+      @project_field.autoCompletePopover.close()
+    elsif textField.wu_identifier == 'project'
+      @customer_field.autoCompletePopover.close()
+
+      customer = Customer.where(:name).eq(@customer_field.stringValue.to_s).first
+      if customer
+        matches = Project.where(:project_id).contains(textField.stringValue,NSCaseInsensitivePredicateOption)
+          .or(:project_description).contains(textField.stringValue,NSCaseInsensitivePredicateOption)
+          .and(cdq(:customer_id).eq(customer.customer_id.to_i).or.lt(1))
+          .map(&:project_id).uniq
+      else
+        matches = Project.where(:project_id).contains(textField.stringValue,NSCaseInsensitivePredicateOption)
+          .or(:project_description).contains(textField.stringValue,NSCaseInsensitivePredicateOption)
+          .map(&:project_id).uniq
+      end
     end
 
     matches
@@ -187,12 +199,30 @@ class ListEntriesWindowController < NSWindowController
     Entry.where(:title).eq(@entries[@last_selected_row].title).each do |e|
 
       e.title = @entry_field.stringValue.to_s
+
+      project = Project.where(:project_id).eq(@project_field.stringValue.to_s).first
+      unless project
+        project = Project.create(project_id: @project_field.stringValue.to_s)
+      end
       e.project_id = @project_field.stringValue.to_s
+
+      if @check_sticky.state == NSOnState
+        e.sticky = 1
+      else
+        e.sticky = 0
+      end
+
+      if @check_no_export.state == NSOnState
+        e.not_in_export = 1
+      else
+        e.not_in_export = 0
+      end
 
       customer = Customer.where(:name).eq(@customer_field.stringValue.to_s).first
       if customer
         e.customer_id = customer.customer_id.to_i
       end
+
     end
 
     cdq.save
@@ -245,6 +275,7 @@ class ListEntriesWindowController < NSWindowController
       @button_delete.setEnabled false
       @button_cancel.setEnabled false
 
+      @check_no_export.setEnabled false
 
       @addextratime_field.setStringValue ''
       @addextratime_field.setEditable false
@@ -259,6 +290,8 @@ class ListEntriesWindowController < NSWindowController
       @button_delete.setEnabled true
       @button_cancel.setEnabled true
 
+      @check_no_export.setEnabled true
+
       @addextratime_field.setEditable true
       @button_lastdayextra.setEnabled true
   end
@@ -272,6 +305,19 @@ class ListEntriesWindowController < NSWindowController
       @entry_field.setStringValue @entries[idx].title
       @project_field.setStringValue @entries[idx].project_id.to_s
       @customer_field.setStringValue @entries[idx].customer_name
+
+      if @entries[idx].not_in_export == 1
+        @check_no_export.setState NSOnState
+      else
+        @check_no_export.setState NSOffState
+      end
+
+      if @entries[idx].sticky == 1
+        @check_sticky.setState NSOnState
+      else
+        @check_sticky.setState NSOffState
+      end
+
 
       #customer = Customer.where(:customer_id).eq(@entries[idx].customer_id).first
       #if customer

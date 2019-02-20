@@ -16,11 +16,21 @@ class ManageProjectsWindowLayout < MK::WindowLayout
       end
     end
 
-    add NSTextField, :lbl_description_field
     add NSTextField, :lbl_project_id_field
-
-    add NSTextField, :description_field
     add NSTextField, :project_id_field
+
+    add NSTextField, :lbl_description_field
+    add NSTextField, :description_field
+
+    add NSTextField, :lbl_customer_field
+
+    @customer_field = WuAutoCompleteTextField.alloc.initWithFrame(NSMakeRect(0, 0, 300, 24))
+    @customer_field.awakeFromNib
+    @customer_field.popOverWidth = 150.0
+    @customer_field.wu_identifier = 'customer'
+    add @customer_field, :customer_field
+    #add NSTextField, :customer_field
+
 
     add NSButton, :button_update
     add NSButton, :button_delete
@@ -62,7 +72,7 @@ class ManageProjectsWindowLayout < MK::WindowLayout
   end
 
   def lbl_description_field_style
-    configure_as_label_with_title "Project ID"
+    configure_as_label_with_title "Description"
 
     constraints do
       width 200
@@ -80,7 +90,30 @@ class ManageProjectsWindowLayout < MK::WindowLayout
       width 243
       height 46
       left.equals(:superview, :right).minus 278
-      top.equals(:lbl_description_field, :bottom).plus 10
+      top.equals(:lbl_description_field, :bottom)
+    end
+
+  end
+  def lbl_customer_field_style
+    configure_as_label_with_title "Customer"
+
+    constraints do
+      width 200
+      height 25
+      left.equals(:superview, :right).minus 278
+      top.equals(:description_field, :bottom).plus 20
+    end
+  end
+
+  def customer_field_style
+    configure_as_textinput_with_value ""
+    tag 2
+
+    constraints do
+      width 243
+      height 25
+      left.equals(:superview, :right).minus 278
+      top.equals(:lbl_customer_field, :bottom)
     end
   end
 
@@ -92,7 +125,7 @@ class ManageProjectsWindowLayout < MK::WindowLayout
       width 80
       height 20
       left.equals(:project_id_field, :left)
-      top.equals(:description_field, :bottom).plus 20
+      top.equals(:customer_field, :bottom).plus 20
     end
 
     title "add"
@@ -106,7 +139,7 @@ class ManageProjectsWindowLayout < MK::WindowLayout
       width 80
       height 20
       left.equals(:button_update, :right).plus 10
-      top.equals(:description_field, :bottom).plus 20
+      top.equals(:customer_field, :bottom).plus 20
     end
 
     title "delete"
@@ -120,7 +153,7 @@ class ManageProjectsWindowLayout < MK::WindowLayout
       width 80
       height 20
       left.equals(:button_delete, :right).plus 10
-      top.equals(:description_field, :bottom).plus 20
+      top.equals(:customer_field, :bottom).plus 20
     end
 
     title "cancel"
@@ -138,7 +171,7 @@ class ManageProjectsWindowLayout < MK::WindowLayout
     add_column('project_id') do
       title 'Project ID'
       min_width 120
-      width 200
+      width 140
       resizing_mask NSTableColumnUserResizingMask
     end
 
@@ -146,6 +179,13 @@ class ManageProjectsWindowLayout < MK::WindowLayout
       title 'Description'
       min_width 120
       width 200
+      resizing_mask NSTableColumnUserResizingMask
+    end
+
+    add_column('customer') do
+      title 'Customer'
+      min_width 120
+      width 120
       resizing_mask NSTableColumnUserResizingMask
     end
 
