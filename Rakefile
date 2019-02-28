@@ -15,7 +15,7 @@ Motion::Project::App.setup do |app|
   app.name = 'Tempo'
   app.copyright ="Copyright © 2019 MunsterMade. All rights reserved."
   app.deployment_target = "10.9"
-  app.version = "1.6.2.4"
+  app.version = "1.6.2.5"
   app.icon = "AppIcon.icns"
 
   app.frameworks << 'webkit'
