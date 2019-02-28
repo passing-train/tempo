@@ -1,6 +1,4 @@
-class ManageProjectsWindowController < NSWindowController
-
-  include CDQ
+class ManageProjectsWindowController < ManageWindowControllerPrototype
 
   def layout
     @layout ||= ManageProjectsWindowLayout.new
@@ -12,7 +10,7 @@ class ManageProjectsWindowController < NSWindowController
 
       @layout = layout
 
-      populateProjects
+      populate
 
       @button_update = @layout.get(:button_update)
       @button_update.target = self
@@ -42,14 +40,10 @@ class ManageProjectsWindowController < NSWindowController
     end
   end
 
-  def populateProjects
+  def populate
     @projects = Project.sort_by(:project_id)
   end
 
-  def tableUpdate
-    populateProjects
-    @table_view.reloadData
-  end
 
   def cancel sender
     disable_edit
@@ -100,8 +94,9 @@ class ManageProjectsWindowController < NSWindowController
     end
 
     cdq.save
-    populateProjects
-    @table_view.reloadData
+    #populate
+    #@table_view.reloadData
+    call_reload_all_windows
     disable_edit
 
     if @button_mode == 'edit'
@@ -122,8 +117,9 @@ class ManageProjectsWindowController < NSWindowController
     end
 
     cdq.save
-    populateProjects
-    @table_view.reloadData
+    #populate
+    #@table_view.reloadData
+    call_reload_all_windows
     disable_edit
 
     self.window.makeFirstResponder @table_view

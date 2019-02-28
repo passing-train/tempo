@@ -1,6 +1,5 @@
-class ListEntriesWindowController < NSWindowController
+class ListEntriesWindowController < ManageWindowControllerPrototype
 
-  include CDQ
 
   def layout
     @layout ||= ListEntriesWindowLayout.new
@@ -21,7 +20,7 @@ class ListEntriesWindowController < NSWindowController
       @fltr_customer_field = @layout.get(:fltr_customer_field)
       @fltr_customer_field.delegate = self
 
-      populateEntries
+      populate
 
       @button_update = @layout.get(:button_update)
       @button_update.target = self
@@ -83,15 +82,15 @@ class ListEntriesWindowController < NSWindowController
       @last_selected_row = nil
       disable_edit
     end
-
   end
+
 
   def controlTextDidChange sender
     #NSTextField *textField = [notification object];
     #NSLog(@"controlTextDidChange: stringValue == %@", [textField stringValue]);
-    p @search_field.stringValue
-    populateEntries
-    @table_view.reloadData
+    call_reload_all_windows
+#    populate
+#    @table_view.reloadData
 
   end
 
@@ -109,8 +108,9 @@ class ListEntriesWindowController < NSWindowController
     end
 
     cdq.save
-    populateEntries
-    @table_view.reloadData
+    call_reload_all_windows
+#    populate
+#    @table_view.reloadData
     disable_edit
 
     self.window.makeFirstResponder @table_view
@@ -130,8 +130,8 @@ class ListEntriesWindowController < NSWindowController
 
     if textField.wu_identifier == 'customer'
       matches = Customer.where(:name).contains(textField.stringValue,NSCaseInsensitivePredicateOption).map(&:name).uniq
-
       @project_field.autoCompletePopover.close()
+
     elsif textField.wu_identifier == 'project'
       @customer_field.autoCompletePopover.close()
 
@@ -161,7 +161,7 @@ class ListEntriesWindowController < NSWindowController
   end
 
 
-  def populateEntries sortBy=:title, ascending=true
+  def populate sortBy=:title, ascending=true
 
     if ascending
       order = :ascending
@@ -190,11 +190,6 @@ class ListEntriesWindowController < NSWindowController
     end
   end
 
-  def tableUpdate
-    populateEntries
-    @table_view.reloadData
-  end
-
   def update sender
     @last_selected_row = @table_view.selectedRow
 
@@ -205,7 +200,7 @@ class ListEntriesWindowController < NSWindowController
       project = Project.where(:project_id).eq(@project_field.stringValue.to_s).first
       p project
 
-      unless project.nil?
+      if project.nil?
         project = Project.create(project_id: @project_field.stringValue.to_s)
       end
       e.project_id = @project_field.stringValue.to_s
@@ -230,8 +225,9 @@ class ListEntriesWindowController < NSWindowController
     end
 
     cdq.save
-    populateEntries
-    @table_view.reloadData
+    #populate
+    #@table_view.reloadData
+    call_reload_all_windows
     disable_edit
 
     indexSet = NSIndexSet.indexSetWithIndex @last_selected_row
@@ -376,15 +372,15 @@ class ListEntriesWindowController < NSWindowController
 
     case aTableView.sortDescriptors[0].key
     when 'entry'
-      populateEntries :title, aTableView.sortDescriptors[0].ascending
+      populate :title, aTableView.sortDescriptors[0].ascending
     when 'customer'
-      populateEntries :customer_id, aTableView.sortDescriptors[0].ascending
+      populate :customer_id, aTableView.sortDescriptors[0].ascending
     when 'project'
-      populateEntries :project_id, aTableView.sortDescriptors[0].ascending
+      populate :project_id, aTableView.sortDescriptors[0].ascending
 #    when 'total_day_time'
-#      populateEntries :time_today, aTableView.sortDescriptors[0].ascending
+#      populate :time_today, aTableView.sortDescriptors[0].ascending
 #    when 'total_time'
-#      populateEntries :total_time, aTableView.sortDescriptors[0].ascending
+#      populate :total_time, aTableView.sortDescriptors[0].ascending
     end
 
     @table_view.reloadData

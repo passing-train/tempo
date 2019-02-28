@@ -23,11 +23,25 @@ class AppDelegate
     NSUserDefaults.standardUserDefaults.registerDefaults PREFS_DEFAULTS
     buildMenu
     setup_menu_bar
+    init_all_windows
+    reload_all_windows
 
     @export = Export.alloc.init
     @ask = Ask.alloc.init
     @ask.ask_and_schedule
     self.showNotification
+  end
+
+  def init_all_windows
+    @list_entries_window_controller ||= ListEntriesWindowController.alloc.init
+    @list_manage_customers_constroller ||= ManageCustomersWindowController.alloc.init
+    @list_manage_projects_constroller ||= ManageProjectsWindowController.alloc.init
+  end
+
+  def reload_all_windows
+    @list_entries_window_controller.reload_window
+    @list_manage_customers_constroller.reload_window
+    @list_manage_projects_constroller.reload_window
   end
 
 
@@ -74,24 +88,21 @@ class AppDelegate
   end
 
   def open_list_entries_window
-    @list_entries_window_controller ||= ListEntriesWindowController.alloc.init
     @list_entries_window_controller.showWindow(self)
     @list_entries_window_controller.window.orderFrontRegardless
-    @list_entries_window_controller.tableUpdate
+    #@list_entries_window_controller.tableUpdate
   end
 
   def open_manage_customers_window
-    @list_manage_customers_constroller ||= ManageCustomersWindowController.alloc.init
     @list_manage_customers_constroller.showWindow(self)
     @list_manage_customers_constroller.window.orderFrontRegardless
-    @list_manage_customers_constroller.tableUpdate
+    #@list_manage_customers_constroller.tableUpdate
   end
 
   def open_manage_projects_window
-    @list_manage_projects_constroller ||= ManageProjectsWindowController.alloc.init
     @list_manage_projects_constroller.showWindow(self)
     @list_manage_projects_constroller.window.orderFrontRegardless
-    @list_manage_projects_constroller.tableUpdate
+    #@list_manage_projects_constroller.tableUpdate
   end
 
   def openPreferences(sender)

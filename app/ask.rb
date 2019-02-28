@@ -66,7 +66,6 @@ class Ask
   end
 
   def ask
-
     NSApp.delegate.showNotification
 
     picked = PROMPTS[rand*PROMPTS.length]

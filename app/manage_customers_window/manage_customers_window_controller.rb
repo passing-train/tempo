@@ -1,6 +1,4 @@
-class ManageCustomersWindowController < NSWindowController
-
-  include CDQ
+class ManageCustomersWindowController < ManageWindowControllerPrototype
 
   def layout
     @layout ||= ManageCustomersWindowLayout.new
@@ -12,7 +10,7 @@ class ManageCustomersWindowController < NSWindowController
 
       @layout = layout
 
-      populateCustomers
+      populate
 
       @button_update = @layout.get(:button_update)
       @button_update.target = self
@@ -40,13 +38,8 @@ class ManageCustomersWindowController < NSWindowController
     end
   end
 
-  def populateCustomers
+  def populate
     @customers = Customer.sort_by(:name)
-  end
-
-  def tableUpdate
-    populateCustomers
-    @table_view.reloadData
   end
 
   def cancel sender
@@ -56,7 +49,6 @@ class ManageCustomersWindowController < NSWindowController
   end
 
   def update sender
-
     if @button_mode == 'add'
       Customer.create(name: @name_field.stringValue.to_s, customer_id: @customer_id_field.stringValue.to_i)
     else
@@ -69,8 +61,11 @@ class ManageCustomersWindowController < NSWindowController
     end
 
     cdq.save
-    populateCustomers
-    @table_view.reloadData
+    call_reload_all_windows
+
+    #populate
+    #@table_view.reloadData
+
     disable_edit
 
     if @button_mode == 'edit'
@@ -79,8 +74,9 @@ class ManageCustomersWindowController < NSWindowController
     end
 
     self.window.makeFirstResponder @table_view
-
   end
+
+
 
   def delete sender
 
@@ -91,8 +87,10 @@ class ManageCustomersWindowController < NSWindowController
     end
 
     cdq.save
-    populateCustomers
-    @table_view.reloadData
+
+    call_reload_all_windows
+    #populate
+    #@table_view.reloadData
     disable_edit
 
     self.window.makeFirstResponder @table_view
