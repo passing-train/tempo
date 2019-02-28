@@ -43,6 +43,7 @@ class Ask
     begin
 
       ask
+      NSApp.delegate.showNotification
 
     rescue => e
       NSLog("Error %@", e)
@@ -66,8 +67,6 @@ class Ask
   end
 
   def ask
-    NSApp.delegate.showNotification
-
     picked = PROMPTS[rand*PROMPTS.length]
     input_window(picked, @last_answer)
   end
@@ -83,10 +82,12 @@ class Ask
     @ask_window_controller ||= AskWindowController.alloc.init_with_arguments(self)
     @ask_window_controller.set_prompt prompt
     @ask_window_controller.set_default_value default_value
+
+    @ask_window_controller.set_task_meta_info
+
     @ask_window_controller.showWindow(self)
     @ask_window_controller.window.orderFrontRegardless
   end
-
 
   def log(msg)
 

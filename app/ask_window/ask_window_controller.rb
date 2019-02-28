@@ -62,10 +62,13 @@ class AskWindowController < NSWindowController
 
   #get record and attributes
   def set_task_meta_info answer=''
+
     if answer==''
       answer = @task_text_field.stringValue
     end
+
     existing_entry = Entry.where(:title).eq(answer).sort_by('created_at').last
+
     if existing_entry
       @project_field.setStringValue existing_entry.project_id if existing_entry.project_id
       @customer_field.setStringValue existing_entry.customer_name

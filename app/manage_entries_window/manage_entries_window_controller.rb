@@ -94,8 +94,6 @@ class ListEntriesWindowController < ManageWindowControllerPrototype
 #      @table_view.tableColumns[3].sortDescriptorPrototype = descriptorTotalTime
   end
 
-
-
   def controlTextDidChange sender
     #NSTextField *textField = [notification object];
     #NSLog(@"controlTextDidChange: stringValue == %@", [textField stringValue]);
