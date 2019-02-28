@@ -1,6 +1,5 @@
 class ListEntriesWindowController < ManageWindowControllerPrototype
 
-
   def layout
     @layout ||= ListEntriesWindowLayout.new
   end
@@ -8,7 +7,6 @@ class ListEntriesWindowController < ManageWindowControllerPrototype
   def init
     super.tap do
       self.window = layout.window
-
       setDateFormats
 
       @title = 'NSTableView'
@@ -22,30 +20,61 @@ class ListEntriesWindowController < ManageWindowControllerPrototype
 
       populate
 
-      @button_update = @layout.get(:button_update)
-      @button_update.target = self
-      @button_update.action = 'update:'
+      init_controls
+      init_sort_descriptors
 
-      @button_delete = @layout.get(:button_delete)
-      @button_delete.target = self
-      @button_delete.action = 'delete:'
+      @last_selected_row = nil
+      disable_edit
+    end
+  end
 
-      @button_cancel = @layout.get(:button_cancel)
-      @button_cancel.target = self
-      @button_cancel.action = 'cancel:'
-      @button_cancel.setEnabled false
+  def init_controls
 
-      @table_view = @layout.get(:table_view)
-      @table_view.delegate = self
-      @table_view.dataSource = self
-      @entry_field = @layout.get(:entry_field)
+    @button_update = @layout.get(:button_update)
+    @button_update.target = self
+    @button_update.action = 'update:'
 
-      @table_view.tableColumns.each do |col|
+    @button_delete = @layout.get(:button_delete)
+    @button_delete.target = self
+    @button_delete.action = 'delete:'
+
+    @button_cancel = @layout.get(:button_cancel)
+    @button_cancel.target = self
+    @button_cancel.action = 'cancel:'
+    @button_cancel.setEnabled false
+
+    @table_view = @layout.get(:table_view)
+    @table_view.delegate = self
+    @table_view.dataSource = self
+
+    @entry_field = @layout.get(:entry_field)
+
+    @customer_field = @layout.get(:customer_field)
+    @customer_field.tableViewDelegate = self
+
+    @project_field = @layout.get(:project_field)
+    @project_field.tableViewDelegate = self
+
+    @project_description = @layout.get(:project_description)
+
+    @check_no_export = @layout.get(:check_no_export)
+    @check_sticky = @layout.get(:check_sticky)
+
+    @addextratime_field = @layout.get(:addextratime_field)
+
+    @button_lastdayextra = @layout.get(:button_lastdayextra)
+    @button_lastdayextra.target = self
+    @button_lastdayextra.action = 'add_extra_time_last_day:'
+  end
+
+  def init_sort_descriptors
+
+      #@table_view.tableColumns.each do |col|
       #  p col
       #  p col.identifier
       #  sortDescriptor = NSSortDescriptor.sortDescriptorWithKey(col.identifier, ascending:true, selector:'compare:')
       #  col.setSortDescriptorPrototype sortDescriptor
-      end
+      #end
 
       descriptorEntry = NSSortDescriptor.sortDescriptorWithKey('entry' , ascending:true, selector:'compare:')
       @table_view.tableColumns[0].sortDescriptorPrototype = descriptorEntry
@@ -61,33 +90,15 @@ class ListEntriesWindowController < ManageWindowControllerPrototype
 #
 #      descriptorTotalTime = NSSortDescriptor.sortDescriptorWithKey('total_time' , ascending:true, selector:'compare:')
 #      @table_view.tableColumns[3].sortDescriptorPrototype = descriptorTotalTime
-
-      @customer_field = @layout.get(:customer_field)
-      @customer_field.tableViewDelegate = self
-
-      @project_field = @layout.get(:project_field)
-      @project_field.tableViewDelegate = self
-
-      @project_description = @layout.get(:project_description)
-
-      @check_no_export = @layout.get(:check_no_export)
-      @check_sticky = @layout.get(:check_sticky)
-
-      @addextratime_field = @layout.get(:addextratime_field)
-
-      @button_lastdayextra = @layout.get(:button_lastdayextra)
-      @button_lastdayextra.target = self
-      @button_lastdayextra.action = 'add_extra_time_last_day:'
-
-      @last_selected_row = nil
-      disable_edit
-    end
   end
+
 
 
   def controlTextDidChange sender
     #NSTextField *textField = [notification object];
     #NSLog(@"controlTextDidChange: stringValue == %@", [textField stringValue]);
+    p "text control did change"
+
     call_reload_all_windows
   end
 
@@ -118,7 +129,15 @@ class ListEntriesWindowController < ManageWindowControllerPrototype
       @project_field.autoCompletePopover.close()
     else
     end
+  end
 
+  def customer_by_name name
+    customers = Customer.where(:name).eq(name)
+    if customers.count == 1
+      customers.first
+    else
+      nil
+    end
   end
 
   def textField(textField, completions:somecompletions, forPartialWordRange:partialWordRange, indexOfSelectedItem:theIndexOfSelectedItem)
@@ -130,7 +149,7 @@ class ListEntriesWindowController < ManageWindowControllerPrototype
     elsif textField.wu_identifier == 'project'
       @customer_field.autoCompletePopover.close()
 
-      customer = Customer.where(:name).eq(@customer_field.stringValue.to_s).first
+      customer = customer_by_name @customer_field.stringValue.to_s
       if customer
         matches = Project.where(:project_id).contains(textField.stringValue,NSCaseInsensitivePredicateOption)
           .or(:project_description).contains(textField.stringValue,NSCaseInsensitivePredicateOption)
@@ -155,7 +174,6 @@ class ListEntriesWindowController < ManageWindowControllerPrototype
     @timeFormat.setDateFormat " HH:mm"
   end
 
-
   def populate sortBy=:title, ascending=true
 
     if ascending
@@ -164,18 +182,23 @@ class ListEntriesWindowController < ManageWindowControllerPrototype
       order = :descending
     end
 
-    if @search_field.stringValue == '' and @fltr_customer_field.stringValue == ''
-      entries = Entry.sort_by(sortBy, order: order).map(&:title).uniq
+    customer = customer_by_name @fltr_customer_field.stringValue unless @fltr_customer_field.stringValue == ''
+    freesearchfield = @search_field.stringValue unless @search_field.stringValue == ''
 
-    elsif @search_field.stringValue != '' and @fltr_customer_field.stringValue == ''
-      entries = Entry.where("title LIKE[c] %@", "*#{@search_field.stringValue}*").sort_by(sortBy, order: order).map(&:title).uniq
+    if customer.nil? and @fltr_customer_field.stringValue != ''
+      entries = []
 
-    elsif @search_field.stringValue == '' and @fltr_customer_field.stringValue != ''
-      entries = Entry.where("customer_id LIKE[c] %@", "*#{@fltr_customer_field.stringValue}*").sort_by(sortBy, order: order).map(&:title).uniq
+    elsif freesearchfield and customer
+      entries = Entry.where("title LIKE[c] %@", "*#{freesearchfield}*").where(:customer_id).eq(customer.customer_id).sort_by(sortBy, order: order).map(&:title).uniq
+
+    elsif freesearchfield and customer.nil?
+      entries = Entry.where("title LIKE[c] %@", "*#{freesearchfield}*").sort_by(sortBy, order: order).map(&:title).uniq
+
+    elsif freesearchfield.nil? and customer
+      entries = Entry.where(:customer_id).eq(customer.customer_id.to_i).sort_by(sortBy, order: order).map(&:title).uniq
 
     else
-      entries = Entry.where("title LIKE[c] %@", "*#{@search_field.stringValue}*").where("customer_id LIKE[c] %@", "*#{@fltr_customer_field.stringValue}*").sort_by(sortBy, order: order).map(&:title).uniq
-
+      entries = Entry.sort_by(sortBy, order: order).map(&:title).uniq
     end
 
     @entries = []
@@ -212,11 +235,10 @@ class ListEntriesWindowController < ManageWindowControllerPrototype
         e.not_in_export = 0
       end
 
-      customer = Customer.where(:name).eq(@customer_field.stringValue.to_s).first
+      customer = customer_by_name @customer_field.stringValue.to_s
       if customer
         e.customer_id = customer.customer_id.to_i
       end
-
     end
 
     cdq.save

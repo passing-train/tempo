@@ -1,3 +1,4 @@
 class Customer < CDQManagedObject
 
+
 end
