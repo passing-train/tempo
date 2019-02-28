@@ -218,7 +218,7 @@ class ListEntriesWindowController < ManageWindowControllerPrototype
       project = Project.where(:project_id).eq(@project_field.stringValue.to_s).first
       p project
 
-      if project.nil?
+      if project.nil? and @project_field.stringValue != ''
         project = Project.create(project_id: @project_field.stringValue.to_s)
       end
       e.project_id = @project_field.stringValue.to_s
