@@ -13,9 +13,9 @@ end
 Motion::Project::App.setup do |app|
   # Use `rake config' to see complete project settings.
   app.name = 'Tempo'
-  app.copyright ="Copyright © 2018 MunsterMade. All rights reserved."
+  app.copyright ="Copyright © 2019 MunsterMade. All rights reserved."
   app.deployment_target = "10.9"
-  app.version = "1.6.2.2"
+  app.version = "1.6.2.3"
   app.icon = "AppIcon.icns"
 
   app.frameworks << 'webkit'
