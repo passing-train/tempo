@@ -89,9 +89,6 @@ class ListEntriesWindowController < ManageWindowControllerPrototype
     #NSTextField *textField = [notification object];
     #NSLog(@"controlTextDidChange: stringValue == %@", [textField stringValue]);
     call_reload_all_windows
-#    populate
-#    @table_view.reloadData
-
   end
 
   def cancel sender
@@ -109,8 +106,6 @@ class ListEntriesWindowController < ManageWindowControllerPrototype
 
     cdq.save
     call_reload_all_windows
-#    populate
-#    @table_view.reloadData
     disable_edit
 
     self.window.makeFirstResponder @table_view
@@ -225,8 +220,6 @@ class ListEntriesWindowController < ManageWindowControllerPrototype
     end
 
     cdq.save
-    #populate
-    #@table_view.reloadData
     call_reload_all_windows
     disable_edit
 

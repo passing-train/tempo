@@ -63,9 +63,6 @@ class ManageCustomersWindowController < ManageWindowControllerPrototype
     cdq.save
     call_reload_all_windows
 
-    #populate
-    #@table_view.reloadData
-
     disable_edit
 
     if @button_mode == 'edit'
@@ -89,8 +86,6 @@ class ManageCustomersWindowController < ManageWindowControllerPrototype
     cdq.save
 
     call_reload_all_windows
-    #populate
-    #@table_view.reloadData
     disable_edit
 
     self.window.makeFirstResponder @table_view

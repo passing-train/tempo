@@ -94,8 +94,6 @@ class ManageProjectsWindowController < ManageWindowControllerPrototype
     end
 
     cdq.save
-    #populate
-    #@table_view.reloadData
     call_reload_all_windows
     disable_edit
 
@@ -117,8 +115,6 @@ class ManageProjectsWindowController < ManageWindowControllerPrototype
     end
 
     cdq.save
-    #populate
-    #@table_view.reloadData
     call_reload_all_windows
     disable_edit
 
