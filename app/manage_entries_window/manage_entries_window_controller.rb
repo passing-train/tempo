@@ -18,6 +18,8 @@ class ListEntriesWindowController < ManageWindowControllerPrototype
       @fltr_customer_field = @layout.get(:fltr_customer_field)
       @fltr_customer_field.delegate = self
 
+      @sorting_column = :title
+      @sorting_ascending = true
       populate
 
       init_controls
@@ -176,7 +178,7 @@ class ListEntriesWindowController < ManageWindowControllerPrototype
 
   def populate sortBy=:title, ascending=true
 
-    if ascending
+    if @sorting_ascending
       order = :ascending
     else
       order = :descending
@@ -189,16 +191,16 @@ class ListEntriesWindowController < ManageWindowControllerPrototype
       entries = []
 
     elsif freesearchfield and customer
-      entries = Entry.where("title LIKE[c] %@", "*#{freesearchfield}*").where(:customer_id).eq(customer.customer_id).sort_by(sortBy, order: order).map(&:title).uniq
+      entries = Entry.where("title LIKE[c] %@", "*#{freesearchfield}*").where(:customer_id).eq(customer.customer_id).sort_by(@sorting_column, order: order).map(&:title).uniq
 
     elsif freesearchfield and customer.nil?
-      entries = Entry.where("title LIKE[c] %@", "*#{freesearchfield}*").sort_by(sortBy, order: order).map(&:title).uniq
+      entries = Entry.where("title LIKE[c] %@", "*#{freesearchfield}*").sort_by(@sorting_column, order: order).map(&:title).uniq
 
     elsif freesearchfield.nil? and customer
-      entries = Entry.where(:customer_id).eq(customer.customer_id.to_i).sort_by(sortBy, order: order).map(&:title).uniq
+      entries = Entry.where(:customer_id).eq(customer.customer_id.to_i).sort_by(@sorting_column, order: order).map(&:title).uniq
 
     else
-      entries = Entry.sort_by(sortBy, order: order).map(&:title).uniq
+      entries = Entry.sort_by(@sorting_column, order: order).map(&:title).uniq
     end
 
     @entries = []
@@ -387,17 +389,22 @@ class ListEntriesWindowController < ManageWindowControllerPrototype
 
     case aTableView.sortDescriptors[0].key
     when 'entry'
-      populate :title, aTableView.sortDescriptors[0].ascending
+      @sorting_column = :title
+#      populate :title, aTableView.sortDescriptors[0].ascending
     when 'customer'
-      populate :customer_id, aTableView.sortDescriptors[0].ascending
+      @sorting_column = :customer_id
+#      populate :customer_id, aTableView.sortDescriptors[0].ascending
     when 'project'
-      populate :project_id, aTableView.sortDescriptors[0].ascending
+      @sorting_column = :customer_id
+      #populate :project_id, aTableView.sortDescriptors[0].ascending
 #    when 'total_day_time'
 #      populate :time_today, aTableView.sortDescriptors[0].ascending
 #    when 'total_time'
 #      populate :total_time, aTableView.sortDescriptors[0].ascending
     end
 
+    @sorting_ascending = aTableView.sortDescriptors[0].ascending
+    populate
     @table_view.reloadData
   end
 
