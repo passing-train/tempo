@@ -10,6 +10,4 @@ class ManageWindowControllerPrototype < NSWindowController
   def call_reload_all_windows
     NSApp.delegate.reload_all_windows
   end
-
-
 end
