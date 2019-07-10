@@ -9,4 +9,10 @@ class Project < CDQManagedObject
     end
   end
 
+  def entries_amount
+    entries = Entry.where(:project_id).eq(project_id).map(&:title).uniq
+    entries.count
+  end
+
+
 end

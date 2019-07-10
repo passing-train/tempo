@@ -186,6 +186,8 @@ class ManageProjectsWindowController < ManageWindowControllerPrototype
       text_field.stringValue = record.project_id.to_s
     when 'customer'
       text_field.stringValue = record.customer_name
+    when 'entries_amount'
+      text_field.stringValue = record.entries_amount
     when 'project_description'
       if record.project_description
         text_field.stringValue = record.project_description

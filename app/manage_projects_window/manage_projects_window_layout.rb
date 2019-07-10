@@ -189,6 +189,13 @@ class ManageProjectsWindowLayout < ManageWindowLayoutPrototype
       resizing_mask NSTableColumnUserResizingMask
     end
 
+    add_column('entries_amount') do
+      title '# Entries'
+      min_width 50
+      width 50
+      resizing_mask NSTableColumnUserResizingMask
+    end
+
   end
 
 end

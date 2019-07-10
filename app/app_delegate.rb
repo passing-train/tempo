@@ -158,6 +158,7 @@ class AppDelegate
 
       cdq.save
       @ask.reset_last
+      reload_all_windows
     end
   end
 

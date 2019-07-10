@@ -27,6 +27,7 @@ class ListEntriesWindowController < ManageWindowControllerPrototype
 
       @last_selected_row = nil
       disable_edit
+      disable_multi_edit
     end
   end
 
@@ -40,6 +41,10 @@ class ListEntriesWindowController < ManageWindowControllerPrototype
     @button_delete.target = self
     @button_delete.action = 'delete:'
 
+    @button_multi_delete = @layout.get(:button_multi_delete)
+    @button_multi_delete.target = self
+    @button_multi_delete.action = 'multi_delete:'
+
     @button_cancel = @layout.get(:button_cancel)
     @button_cancel.target = self
     @button_cancel.action = 'cancel:'
@@ -48,6 +53,7 @@ class ListEntriesWindowController < ManageWindowControllerPrototype
     @table_view = @layout.get(:table_view)
     @table_view.delegate = self
     @table_view.dataSource = self
+    @table_view.allowsMultipleSelection = true
 
     @entry_field = @layout.get(:entry_field)
 
@@ -106,6 +112,30 @@ class ListEntriesWindowController < ManageWindowControllerPrototype
     disable_edit
     @table_view.deselectAll sender
     self.window.makeFirstResponder @table_view
+  end
+
+  def multi_delete sender
+
+    text =  "Are you sure you want to delete these " + @table_view.selectedRowIndexes.count.to_s + " entries?"
+
+    if alert_confirm("Delete entries",text)
+      currentIndex = @table_view.selectedRowIndexes.firstIndex
+      while currentIndex != NSNotFound do
+
+        Entry.where(:title).eq(@entries[currentIndex].title).each do |e|
+          e.destroy
+        end
+
+        currentIndex = @table_view.selectedRowIndexes.indexGreaterThanIndex currentIndex
+      end
+
+      cdq.save
+      call_reload_all_windows
+      disable_multi_edit
+
+      self.window.makeFirstResponder @table_view
+    end
+
   end
 
   def delete sender
@@ -251,19 +281,20 @@ class ListEntriesWindowController < ManageWindowControllerPrototype
   end
 
   def add_extra_time_last_day sender
+
     if @addextratime_field.stringValue != @addextratime_field.stringValue.to_s.to_i.to_s and
         @addextratime_field.stringValue != @addextratime_field.stringValue.to_s.to_f.to_s
 
       alert = NSAlert.alloc.init
       alert.setMessageText  "Can't add time"
-      alert.setInformativeText "Please enter a float value. 1 and a half hour is 1.5."
+      alert.setInformativeText "Please enter the amount of minutes as a number. Add '-' to decrease time."
       alert.addButtonWithTitle "Ok"
       alert.runModal
     else
-      @last_selected_row = @table_view.selectedRow
 
+      @last_selected_row = @table_view.selectedRow
       last_day_entry = Entry.where(:title).eq(@entries[@last_selected_row].title).sort_by('created_at').last
-      last_day_entry.extra_time = last_day_entry.extra_time + TimeUtility::format_time_from_metric_hours_to_seconds(@addextratime_field.stringValue.to_f)
+      last_day_entry.extra_time = last_day_entry.extra_time + (@addextratime_field.stringValue.to_i * 60)
 
       cdq.save
       @table_view.reloadData
@@ -274,8 +305,11 @@ class ListEntriesWindowController < ManageWindowControllerPrototype
       self.window.makeFirstResponder @table_view
 
     end
+
     @addextratime_field.setStringValue ''
   end
+
+
 
   def disable_edit
       @entry_field.setStringValue ''
@@ -292,6 +326,7 @@ class ListEntriesWindowController < ManageWindowControllerPrototype
       @button_cancel.setEnabled false
 
       @check_no_export.setEnabled false
+      @check_sticky.setEnabled false
 
       @addextratime_field.setStringValue ''
       @addextratime_field.setEditable false
@@ -307,17 +342,20 @@ class ListEntriesWindowController < ManageWindowControllerPrototype
       @button_cancel.setEnabled true
 
       @check_no_export.setEnabled true
+      @check_sticky.setEnabled true
 
       @addextratime_field.setEditable true
       @button_lastdayextra.setEnabled true
   end
 
   def tableViewSelectionDidChange sender
-    idx = @table_view.selectedRow
-    if idx == -1
-      disable_edit
-    else
+
+    if @table_view.selectedRowIndexes.count > 0
+
+      disable_multi_edit
+      idx = @table_view.selectedRow
       enable_edit
+      enable_multi_edit
       @entry_field.setStringValue @entries[idx].title
       @project_field.setStringValue @entries[idx].project_id.to_s
       @project_description.setStringValue @entries[idx].project_description.to_s
@@ -335,7 +373,6 @@ class ListEntriesWindowController < ManageWindowControllerPrototype
         @check_sticky.setState NSOffState
       end
 
-
       #customer = Customer.where(:customer_id).eq(@entries[idx].customer_id).first
       #if customer
         #@customer_field.setStringValue customer.name.to_s
@@ -343,7 +380,22 @@ class ListEntriesWindowController < ManageWindowControllerPrototype
         #@customer_field.setStringValue ''
       #end
 
+#    elsif @table_view.selectedRowIndexes.count > 1
+    else
+      disable_edit
+      disable_multi_edit
     end
+
+  end
+
+  def enable_multi_edit
+    p 'enable multi edit'
+    @button_multi_delete.setEnabled true
+  end
+
+  def disable_multi_edit
+    @button_multi_delete.setEnabled false
+    p 'disable_multi_edit'
   end
 
   def numberOfRowsInTableView(table_view)
@@ -378,6 +430,10 @@ class ListEntriesWindowController < ManageWindowControllerPrototype
       text_field.stringValue = record.time_today
     when 'total_time'
       text_field.stringValue = record.total_time
+    when 'skip'
+      text_field.stringValue = record.not_in_export
+    when 'sticky'
+      text_field.stringValue = record.sticky
     end
 
     return text_field

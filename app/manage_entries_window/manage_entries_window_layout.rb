@@ -53,6 +53,11 @@ class ListEntriesWindowLayout < ManageWindowLayoutPrototype
     add NSButton, :button_delete
     add NSButton, :button_cancel
 
+    add NSButton, :button_multi_delete
+    add NSButton, :button_multi_skip_export
+    add NSButton, :button_multi_sticky
+
+
     add NSTextField, :lbl_addextratime_field
     add NSTextField, :addextratime_field
 #    add NSButton, :button_divideextra
@@ -254,7 +259,7 @@ class ListEntriesWindowLayout < ManageWindowLayoutPrototype
   end
 
   def lbl_addextratime_field_style
-    configure_as_label_with_title "Add extra time"
+    configure_as_label_with_title "Add or remove time in minutes"
 
     constraints do
       width 200
@@ -352,6 +357,21 @@ class ListEntriesWindowLayout < ManageWindowLayoutPrototype
     title "equally devide"
   end
 
+  def button_multi_delete_style
+    key_equivalent "\m"
+    bezel_style NSRoundedBezelStyle
+
+    constraints do
+      width 120
+      height 20
+      left.equals(:button_update, :left)
+      top.equals(:button_lastdayextra, :bottom).plus 40
+    end
+
+    title "delete selected"
+  end
+
+
 
 
   def table_view_style
@@ -395,6 +415,20 @@ class ListEntriesWindowLayout < ManageWindowLayoutPrototype
       title 'Time today'
       min_width 60
       width 70
+      resizing_mask NSTableColumnUserResizingMask
+    end
+
+    add_column('sticky') do
+      title 'Sticky'
+      min_width 40
+      width 40
+      resizing_mask NSTableColumnUserResizingMask
+    end
+
+    add_column('skip') do
+      title 'skip export'
+      min_width 40
+      width 40
       resizing_mask NSTableColumnUserResizingMask
     end
 
