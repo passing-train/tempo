@@ -22,7 +22,7 @@ class AskWindowLayout < MK::WindowLayout
     add NSTextField, :project_field
 
 
-    @appIcon = NSImage.imageNamed 'tempo-icon-128'
+    @appIcon = NSImage.imageNamed 'tempo17-icon-128'
     @appIconView = NSImageView.alloc.initWithFrame(NSMakeRect(0, 0, 300, 24))
     @appIconView.setImage @appIcon
     add @appIconView, :app_icon
