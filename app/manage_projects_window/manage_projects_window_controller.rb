@@ -10,6 +10,9 @@ class ManageProjectsWindowController < ManageWindowControllerPrototype
 
       @layout = layout
 
+      @sorting_column = :project_description
+      @sorting_ascending = true
+
       populate
 
       @button_update = @layout.get(:button_update)
@@ -34,6 +37,8 @@ class ManageProjectsWindowController < ManageWindowControllerPrototype
       @customer_field = @layout.get(:customer_field)
       @customer_field.tableViewDelegate = self
 
+      init_sort_descriptors
+
       @last_selected_row = nil
       @button_mode = 'add'
       disable_edit
@@ -41,9 +46,14 @@ class ManageProjectsWindowController < ManageWindowControllerPrototype
   end
 
   def populate
-    @projects = Project.sort_by(:project_id)
-  end
+    if @sorting_ascending
+      order = :ascending
+    else
+      order = :descending
+    end
 
+    @projects = Project.sort_by(@sorting_column, order: order)
+  end
 
   def cancel sender
     disable_edit
@@ -186,5 +196,35 @@ class ManageProjectsWindowController < ManageWindowControllerPrototype
 
     return text_field
   end
+
+  def init_sort_descriptors
+      descriptorProjectId = NSSortDescriptor.sortDescriptorWithKey('project_id' , ascending:true, selector:'compare:')
+      @table_view.tableColumns[0].sortDescriptorPrototype = descriptorProjectId
+
+      descriptorProjectDescription = NSSortDescriptor.sortDescriptorWithKey('project_description' , ascending:true, selector:'compare:')
+      @table_view.tableColumns[1].sortDescriptorPrototype = descriptorProjectDescription
+
+      descriptorCustomer = NSSortDescriptor.sortDescriptorWithKey('customer' , ascending:true, selector:'compare:')
+      @table_view.tableColumns[2].sortDescriptorPrototype = descriptorCustomer
+  end
+
+
+  def tableView(aTableView, sortDescriptorsDidChange:oldDescriptors)
+
+    case aTableView.sortDescriptors[0].key
+    when 'project_description'
+      @sorting_column = :project_description
+    when 'customer'
+      @sorting_column = :customer_id
+    when 'project_id'
+      @sorting_column = :project_id
+    end
+
+    @sorting_ascending = aTableView.sortDescriptors[0].ascending
+    populate
+    @table_view.reloadData
+  end
+
+
 
 end

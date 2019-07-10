@@ -10,6 +10,9 @@ class ManageCustomersWindowController < ManageWindowControllerPrototype
 
       @layout = layout
 
+      @sorting_column = :name
+      @sorting_ascending = true
+
       populate
 
       @button_update = @layout.get(:button_update)
@@ -32,6 +35,8 @@ class ManageCustomersWindowController < ManageWindowControllerPrototype
       @name_field = @layout.get(:name_field)
       @customer_id_field = @layout.get(:customer_id_field)
 
+      init_sort_descriptors
+
       @last_selected_row = nil
       @button_mode = 'add'
       disable_edit
@@ -39,7 +44,14 @@ class ManageCustomersWindowController < ManageWindowControllerPrototype
   end
 
   def populate
-    @customers = Customer.sort_by(:name)
+
+    if @sorting_ascending
+      order = :ascending
+    else
+      order = :descending
+    end
+
+    @customers = Customer.sort_by(@sorting_column, order: order)
   end
 
   def cancel sender
@@ -144,5 +156,30 @@ class ManageCustomersWindowController < ManageWindowControllerPrototype
 
     return text_field
   end
+
+  def init_sort_descriptors
+
+      descriptorCustomerId = NSSortDescriptor.sortDescriptorWithKey('customer_id' , ascending:true, selector:'compare:')
+      @table_view.tableColumns[0].sortDescriptorPrototype = descriptorCustomerId
+
+      descriptorName = NSSortDescriptor.sortDescriptorWithKey('name' , ascending:true, selector:'compare:')
+      @table_view.tableColumns[1].sortDescriptorPrototype = descriptorName
+  end
+
+
+  def tableView(aTableView, sortDescriptorsDidChange:oldDescriptors)
+
+    case aTableView.sortDescriptors[0].key
+    when 'name'
+      @sorting_column = :name
+    when 'customer_id'
+      @sorting_column = :customer_id
+    end
+
+    @sorting_ascending = aTableView.sortDescriptors[0].ascending
+    populate
+    @table_view.reloadData
+  end
+
 
 end

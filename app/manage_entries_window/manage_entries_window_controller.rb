@@ -393,7 +393,7 @@ class ListEntriesWindowController < ManageWindowControllerPrototype
       @sorting_column = :customer_id
 #      populate :customer_id, aTableView.sortDescriptors[0].ascending
     when 'project'
-      @sorting_column = :customer_id
+      @sorting_column = :project_id
       #populate :project_id, aTableView.sortDescriptors[0].ascending
 #    when 'total_day_time'
 #      populate :time_today, aTableView.sortDescriptors[0].ascending
