@@ -34,12 +34,14 @@ class AppDelegate
 
   def init_all_windows
     @list_entries_window_controller ||= ListEntriesWindowController.alloc.init
+    @list_flat_entries_window_controller ||= ListFlatEntriesWindowController.alloc.init
     @list_manage_customers_constroller ||= ManageCustomersWindowController.alloc.init
     @list_manage_projects_constroller ||= ManageProjectsWindowController.alloc.init
   end
 
   def reload_all_windows
     @list_entries_window_controller.reload_window
+    @list_flat_entries_window_controller.reload_window
     @list_manage_customers_constroller.reload_window
     @list_manage_projects_constroller.reload_window
   end
@@ -90,7 +92,11 @@ class AppDelegate
   def open_list_entries_window
     @list_entries_window_controller.showWindow(self)
     @list_entries_window_controller.window.orderFrontRegardless
-    #@list_entries_window_controller.tableUpdate
+  end
+
+  def open_list_flat_entries_window
+    @list_flat_entries_window_controller.showWindow(self)
+    @list_flat_entries_window_controller.window.orderFrontRegardless
   end
 
   def open_manage_customers_window

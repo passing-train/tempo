@@ -18,6 +18,22 @@ class Entry < CDQManagedObject
     end
   end
 
+  def first_activity_date
+    @dateFormat = NSDateFormatter.new
+    @dateFormat.setDateFormat "YYYY-MM-dd"
+
+    entry = Entry.where(:title).eq(title).sort_by('created_at', order: :ascending).first
+    @dateFormat.stringFromDate(entry.created_at)
+  end
+
+  def last_activity_date
+    @dateFormat = NSDateFormatter.new
+    @dateFormat.setDateFormat "YYYY-MM-dd"
+
+    entry = Entry.where(:title).eq(title).sort_by('created_at', order: :descending).first
+    @dateFormat.stringFromDate(entry.created_at)
+  end
+
   def total_time_in_seconds today_only=false
 
     last_only = true

@@ -48,6 +48,7 @@ class AppDelegate
       addItemWithTitle('Export Log to CSV', action: 'export_csv_log', keyEquivalent: '')
       addItemWithTitle('Show Flat Time Log', action: 'show_flat_log', keyEquivalent: '')
       addItemWithTitle('Show Cumulated Time Log', action: 'show_cum_log', keyEquivalent: '')
+      addItemWithTitle('Flat Time entries', action: 'open_list_flat_entries_window', keyEquivalent: 'f')
     end
 
     NSApp.helpMenu = addMenu('Help') do
