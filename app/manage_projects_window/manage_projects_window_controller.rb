@@ -15,6 +15,10 @@ class ManageProjectsWindowController < ManageWindowControllerPrototype
 
       populate
 
+      @button_multi_delete = @layout.get(:button_multi_delete)
+      @button_multi_delete.target = self
+      @button_multi_delete.action = 'multi_delete:'
+
       @button_update = @layout.get(:button_update)
       @button_update.target = self
       @button_update.action = 'update:'
@@ -30,6 +34,7 @@ class ManageProjectsWindowController < ManageWindowControllerPrototype
       @table_view = @layout.get(:table_view)
       @table_view.delegate = self
       @table_view.dataSource = self
+      @table_view.allowsMultipleSelection = true
 
       @description_field = @layout.get(:description_field)
       @project_id_field = @layout.get(:project_id_field)
@@ -116,6 +121,39 @@ class ManageProjectsWindowController < ManageWindowControllerPrototype
 
   end
 
+  def enable_multi_edit
+    @button_multi_delete.setEnabled true
+  end
+
+  def disable_multi_edit
+    @button_multi_delete.setEnabled false
+  end
+
+  def multi_delete sender
+
+    text =  "Are you sure you want to delete these " + @table_view.selectedRowIndexes.count.to_s + " projects?"
+
+    if alert_confirm("Delete projects",text)
+      currentIndex = @table_view.selectedRowIndexes.firstIndex
+      while currentIndex != NSNotFound do
+
+        Project.where(:project_id).eq(@projects[currentIndex].project_id).each do |e|
+          e.destroy
+        end
+
+        currentIndex = @table_view.selectedRowIndexes.indexGreaterThanIndex currentIndex
+      end
+
+      cdq.save
+      call_reload_all_windows
+      disable_multi_edit
+
+      self.window.makeFirstResponder @table_view
+    end
+
+  end
+
+
   def delete sender
 
     @last_selected_row = @table_view.selectedRow
@@ -149,10 +187,14 @@ class ManageProjectsWindowController < ManageWindowControllerPrototype
   end
 
   def tableViewSelectionDidChange sender
-    idx = @table_view.selectedRow
-    if idx == -1
-      disable_edit
-    else
+
+    if @table_view.selectedRowIndexes.count > 0
+
+      disable_multi_edit
+      idx = @table_view.selectedRow
+      enable_edit
+      enable_multi_edit
+
       enable_edit
       @customer_field.setStringValue @projects[idx].customer_name
       if @projects[idx].project_description
@@ -161,6 +203,10 @@ class ManageProjectsWindowController < ManageWindowControllerPrototype
         @description_field.setStringValue ''
       end
       @project_id_field.setStringValue @projects[idx].project_id.to_s
+
+    else
+      disable_edit
+      disable_multi_edit
     end
   end
 

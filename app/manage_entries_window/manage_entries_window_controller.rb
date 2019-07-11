@@ -45,6 +45,22 @@ class ListEntriesWindowController < ManageWindowControllerPrototype
     @button_multi_delete.target = self
     @button_multi_delete.action = 'multi_delete:'
 
+    @button_multi_skip_export = @layout.get(:button_multi_skip_export)
+    @button_multi_skip_export.target = self
+    @button_multi_skip_export.action = 'multi_skip_export:'
+
+    @button_multi_in_export = @layout.get(:button_multi_in_export)
+    @button_multi_in_export.target = self
+    @button_multi_in_export.action = 'multi_in_export:'
+
+    @button_multi_sticky = @layout.get(:button_multi_sticky)
+    @button_multi_sticky.target = self
+    @button_multi_sticky.action = 'multi_sticky:'
+
+    @button_multi_not_sticky = @layout.get(:button_multi_not_sticky)
+    @button_multi_not_sticky.target = self
+    @button_multi_not_sticky.action = 'multi_not_sticky:'
+
     @button_cancel = @layout.get(:button_cancel)
     @button_cancel.target = self
     @button_cancel.action = 'cancel:'
@@ -119,8 +135,9 @@ class ListEntriesWindowController < ManageWindowControllerPrototype
     text =  "Are you sure you want to delete these " + @table_view.selectedRowIndexes.count.to_s + " entries?"
 
     if alert_confirm("Delete entries",text)
+
       currentIndex = @table_view.selectedRowIndexes.firstIndex
-      while currentIndex != NSNotFound do
+      while currentIndex != NSNotFound
 
         Entry.where(:title).eq(@entries[currentIndex].title).each do |e|
           e.destroy
@@ -136,6 +153,78 @@ class ListEntriesWindowController < ManageWindowControllerPrototype
       self.window.makeFirstResponder @table_view
     end
 
+  end
+
+  def multi_not_sticky sender
+
+    tempIndexes = @table_view.selectedRowIndexes
+
+    currentIndex = @table_view.selectedRowIndexes.firstIndex
+    while currentIndex != NSNotFound
+
+      Entry.where(:title).eq(@entries[currentIndex].title).each do |e|
+        e.sticky = 0
+      end
+
+      currentIndex = @table_view.selectedRowIndexes.indexGreaterThanIndex currentIndex
+    end
+
+    cdq.save
+    call_reload_all_windows
+    self.window.makeFirstResponder @table_view
+
+    @table_view.selectRowIndexes(tempIndexes, byExtendingSelection:false)
+  end
+
+  def multi_sticky sender
+    tempIndexes = @table_view.selectedRowIndexes
+    currentIndex = @table_view.selectedRowIndexes.firstIndex
+    while currentIndex != NSNotFound
+
+      Entry.where(:title).eq(@entries[currentIndex].title).each do |e|
+        e.sticky = 1
+      end
+
+      currentIndex = @table_view.selectedRowIndexes.indexGreaterThanIndex currentIndex
+    end
+
+    cdq.save
+    call_reload_all_windows
+    @table_view.selectRowIndexes(tempIndexes, byExtendingSelection:false)
+  end
+
+  def multi_in_export sender
+    tempIndexes = @table_view.selectedRowIndexes
+    currentIndex = @table_view.selectedRowIndexes.firstIndex
+    while currentIndex != NSNotFound
+
+      Entry.where(:title).eq(@entries[currentIndex].title).each do |e|
+        e.not_in_export = 0
+      end
+
+      currentIndex = @table_view.selectedRowIndexes.indexGreaterThanIndex currentIndex
+    end
+
+    cdq.save
+    call_reload_all_windows
+    @table_view.selectRowIndexes(tempIndexes, byExtendingSelection:false)
+  end
+
+  def multi_skip_export sender
+    tempIndexes = @table_view.selectedRowIndexes
+    currentIndex = @table_view.selectedRowIndexes.firstIndex
+    while currentIndex != NSNotFound
+
+      Entry.where(:title).eq(@entries[currentIndex].title).each do |e|
+        e.not_in_export = 1
+      end
+
+      currentIndex = @table_view.selectedRowIndexes.indexGreaterThanIndex currentIndex
+    end
+
+    cdq.save
+    call_reload_all_windows
+    @table_view.selectRowIndexes(tempIndexes, byExtendingSelection:false)
   end
 
   def delete sender
@@ -309,8 +398,6 @@ class ListEntriesWindowController < ManageWindowControllerPrototype
     @addextratime_field.setStringValue ''
   end
 
-
-
   def disable_edit
       @entry_field.setStringValue ''
       @project_field.setStringValue ''
@@ -389,13 +476,19 @@ class ListEntriesWindowController < ManageWindowControllerPrototype
   end
 
   def enable_multi_edit
-    p 'enable multi edit'
     @button_multi_delete.setEnabled true
+    @button_multi_skip_export.setEnabled true
+    @button_multi_in_export.setEnabled true
+    @button_multi_sticky.setEnabled true
+    @button_multi_not_sticky.setEnabled true
   end
 
   def disable_multi_edit
     @button_multi_delete.setEnabled false
-    p 'disable_multi_edit'
+    @button_multi_skip_export.setEnabled false
+    @button_multi_in_export.setEnabled false
+    @button_multi_sticky.setEnabled false
+    @button_multi_not_sticky.setEnabled false
   end
 
   def numberOfRowsInTableView(table_view)

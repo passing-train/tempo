@@ -34,6 +34,7 @@ class ManageProjectsWindowLayout < ManageWindowLayoutPrototype
 
     add NSButton, :button_update
     add NSButton, :button_delete
+    add NSButton, :button_multi_delete
     add NSButton, :button_cancel
 
   end
@@ -157,6 +158,20 @@ class ManageProjectsWindowLayout < ManageWindowLayoutPrototype
     end
 
     title "cancel"
+  end
+
+  def button_multi_delete_style
+    key_equivalent "\m"
+    bezel_style NSRoundedBezelStyle
+
+    constraints do
+      width 120
+      height 20
+      left.equals(:button_update, :left)
+      top.equals(:button_update, :bottom).plus 40
+    end
+
+    title "delete selected"
   end
 
   def table_view_style

@@ -1,7 +1,7 @@
 class ListEntriesWindowLayout < ManageWindowLayoutPrototype
 
   def layout
-    frame from_center(size:[990, 550])
+    frame from_center(size:[1120, 650])
     title "Tempo List"
 
     add NSScrollView, :outer_view do
@@ -55,7 +55,9 @@ class ListEntriesWindowLayout < ManageWindowLayoutPrototype
 
     add NSButton, :button_multi_delete
     add NSButton, :button_multi_skip_export
+    add NSButton, :button_multi_in_export
     add NSButton, :button_multi_sticky
+    add NSButton, :button_multi_not_sticky
 
 
     add NSTextField, :lbl_addextratime_field
@@ -371,7 +373,61 @@ class ListEntriesWindowLayout < ManageWindowLayoutPrototype
     title "delete selected"
   end
 
+  def button_multi_skip_export_style
+    key_equivalent "\m"
+    bezel_style NSRoundedBezelStyle
 
+    constraints do
+      width 120
+      height 20
+      left.equals(:button_update, :left)
+      top.equals(:button_multi_delete, :bottom).plus 10
+    end
+
+    title "not in export"
+  end
+
+  def button_multi_in_export_style
+    key_equivalent "\m"
+    bezel_style NSRoundedBezelStyle
+
+    constraints do
+      width 120
+      height 20
+      left.equals(:button_multi_skip_export, :right).plus 10
+      top.equals(:button_multi_delete, :bottom).plus 10
+    end
+
+    title "set in export"
+  end
+
+  def button_multi_sticky_style
+    key_equivalent "\m"
+    bezel_style NSRoundedBezelStyle
+
+    constraints do
+      width 120
+      height 20
+      left.equals(:button_update, :left)
+      top.equals(:button_multi_skip_export, :bottom).plus 10
+    end
+
+    title "set sticky"
+  end
+
+  def button_multi_not_sticky_style
+    key_equivalent "\m"
+    bezel_style NSRoundedBezelStyle
+
+    constraints do
+      width 120
+      height 20
+      left.equals(:button_multi_skip_export, :right).plus 10
+      top.equals(:button_multi_skip_export, :bottom).plus 10
+    end
+
+    title "set not sticky"
+  end
 
 
   def table_view_style
@@ -420,15 +476,15 @@ class ListEntriesWindowLayout < ManageWindowLayoutPrototype
 
     add_column('sticky') do
       title 'Sticky'
-      min_width 40
-      width 40
+      min_width 50
+      width 50
       resizing_mask NSTableColumnUserResizingMask
     end
 
     add_column('skip') do
-      title 'skip export'
-      min_width 40
-      width 40
+      title 'Not in export'
+      min_width 70
+      width 70
       resizing_mask NSTableColumnUserResizingMask
     end
 
