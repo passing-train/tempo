@@ -527,6 +527,10 @@ class ListEntriesWindowController < ManageWindowControllerPrototype
       text_field.stringValue = record.not_in_export
     when 'sticky'
       text_field.stringValue = record.sticky
+    when 'first_date'
+      text_field.stringValue = record.first_activity_date
+    when 'last_date'
+      text_field.stringValue = record.last_activity_date
     end
 
     return text_field

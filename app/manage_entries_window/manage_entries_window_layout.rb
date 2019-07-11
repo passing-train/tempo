@@ -2,7 +2,7 @@ class ListEntriesWindowLayout < ManageWindowLayoutPrototype
 
   def layout
     frame from_center(size:[1120, 650])
-    title "Tempo List"
+    title "Tempo Entries"
 
     add NSScrollView, :outer_view do
       document_view add NSTableView, :table_view
@@ -485,6 +485,20 @@ class ListEntriesWindowLayout < ManageWindowLayoutPrototype
       title 'Not in export'
       min_width 70
       width 70
+      resizing_mask NSTableColumnUserResizingMask
+    end
+
+    add_column('first_date') do
+      title 'First activity date'
+      min_width 70
+      width 150
+      resizing_mask NSTableColumnUserResizingMask
+    end
+
+    add_column('last_date') do
+      title 'Last activity date'
+      min_width 70
+      width 150
       resizing_mask NSTableColumnUserResizingMask
     end
 
