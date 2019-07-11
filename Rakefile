@@ -15,7 +15,7 @@ Motion::Project::App.setup do |app|
   app.name = 'Tempo'
   app.copyright ="Copyright © 2019 Schepsels All rights reserved."
   app.deployment_target = "10.9"
-  app.version = "1.7.0.1"
+  app.version = "1.7.0.2"
   app.icon = "tempo17.icns"
 
   app.frameworks << 'webkit'
@@ -46,5 +46,14 @@ task :populateEntriesFromProd do
   system "cp -v '/Users/pim/Library/Containers/com.lingewoud.Tempo/Data/Documents/Tempo.sqlite-shm' '/Users/pim/Documents/'"
   system "cp -v '/Users/pim/Library/Containers/com.lingewoud.Tempo/Data/Documents/Tempo.sqlite-wal' '/Users/pim/Documents/'"
 end
+
+desc "backupProdDb"
+task :backupProdDb do
+  system "mkdir -p tempo-db-backups/productieTempoSQL"
+  system "cp -v '/Users/pim/Library/Containers/com.lingewoud.Tempo/Data/Documents/Tempo.sqlite' 'tempo-db-backups/productieTempoSQL'"
+  system "cp -v '/Users/pim/Library/Containers/com.lingewoud.Tempo/Data/Documents/Tempo.sqlite-shm' 'tempo-db-backups/productieTempoSQL'"
+  system "cp -v '/Users/pim/Library/Containers/com.lingewoud.Tempo/Data/Documents/Tempo.sqlite-wal' 'tempo-db-backups/productieTempoSQL'"
+end
+
 
 task :"build:simulator" => :"schema:build"

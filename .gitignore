@@ -22,3 +22,4 @@ vendor
 vendor/build
 .build
 build-MacOSX
+tempo-db-backups
