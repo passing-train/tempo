@@ -42,7 +42,6 @@ class ListEntriesWindowLayout < ManageWindowLayoutPrototype
     @customer_field.wu_identifier = 'customer'
     add @customer_field, :customer_field
 
-#    add NSTextField, :project_field
     @project_field = WuAutoCompleteTextField.alloc.initWithFrame(NSMakeRect(0, 0, 300, 24))
     @project_field.awakeFromNib
     @project_field.popOverWidth = 150.0
@@ -62,7 +61,6 @@ class ListEntriesWindowLayout < ManageWindowLayoutPrototype
 
     add NSTextField, :lbl_addextratime_field
     add NSTextField, :addextratime_field
-#    add NSButton, :button_divideextra
     add NSButton, :button_lastdayextra
 
   end

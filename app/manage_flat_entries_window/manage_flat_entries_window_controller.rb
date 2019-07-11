@@ -74,10 +74,10 @@ class ListFlatEntriesWindowController < ManageWindowControllerPrototype
     @entry_field = @layout.get(:entry_field)
 
     @customer_field = @layout.get(:customer_field)
-#    @customer_field.tableViewDelegate = self
+    @customer_field.tableViewDelegate = self
 
     @project_field = @layout.get(:project_field)
-#    @project_field.tableViewDelegate = self
+    @project_field.tableViewDelegate = self
 
     @project_description = @layout.get(:project_description)
 
