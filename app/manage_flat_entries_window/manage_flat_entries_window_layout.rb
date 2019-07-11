@@ -28,12 +28,6 @@ class ListFlatEntriesWindowLayout < ManageWindowLayoutPrototype
     add NSTextField, :lbl_project_field
     add NSTextField, :project_description
 
-#  add NSTextField, :lbl_no_export
-#  add NSButton, :check_no_export
-
-#  add NSTextField, :lbl_sticky
-#  add NSButton, :check_sticky
-
     add NSTextField, :entry_field
 
     @customer_field = WuAutoCompleteTextField.alloc.initWithFrame(NSMakeRect(0, 0, 300, 24))
@@ -167,57 +161,6 @@ class ListFlatEntriesWindowLayout < ManageWindowLayoutPrototype
     end
   end
 
-#def lbl_sticky_style
-#  configure_as_label_with_title('Sticky (never delete)')
-
-#  constraints do
-#    width 220
-#    height 20
-#    left.equals(:check_sticky, :right).plus 10
-#    top.equals(:project_field, :bottom).plus(35)
-#  end
-#end
-
-#def check_sticky_style
-#  tag 4
-#  button_type NSSwitchButton
-#  bezel_style 0
-#  title ''
-
-#  constraints do
-#    width 20
-#    height 20
-#    left.equals(:project_field, :left)
-#    top.equals(:project_field, :bottom).plus 35
-#  end
-#end
-
-#def lbl_no_export_style
-#  configure_as_label_with_title('Skip in export')
-
-#  constraints do
-#    width 100
-#    height 20
-#    left.equals(:check_no_export, :right).plus 10
-#    top.equals(:lbl_sticky, :bottom).plus(10)
-#  end
-#end
-
-#def check_no_export_style
-#  tag 4
-#  button_type NSSwitchButton
-#  bezel_style 0
-#  title ''
-
-#  constraints do
-#    width 20
-#    height 20
-#    left.equals(:project_field, :left)
-#    top.equals(:lbl_sticky, :bottom).plus 10
-#  end
-#end
-
-
   def button_update_style
     key_equivalent "\r"
     bezel_style NSRoundedBezelStyle
@@ -344,21 +287,6 @@ class ListFlatEntriesWindowLayout < ManageWindowLayoutPrototype
     end
   end
 
-
-#def button_divideextra_style
-#  key_equivalent "\r"
-#  bezel_style NSRoundedBezelStyle
-
-#  constraints do
-#    width 120
-#    height 20
-#    left.equals(:superview, :right).minus 153
-#    top.equals(:superview, :top).plus 368
-#  end
-
-#  title "equally devide"
-#end
-
   def button_multi_delete_style
     key_equivalent "\m"
     bezel_style NSRoundedBezelStyle
@@ -410,20 +338,6 @@ class ListFlatEntriesWindowLayout < ManageWindowLayoutPrototype
       width 110
       resizing_mask NSTableColumnUserResizingMask
     end
-
-#    add_column('activity_time') do
-#      title 'activity time'
-#      min_width 70
-#      width 150
-#      resizing_mask NSTableColumnUserResizingMask
-#    end
-#
-#    add_column('activity_date') do
-#      title 'Activity date'
-#      min_width 70
-#      width 150
-#      resizing_mask NSTableColumnUserResizingMask
-#    end
 
   end
 

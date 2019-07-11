@@ -26,7 +26,7 @@ class ListFlatEntriesWindowController < ManageWindowControllerPrototype
       init_sort_descriptors
 
       @last_selected_row = nil
-#      disable_edit
+      disable_edit
       disable_multi_edit
     end
   end
@@ -44,22 +44,6 @@ class ListFlatEntriesWindowController < ManageWindowControllerPrototype
     @button_multi_delete = @layout.get(:button_multi_delete)
     @button_multi_delete.target = self
     @button_multi_delete.action = 'multi_delete:'
-
-#   @button_multi_skip_export = @layout.get(:button_multi_skip_export)
-#   @button_multi_skip_export.target = self
-#   @button_multi_skip_export.action = 'multi_skip_export:'
-
-#   @button_multi_in_export = @layout.get(:button_multi_in_export)
-#   @button_multi_in_export.target = self
-#   @button_multi_in_export.action = 'multi_in_export:'
-
-#   @button_multi_sticky = @layout.get(:button_multi_sticky)
-#   @button_multi_sticky.target = self
-#   @button_multi_sticky.action = 'multi_sticky:'
-
-#   @button_multi_not_sticky = @layout.get(:button_multi_not_sticky)
-#   @button_multi_not_sticky.target = self
-#   @button_multi_not_sticky.action = 'multi_not_sticky:'
 
     @button_cancel = @layout.get(:button_cancel)
     @button_cancel.target = self
@@ -80,9 +64,6 @@ class ListFlatEntriesWindowController < ManageWindowControllerPrototype
     @project_field.tableViewDelegate = self
 
     @project_description = @layout.get(:project_description)
-
-#   @check_no_export = @layout.get(:check_no_export)
-#   @check_sticky = @layout.get(:check_sticky)
 
     @addextratime_field = @layout.get(:addextratime_field)
 
@@ -108,8 +89,6 @@ class ListFlatEntriesWindowController < ManageWindowControllerPrototype
   end
 
   def controlTextDidChange sender
-    #NSTextField *textField = [notification object];
-    #NSLog(@"controlTextDidChange: stringValue == %@", [textField stringValue]);
     p "text control did change"
 
     call_reload_all_windows
@@ -243,7 +222,6 @@ class ListFlatEntriesWindowController < ManageWindowControllerPrototype
 
     entries.each do |e|
       p e.title
-#      @entries << Entry.where(:title).eq(e.).first
     end
   end
 
@@ -349,14 +327,6 @@ class ListFlatEntriesWindowController < ManageWindowControllerPrototype
       @project_description.setStringValue @entries[idx].project_description.to_s
       @customer_field.setStringValue @entries[idx].customer_name
 
-      #customer = Customer.where(:customer_id).eq(@entries[idx].customer_id).first
-      #if customer
-        #@customer_field.setStringValue customer.name.to_s
-      #else
-        #@customer_field.setStringValue ''
-      #end
-
-#    elsif @table_view.selectedRowIndexes.count > 1
     else
       disable_edit
       disable_multi_edit
