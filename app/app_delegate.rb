@@ -40,10 +40,21 @@ class AppDelegate
   end
 
   def reload_all_windows
+    p 'reload all windows'
     @list_entries_window_controller.reload_window
     @list_flat_entries_window_controller.reload_window
     @list_manage_customers_constroller.reload_window
     @list_manage_projects_constroller.reload_window
+  end
+
+  def setLastApp
+    p 'record lastapp'
+    @last_app = NSWorkspace.sharedWorkspace.frontmostApplication
+  end
+
+  def returnToLastApp
+    p 'return to lastapp'
+    @last_app.activateWithOptions(NSApplicationActivateIgnoringOtherApps)
   end
 
 

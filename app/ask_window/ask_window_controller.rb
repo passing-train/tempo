@@ -90,13 +90,14 @@ class AskWindowController < NSWindowController
 
   def write_and_close_window(sender)
     @parent.set_new_answer(@task_text_field.stringValue)
-    NSApp.delegate.reload_all_windows
     close_window sender
   end
 
   def close_window(sender)
-    NSApp.delegate.set_menu_bar_normal
     window.close
+    NSApp.delegate.set_menu_bar_normal
+    NSApp.delegate.returnToLastApp
+    NSApp.delegate.reload_all_windows
   end
 
 end

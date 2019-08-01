@@ -109,6 +109,12 @@ class ListEntriesWindowController < ManageWindowControllerPrototype
       descriptorProject = NSSortDescriptor.sortDescriptorWithKey('project' , ascending:true, selector:'compare:')
       @table_view.tableColumns[2].sortDescriptorPrototype = descriptorProject
 
+      descriptorSticky = NSSortDescriptor.sortDescriptorWithKey('sticky' , ascending:true, selector:'compare:')
+      @table_view.tableColumns[5].sortDescriptorPrototype = descriptorSticky
+
+      descriptorNotInExport = NSSortDescriptor.sortDescriptorWithKey('skip' , ascending:true, selector:'compare:')
+      @table_view.tableColumns[6].sortDescriptorPrototype = descriptorNotInExport
+
 #      descriptorTimeToday = NSSortDescriptor.sortDescriptorWithKey('time_today' , ascending:true, selector:'compare:')
 #      @table_view.tableColumns[4].sortDescriptorPrototype = descriptorTimeToday
 #
@@ -335,7 +341,7 @@ class ListEntriesWindowController < ManageWindowControllerPrototype
       e.title = @entry_field.stringValue.to_s
 
       project = Project.where(:project_id).eq(@project_field.stringValue.to_s).first
-      p project
+#      p project
 
       if project.nil? and @project_field.stringValue != ''
         project = Project.create(project_id: @project_field.stringValue.to_s)
@@ -547,6 +553,10 @@ class ListEntriesWindowController < ManageWindowControllerPrototype
 #      populate :customer_id, aTableView.sortDescriptors[0].ascending
     when 'project'
       @sorting_column = :project_id
+    when 'sticky'
+      @sorting_column = :sticky
+    when 'skip'
+      @sorting_column = :not_in_export
       #populate :project_id, aTableView.sortDescriptors[0].ascending
 #    when 'total_day_time'
 #      populate :time_today, aTableView.sortDescriptors[0].ascending

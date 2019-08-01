@@ -32,10 +32,9 @@ class Ask
 
   def ask_and_schedule
 
+    NSApp.delegate.setLastApp
+
     NSApp.delegate.set_menu_bar_active
-
-    old_app = NSWorkspace.sharedWorkspace.frontmostApplication
-
     NSRunningApplication.currentApplication.activateWithOptions(NSApplicationActivateIgnoringOtherApps)
 
     @timer = nil
@@ -63,7 +62,6 @@ class Ask
     end
 
     @timer = NSTimer.scheduledTimerWithTimeInterval(wait_time, target: self, selector: 'ask_and_schedule', userInfo: nil, repeats: false)
-    old_app.activateWithOptions(NSApplicationActivateIgnoringOtherApps)
   end
 
   def ask

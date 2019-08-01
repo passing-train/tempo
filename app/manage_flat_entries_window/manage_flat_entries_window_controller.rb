@@ -215,13 +215,13 @@ class ListFlatEntriesWindowController < ManageWindowControllerPrototype
       entries = Entry.sort_by(@sorting_column, order: order)
     end
 
-    p entries
+    #p entries
 
     @entries = []
     @entries = entries
 
     entries.each do |e|
-      p e.title
+      #p e.title
     end
   end
 
@@ -232,7 +232,7 @@ class ListFlatEntriesWindowController < ManageWindowControllerPrototype
     e.title = @entry_field.stringValue.to_s
 
     project = Project.where(:project_id).eq(@project_field.stringValue.to_s).first
-    p project
+    #p project
 
     if project.nil? and @project_field.stringValue != ''
       project = Project.create(project_id: @project_field.stringValue.to_s)
