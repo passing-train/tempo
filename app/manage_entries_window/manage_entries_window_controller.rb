@@ -528,7 +528,7 @@ class ListEntriesWindowController < ManageWindowControllerPrototype
     when 'total_day_time'
       text_field.stringValue = record.time_today
     when 'total_time'
-      text_field.stringValue = record.total_time
+      text_field.stringValue = record.total_time.to_s
     when 'skip'
       text_field.stringValue = record.not_in_export
     when 'sticky'

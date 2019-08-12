@@ -116,7 +116,7 @@ class Entry < CDQManagedObject
     end
 
     rows.each do | r |
-      total_secs = total_secs + r['block_total_secs']
+      total_secs = total_secs + r['block_total_secs'].to_i
     end
 
     total_secs

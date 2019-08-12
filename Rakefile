@@ -15,7 +15,7 @@ Motion::Project::App.setup do |app|
   app.name = 'Tempo'
   app.copyright ="Copyright © 2019 Schepsels All rights reserved."
   app.deployment_target = "10.9"
-  app.version = "1.7.0.3"
+  app.version = "1.7.0.4"
   app.icon = "tempo17.icns"
 
   app.frameworks << 'webkit'
